@@ -1,10 +1,11 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { Container, HH1, PrimaryButton } from "@hjbdev/ui";
+import { Container, HH1, PrimaryButton, SecondaryButton } from "@hjbdev/ui";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
-    series: Array,
+    series: Object,
 });
 </script>
 
@@ -26,7 +27,7 @@ const props = defineProps({
 
             <div class="divide-y">
                 <Link
-                    v-for="game in series"
+                    v-for="game in series.data"
                     :href="route('admin.series.show', game.id)"
                     class="dark:border-zinc-800 py-3 flex gap-3"
                 >
@@ -36,6 +37,9 @@ const props = defineProps({
                         <h4>{{ game.team_b.name }}</h4>
                     </div>
                 </Link>
+                <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
+                    <Pagination :links="series.links" />
+                </div>
             </div>
         </Container>
     </AuthenticatedLayout>

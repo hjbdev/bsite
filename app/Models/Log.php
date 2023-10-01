@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\Logs\LogCreated;
+use App\Jobs\Series\GenerateSeriesSnapshot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,6 +30,7 @@ class Log extends Model
 
         static::created(function (Log $log) {
             broadcast(new LogCreated($log));
+            dispatch(new GenerateSeriesSnapshot($log->series_id));
         });
     }
 }

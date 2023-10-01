@@ -13,7 +13,7 @@ class TeamController extends Controller
     public function index()
     {
         return inertia('Admin/Teams/Index', [
-            'teams' => Team::all(),
+            'teams' => Team::paginate(12),
         ]);
     }
 

@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Support;
+
+use Illuminate\Support\Collection;
+
+class CS2GameState
+{
+    public array $players = [];
+    public ?string $currentMap = null;
+    public int $currentRound = 0;
+    public int $roundsPlayed;
+
+    // Team A = 1; Team 1 Starts CT
+
+    public function __construct(Collection $logs)
+    {
+        foreach ($logs as $log) {
+            if ($log->type === 'MatchStatus') {
+                dump("Rounds Played: " . $log->data['roundsPlayed'] ?? '');
+                $this->currentMap = $log->data['map'] ?? null;
+                $this->roundsPlayed = $log->data['roundsPlayed'] ?? null;
+                if ($this->roundsPlayed) {
+                    $this->currentRound = $this->roundsPlayed + 1;
+                }
+            }
+
+            if (!$this->currentMap) {
+                continue;
+            }
+
+            if ($log->data['userName'] ?? null) {
+                if (!($this->players[$log->data['steamId']] ?? null)) {
+                    $this->players[$log->data['steamId']] = [];
+                }
+
+                $this->players[$log->data['steamId']]['name'] = $log->data['userName'];
+                if ($log->type === 'SwitchTeam') {
+                    $this->players[$log->data['steamId']]['side'] = $log->data['newTeam'];
+                } else if ($log->data['userTeam'] ?? null) {
+                    $this->players[$log->data['steamId']]['side'] = $log->data['userTeam'];
+                }
+
+                $this->players[$log->data['steamId']]['steamId'] = $log->data['steamId'];
+
+                if ($this->currentRound === 0 && ($log->data['userTeam'] ?? null)) {
+                    if ($log->type === 'SwitchTeam') {
+                        $this->players[$log->data['steamId']]['team'] = $log->data['newTeam'] === 'CT' ? 'a' : 'b';
+                    } else {
+                        $this->players[$log->data['steamId']]['team'] = $log->data['userTeam'] === 'CT' ? 'a' : 'b';
+                    }
+                }
+            }
+
+            if ($log->type === 'Kill' || $log->type === 'KillAssist') {
+                if (!$this->players[$log->data['killedSteamId']]) {
+                    $this->players[$log->data['killedSteamId']] = [];
+                }
+
+                $this->players[$log->data['killedSteamId']]['name'] = $log->data['killedUserName'];
+                $this->players[$log->data['killedSteamId']]['side'] = $log->data['killedUserTeam'];
+                $this->players[$log->data['killedSteamId']]['steamId'] = $log->data['killedSteamId'];
+
+                if ($this->currentRound === 0) {
+                    $this->players[$log->data['killedSteamId']]['team'] = $log->data['killedUserTeam'] === 'CT' ? 'a' : 'b';
+                }
+            }
+        }
+
+        dump($this->players);
+    }
+}

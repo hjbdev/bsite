@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Events\Logs;
+namespace App\Events\Series;
 
-use App\Models\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,17 +10,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LogCreated implements ShouldBroadcast
+class SeriesSnapshot implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public Log $log
-    ) {
-        // 
+    public function __construct(public string $seriesId, public array $snapshot)
+    {
+        //
     }
 
     /**
@@ -32,7 +30,7 @@ class LogCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('series.' . $this->log->series_id),
+            new Channel('series.' . $this->seriesId),
         ];
     }
 }

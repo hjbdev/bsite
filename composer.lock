@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e23c7a841251d222162a268ec081955",
+    "content-hash": "2bb75f738dc68681133a102809f186c6",
     "packages": [
         {
             "name": "brick/math",
@@ -976,12 +976,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:hjbdev/cs-log-parser-php.git",
-                "reference": "2acaa4477e11d3d628a08611ba4c32e02a748b0f"
+                "reference": "c6da073d9b3ae62044a711a9f672df7834d867b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hjbdev/cs-log-parser-php/zipball/2acaa4477e11d3d628a08611ba4c32e02a748b0f",
-                "reference": "2acaa4477e11d3d628a08611ba4c32e02a748b0f",
+                "url": "https://api.github.com/repos/hjbdev/cs-log-parser-php/zipball/c6da073d9b3ae62044a711a9f672df7834d867b0",
+                "reference": "c6da073d9b3ae62044a711a9f672df7834d867b0",
                 "shasum": ""
             },
             "require": {
@@ -1035,7 +1035,7 @@
                 "source": "https://github.com/hjbdev/cs-log-parser-php/tree/main",
                 "issues": "https://github.com/hjbdev/cs-log-parser-php/issues"
             },
-            "time": "2023-09-30T17:33:30+00:00"
+            "time": "2023-10-01T13:44:06+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",
@@ -1370,6 +1370,84 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2023-09-28T14:08:59+00:00"
+        },
+        {
+            "name": "laravel/horizon",
+            "version": "v5.21.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/horizon.git",
+                "reference": "ded3632dca7fd66618d5b712b4a0c6c1c77ecb3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/ded3632dca7fd66618d5b712b4a0c6c1c77ecb3f",
+                "reference": "ded3632dca7fd66618d5b712b4a0c6c1c77ecb3f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pcntl": "*",
+                "ext-posix": "*",
+                "illuminate/contracts": "^8.17|^9.0|^10.0",
+                "illuminate/queue": "^8.17|^9.0|^10.0",
+                "illuminate/support": "^8.17|^9.0|^10.0",
+                "nesbot/carbon": "^2.17",
+                "php": "^7.3|^8.0",
+                "ramsey/uuid": "^4.0",
+                "symfony/error-handler": "^5.0|^6.0",
+                "symfony/process": "^5.0|^6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.0",
+                "predis/predis": "^1.1|^2.0"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the Redis PHP driver.",
+                "predis/predis": "Required when not using the Redis PHP driver (^1.1|^2.0)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Horizon\\HorizonServiceProvider"
+                    ],
+                    "aliases": {
+                        "Horizon": "Laravel\\Horizon\\Horizon"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Horizon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Dashboard and code-driven configuration for Laravel queues.",
+            "keywords": [
+                "laravel",
+                "queue"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/horizon/issues",
+                "source": "https://github.com/laravel/horizon/tree/v5.21.1"
+            },
+            "time": "2023-09-19T22:42:19+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -9372,7 +9450,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "hjbdev/cs-log-parser-php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

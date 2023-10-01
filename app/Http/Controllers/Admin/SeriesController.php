@@ -12,7 +12,7 @@ class SeriesController extends Controller
     public function index()
     {
         return inertia('Admin/Series/Index', [
-            'series' => Series::with('teamA', 'teamB')->latest()->get(),
+            'series' => Series::with('teamA', 'teamB')->latest()->paginate(12),
         ]);
     }
 
