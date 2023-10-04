@@ -1,8 +1,9 @@
 <script setup>
-import { Container, HH1, SecondaryButton } from "@hjbdev/ui";
+import { Container, HH1, SecondaryButton, HH2 } from "@hjbdev/ui";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import { computed, onMounted, ref } from "vue";
 import useEcho from "@/Composables/useEcho";
+import WeaponIcon from "@/Components/WeaponIcon.vue";
 
 const props = defineProps({
     series: Object,
@@ -12,7 +13,7 @@ const props = defineProps({
 
 const echo = useEcho();
 
-const logs = ref(props.logs ?? []);
+const logs = ref(props.logs?.slice()?.reverse() ?? []);
 const reversedLogs = computed(() => {
     return logs.value.slice().reverse();
 });
@@ -40,27 +41,73 @@ onMounted(() => {
             <HH1 class="mb-6"
                 >{{ series.team_a.name }} v {{ series.team_b.name }}</HH1
             >
-            <div class="h-64 bg-black text-white w-full overflow-y-auto">
-                <template v-for="log in reversedLogs">
-                    <div v-if="log.type === 'Kill'">
-                        {{ log.data.killerName }} killed
-                        {{ log.data.killedName }} with
-                        {{ log.data.weapon }} {{ log.data.headshot }}
-                    </div>
-                    <div v-if="log.type === 'RoundEnd'">Round Ended</div>
-                    <div v-if="log.type === 'MatchStatus'">
-                        Score is {{ log.data.scoreA }}:{{ log.data.scoreB }}
-                    </div>
-                    <div v-if="log.type === 'BombPlanting'">
-                        {{ log.data.userName }} planted the bomb on {{ log.data.bombsite }}
-                    </div>
-                </template>
+            <HH2>Match Feed</HH2>
+            <div
+                class="h-64 relative text-white w-full bg-cover bg-center"
+                :style="{
+                    backgroundImage: `url(https://stratbox.app/images/maps/${series?.current_series_map?.map?.title?.toLowerCase()}.jpg)`,
+                }"
+            >
+                <div
+                    class="absolute inset-0 bg-gradient-to-bl from-black/80 to-black/90 overflow-y-auto flex flex-col items-start gap-1"
+                >
+                    <template v-for="log in reversedLogs">
+                        <div
+                            v-if="log.type === 'Kill'"
+                            class="flex gap-1 px-1 py-0.5 border-red-800 border-2 rounded"
+                        >
+                            {{ log.data.killerName }}
+                            <Suspense>
+                                <WeaponIcon
+                                    :weapon-name="log.data.weapon"
+                                    class="h-6"
+                                />
+                            </Suspense>
+                            <img
+                                v-if="log.data.headshot"
+                                class="invert h-5"
+                                src="../../../assets/headshot_icon.webp"
+                            />
+                            {{ log.data.killedName }}
+                        </div>
+                        <div
+                            v-if="log.type === 'RoundEnd'"
+                            class="px-1 py-0.5 border border-zinc-600 rounded"
+                        >
+                            Round Ended
+                        </div>
+                        <div
+                            v-if="log.type === 'MatchStatus'"
+                            class="px-1 py-0.5 border border-zinc-600 rounded"
+                        >
+                            Score is {{ log.data.scoreA }}:{{ log.data.scoreB }}
+                        </div>
+                        <div
+                            v-if="log.type === 'BombPlanting'"
+                            class="px-1 py-0.5 border border-orange-500 rounded"
+                        >
+                            {{ log.data.userName }} planted the bomb on
+                            {{ log.data.bombsite }}
+                        </div>
+                    </template>
+                </div>
             </div>
+            <HH2>Scoreboard</HH2>
             <div>
-                <SecondaryButton v-for="mapName in Object.keys(snapshot?.maps ?? {})" @click="selectedSnapshotMap = mapName">
+                <SecondaryButton
+                    v-for="mapName in Object.keys(snapshot?.maps ?? {})"
+                    class="mr-1 last:mr-0"
+                    :class="{
+                        '!bg-zinc-600': selectedSnapshotMap === mapName,
+                    }"
+                    @click="selectedSnapshotMap = mapName"
+                >
                     {{ mapName }}
                 </SecondaryButton>
-                <table v-if="snapshot.maps[selectedSnapshotMap]?.players" class="dark:text-white w-full">
+                <table
+                    v-if="snapshot.maps[selectedSnapshotMap]?.players"
+                    class="dark:text-white w-full"
+                >
                     <thead>
                         <tr>
                             <th class="p-2 text-left">Player</th>
@@ -72,9 +119,10 @@ onMounted(() => {
                     </thead>
                     <tbody>
                         <tr
-                            v-for="player in snapshot.maps[selectedSnapshotMap]
-                                .players.filter(p => p.side === 'TERRORIST')"
-                             class="bg-gradient-to-tr dark:from-orange-900 dark:to-orange-800"
+                            v-for="player in snapshot.maps[
+                                selectedSnapshotMap
+                            ].players.filter((p) => p.side === 'TERRORIST')"
+                            class="bg-gradient-to-tr dark:from-orange-900 dark:to-orange-800"
                         >
                             <td class="p-2">{{ player.name }}</td>
                             <td class="p-2 text-right">{{ player.kills }}</td>
@@ -91,10 +139,13 @@ onMounted(() => {
                             </td>
                         </tr>
                     </tbody>
-                    <tbody class="bg-gradient-to-tr dark:from-blue-900 dark:to-blue-800">
+                    <tbody
+                        class="bg-gradient-to-tr dark:from-blue-900 dark:to-blue-800"
+                    >
                         <tr
-                            v-for="player in snapshot.maps[selectedSnapshotMap]
-                                .players.filter(p => p.side === 'CT')"
+                            v-for="player in snapshot.maps[
+                                selectedSnapshotMap
+                            ].players.filter((p) => p.side === 'CT')"
                         >
                             <td class="p-2">{{ player.name }}</td>
                             <td class="p-2 text-right">{{ player.kills }}</td>

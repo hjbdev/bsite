@@ -45,6 +45,11 @@ class Series extends Model
         return $this->hasMany(SeriesMap::class);
     }
 
+    public function currentSeriesMap(): BelongsTo
+    {
+        return $this->belongsTo(SeriesMap::class, 'current_series_map_id');
+    }
+
     public function teamA(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'team_a_id');
