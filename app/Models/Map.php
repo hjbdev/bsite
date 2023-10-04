@@ -10,6 +10,8 @@ class Map extends Model
 {
     use HasFactory;
 
+    public const CACHE_TTL = 60 * 60 * 24 * 7;
+
     protected $fillable = [
         'name',
         'title',

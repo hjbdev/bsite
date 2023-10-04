@@ -11,6 +11,8 @@ class Series extends Model
 {
     use HasFactory;
 
+    public const CACHE_TTL = 240;
+
     protected $hidden = ['secret'];
 
     protected $fillable = [
@@ -29,7 +31,7 @@ class Series extends Model
         parent::boot();
 
         static::creating(function ($series) {
-            $series->secret = str()->random(32);
+            // $series->secret = str()->random(32);
         });
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bb75f738dc68681133a102809f186c6",
+    "content-hash": "7a253f5d454bac827d803ae0d41c4090",
     "packages": [
         {
             "name": "brick/math",
@@ -972,16 +972,16 @@
         },
         {
             "name": "hjbdev/cs-log-parser-php",
-            "version": "dev-main",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:hjbdev/cs-log-parser-php.git",
-                "reference": "c6da073d9b3ae62044a711a9f672df7834d867b0"
+                "url": "https://github.com/hjbdev/cs-log-parser-php.git",
+                "reference": "ac2286e399fae8a6a28b216ada6c4c414898800c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hjbdev/cs-log-parser-php/zipball/c6da073d9b3ae62044a711a9f672df7834d867b0",
-                "reference": "c6da073d9b3ae62044a711a9f672df7834d867b0",
+                "url": "https://api.github.com/repos/hjbdev/cs-log-parser-php/zipball/ac2286e399fae8a6a28b216ada6c4c414898800c",
+                "reference": "ac2286e399fae8a6a28b216ada6c4c414898800c",
                 "shasum": ""
             },
             "require": {
@@ -992,7 +992,6 @@
                 "pestphp/pest": "^2.0",
                 "spatie/ray": "^1.28"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1032,10 +1031,10 @@
                 "hjbdev"
             ],
             "support": {
-                "source": "https://github.com/hjbdev/cs-log-parser-php/tree/main",
+                "source": "https://github.com/hjbdev/cs-log-parser-php/tree/1.0.0",
                 "issues": "https://github.com/hjbdev/cs-log-parser-php/issues"
             },
-            "time": "2023-10-01T13:44:06+00:00"
+            "time": "2023-10-04T16:21:36+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",
@@ -9450,9 +9449,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "hjbdev/cs-log-parser-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

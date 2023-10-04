@@ -62,4 +62,17 @@ class EventController extends Controller
     {
         //
     }
+
+    public function search(Request $request)
+    {
+        return Event::where('name', 'like', "%{$request->search}%")
+            ->limit(10)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'name' => $event->name,
+                ];
+            });
+    }
 }

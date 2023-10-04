@@ -19,6 +19,9 @@ import { Link } from "@inertiajs/vue3";
                     <SidebarItem :as="Link" :href="route('dashboard')" :active="route().current('dashboard')"
                         >Dashboard</SidebarItem
                     >
+                    <SidebarItem :as="Link" :href="route('admin.events.index')" :active="route().current('admin.events.index')"
+                        >Events</SidebarItem
+                    >
                     <SidebarItem :as="Link" :href="route('admin.series.index')" :active="route().current('admin.series.index')"
                         >Matches</SidebarItem
                     >

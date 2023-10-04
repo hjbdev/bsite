@@ -10,6 +10,8 @@ class SeriesMap extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['team_a_score', 'team_b_score', 'series_id', 'map_id', 'start_date', 'status'];
+
     public function series(): BelongsTo
     {
         return $this->belongsTo(Series::class);

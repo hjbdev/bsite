@@ -27,7 +27,7 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
         //
     }
 
-    public $uniqueFor = 0.5;
+    public $uniqueFor = 1;
 
     public function uniqueId(): string
     {

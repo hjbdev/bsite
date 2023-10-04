@@ -7,11 +7,12 @@ import useEcho from "@/Composables/useEcho";
 const props = defineProps({
     series: Object,
     snapshot: Object,
+    logs: Array,
 });
 
 const echo = useEcho();
 
-const logs = ref([]);
+const logs = ref(props.logs ?? []);
 const reversedLogs = computed(() => {
     return logs.value.slice().reverse();
 });
@@ -42,13 +43,16 @@ onMounted(() => {
             <div class="h-64 bg-black text-white w-full overflow-y-auto">
                 <template v-for="log in reversedLogs">
                     <div v-if="log.type === 'Kill'">
-                        {{ log.data.userName }} killed
-                        {{ log.data.killedUserName }} with
+                        {{ log.data.killerName }} killed
+                        {{ log.data.killedName }} with
                         {{ log.data.weapon }} {{ log.data.headshot }}
                     </div>
                     <div v-if="log.type === 'RoundEnd'">Round Ended</div>
                     <div v-if="log.type === 'MatchStatus'">
                         Score is {{ log.data.scoreA }}:{{ log.data.scoreB }}
+                    </div>
+                    <div v-if="log.type === 'BombPlanting'">
+                        {{ log.data.userName }} planted the bomb on {{ log.data.bombsite }}
                     </div>
                 </template>
             </div>

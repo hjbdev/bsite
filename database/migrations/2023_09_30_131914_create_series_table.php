@@ -16,9 +16,11 @@ return new class extends Migration
             $table->foreignId('event_id')->nullable();
             $table->foreignId('team_a_id');
             $table->foreignId('team_b_id');
+            $table->foreignId('current_series_map_id')->nullable();
             $table->smallInteger('team_a_score')->default(0);
             $table->smallInteger('team_b_score')->default(0);
-            $table->text('secret')->nullable();
+            $table->smallInteger('rounds_played')->default(0);
+            $table->text('server_token')->nullable();
             $table->string('type');
             $table->string('status')->default('upcoming');
             $table->dateTime('start_date')->nullable();

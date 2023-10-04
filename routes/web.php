@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
 use App\Http\Controllers\ProfileController;
@@ -55,6 +56,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.teams.edit')
         ->name('update', 'admin.teams.update')
         ->name('destroy', 'admin.teams.destroy');
+
+    Route::resource('events', AdminEventController::class)
+        ->name('index', 'admin.events.index')
+        ->name('create', 'admin.events.create')
+        ->name('store', 'admin.events.store')
+        ->name('show', 'admin.events.show')
+        ->name('edit', 'admin.events.edit')
+        ->name('update', 'admin.events.update')
+        ->name('destroy', 'admin.events.destroy');
 });
 
 Route::middleware('auth')->group(function () {

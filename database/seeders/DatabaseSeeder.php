@@ -54,9 +54,9 @@ class DatabaseSeeder extends Seeder
         $e = Event::first();
         $e->series()
             ->save(
-                Series::factory()->has(
+                Series::factory()/*->has(
                     SeriesMap::factory()->count(fake()->randomElement([1, 3]))
-                )->create([
+                )*/->create([
                     'team_a_id' => $t->id
                 ])
             );

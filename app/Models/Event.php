@@ -10,6 +10,8 @@ class Event extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'description', 'start_date', 'end_date'];
+
     public function series(): HasMany
     {
         return $this->hasMany(Series::class);

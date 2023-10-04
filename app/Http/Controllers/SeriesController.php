@@ -19,10 +19,12 @@ class SeriesController extends Controller
     public function show(string $id)
     {
         $gameState = new CS2GameState(Log::where('series_id', $id)->get());
+        $series =  Series::with('teamA', 'teamB', 'event')->findOrFail($id);
 
         return inertia('Series/Show', [
-            'series' => Series::with('teamA', 'teamB', 'event')->findOrFail($id),
-            'snapshot' => $gameState
+            'series' => $series,
+            'snapshot' => $gameState,
+            'logs' => $series->logs()->latest()->limit(10)->get(),
         ]);
     }
 }

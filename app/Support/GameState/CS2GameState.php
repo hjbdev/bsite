@@ -4,7 +4,6 @@ namespace App\Support\GameState;
 
 use App\Models\Log;
 use App\Support\GameState\Concerns\InteractsWithGameStateDB;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -52,9 +51,10 @@ class CS2GameState
 
     public function handleMatchStatus(Log $log): void
     {
-        if ($this->roundsPlayed > $log->data['roundsPlayed']) {
-            if ($this->currentMap) {
-                $this->maps[$this->currentMap] = [];
+
+        if ($log->data['roundsPlayed'] === 0) {
+            if ($log->data['map']) {
+                $this->maps[$log->data['map']] = [];
             }
             // reset the state
             $this->resetState();
@@ -64,7 +64,7 @@ class CS2GameState
             $this->maps[$this->currentMap]['roundsPlayed'] = $this->roundsPlayed;
             $this->maps[$this->currentMap]['players'] = $this->players()->get();
         }
-        
+
         $this->currentMap = $log->data['map'];
         $this->roundsPlayed = $log->data['roundsPlayed'];
     }
@@ -74,8 +74,8 @@ class CS2GameState
         $this->db->table('players')->updateOrInsert([
             'steamId' => $log->data['killedSteamId'],
         ], [
-            'name' => $log->data['killedUserName'],
-            'side' => $log->data['killedUserTeam'],
+            'name' => $log->data['killedName'],
+            'side' => $log->data['killedTeam'],
         ]);
 
         $this->players()->where('steamId', $log->data['killedSteamId'])->update([
@@ -84,24 +84,24 @@ class CS2GameState
 
         if ($this->roundsPlayed === 0) {
             $this->db->table('players')->where('steamId', $log->data['killedSteamId'])->update([
-                'team' => $log->data['killedUserTeam'] === 'CT' ? 'a' : 'b',
+                'team' => $log->data['killedTeam'] === 'CT' ? 'a' : 'b',
             ]);
         }
 
         $this->db->table('players')->updateOrInsert([
-            'steamId' => $log->data['steamId'],
+            'steamId' => $log->data['killerSteamId'],
         ], [
-            'name' => $log->data['userName'],
-            'side' => $log->data['userTeam'],
+            'name' => $log->data['killerName'],
+            'side' => $log->data['killerTeam'],
         ]);
 
-        $this->players()->where('steamId', $log->data['steamId'])->update([
+        $this->players()->where('steamId', $log->data['killerSteamId'])->update([
             'kills' => DB::raw('kills + 1')
         ]);
 
         if ($this->roundsPlayed === 0) {
-            $this->db->table('players')->where('steamId', $log->data['steamId'])->update([
-                'team' => $log->data['userTeam'] === 'CT' ? 'a' : 'b',
+            $this->db->table('players')->where('steamId', $log->data['killerSteamId'])->update([
+                'team' => $log->data['killerTeam'] === 'CT' ? 'a' : 'b',
             ]);
         }
     }
@@ -147,6 +147,14 @@ class CS2GameState
             'side' => $log->data['newTeam'],
         ]);
     }
+
+    // function handleMatchEnd(Log $log): void
+    // {
+    //     // if ($this->currentMap) {
+    //     //     if ($this->roundsPlayed > 12) {
+    //     //     }
+    //     // }
+    // }
 
     public function getTeamSide($team): ?string
     {

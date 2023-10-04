@@ -8,7 +8,7 @@ import { Container, HH1 } from "@hjbdev/ui";
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <Container class="py-12">
+        <Container class="py-6">
             <HH1>Dashboard</HH1>
         </Container>
     </AuthenticatedLayout>

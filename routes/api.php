@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\PlayerController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\LogHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/teams/search', [TeamController::class, 'search'])->name('admin.teams.search');
     Route::get('/players/search', [PlayerController::class, 'search'])->name('admin.players.search');
+    Route::get('/events/search', [EventController::class, 'search'])->name('admin.events.search');
 });
 
 Route::middleware('throttle:1000,0.1')->post('log-handler', LogHandler::class);

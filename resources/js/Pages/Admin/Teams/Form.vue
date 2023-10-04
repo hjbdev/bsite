@@ -61,12 +61,28 @@ function submit() {
                             :display-value="(t) => t.name"
                         />
                         <Input 
+                            type="text"
+                            label="SteamID64"
+                            :value="form.players.steam_id64"
+                            @input="(v) => (form.players.steam_id64 = v.target.value)"
+                        />
+                        <Input 
                             type="date"
                             label="Join Date"
                             :value="form.players[playerIndex]?.pivot?.start_date"
                             @input="(v) => (form.players[playerIndex].pivot.start_date = v.target.value)"
                         />
                         <DangerButton class="mb-0.5">Remove</DangerButton>
+                    </div>
+                    <div class="flex justify-end">
+                        <PrimaryButton @click="form.players.push({
+                            id: null,
+                            name: null,
+                            steam_id64: null,
+                            pivot: {
+                                start_date: null,
+                            },
+                        })">Add</PrimaryButton>
                     </div>
                 </div>
             </Card>
