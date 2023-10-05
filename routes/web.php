@@ -26,7 +26,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'upcomingEvents' => Event::where('end_date', '<', now()->endOfDay())->orderBy('start_date')->limit(5)->get(),
+        'upcomingEvents' => Event::where('end_date', '>', now()->endOfDay())->orderBy('start_date')->limit(5)->get(),
     ]);
 });
 
