@@ -16,8 +16,17 @@ class SeriesController extends Controller
         ]);
     }
 
-    public function show(string $id)
+    public function show(string $id, string $slug = null)
     {
+        if (!$slug) {
+            $series = Series::with('teamA', 'teamB', 'event')->findOrFail($id);
+
+            return redirect()->route('matches.show.seo', [
+                'match' => $series->id,
+                'slug' => $series->slug,
+            ]);
+        }
+
         $gameState = new CS2GameState(Log::where('series_id', $id)->get());
         $series =  Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'currentSeriesMap.map')->findOrFail($id);
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('series_id');
             $table->foreignId('map_id');
             $table->dateTime('start_date')->nullable();
-            $table->string('status')->default((string) SeriesMapStatus::UPCOMING);
+            $table->string('status')->default(SeriesMapStatus::UPCOMING->value);
             $table->timestamps();
         });
     }

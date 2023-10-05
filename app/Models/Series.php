@@ -37,7 +37,11 @@ class Series extends Model
         parent::boot();
 
         static::creating(function ($series) {
-            // $series->secret = str()->random(32);
+            $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
+        });
+        
+        static::updating(function ($series) {
+            $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
         });
     }
 

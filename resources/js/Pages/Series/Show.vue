@@ -13,10 +13,7 @@ const props = defineProps({
 
 const echo = useEcho();
 
-const logs = ref(props.logs?.slice()?.reverse() ?? []);
-const reversedLogs = computed(() => {
-    return logs.value.slice().reverse();
-});
+const logs = ref(props.logs ?? []);
 
 const snapshot = ref(props.snapshot);
 const selectedSnapshotMap = ref();
@@ -28,7 +25,7 @@ if (Object.keys(props.snapshot?.maps ?? {})[0] ?? null) {
 onMounted(() => {
     echo.channel(`series.${props.series.id}`)
         .listen("Logs\\LogCreated", (e) => {
-            logs.value.push(e.log);
+            logs.value.unshift(e.log);
         })
         .listen("Series\\SeriesSnapshot", (e) => {
             snapshot.value = e.snapshot;
@@ -51,9 +48,10 @@ onMounted(() => {
                 <div
                     class="absolute inset-0 bg-gradient-to-bl from-black/80 to-black/90 overflow-y-auto flex flex-col items-start gap-1"
                 >
-                    <template v-for="log in reversedLogs">
+                    <template v-for="log in logs">
                         <div
                             v-if="log.type === 'Kill'"
+                            :key="`log${log.id}`"
                             class="flex gap-1 px-1 py-0.5 border-red-800 border-2 rounded"
                         >
                             {{ log.data.killerName }}
@@ -72,18 +70,21 @@ onMounted(() => {
                         </div>
                         <div
                             v-if="log.type === 'RoundEnd'"
+                            :key="`log${log.id}`"
                             class="px-1 py-0.5 border border-zinc-600 rounded"
                         >
                             Round Ended
                         </div>
                         <div
                             v-if="log.type === 'MatchStatus'"
+                            :key="`log${log.id}`"
                             class="px-1 py-0.5 border border-zinc-600 rounded"
                         >
                             Score is {{ log.data.scoreA }}:{{ log.data.scoreB }}
                         </div>
                         <div
                             v-if="log.type === 'BombPlanting'"
+                            :key="`log${log.id}`"
                             class="px-1 py-0.5 border border-orange-500 rounded"
                         >
                             {{ log.data.userName }} planted the bomb on

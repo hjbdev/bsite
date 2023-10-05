@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('series', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->nullable();
             $table->foreignId('event_id')->nullable();
             $table->foreignId('team_a_id');
             $table->foreignId('team_b_id');
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->smallInteger('rounds_played')->default(0);
             $table->text('server_token')->nullable();
             $table->string('type');
-            $table->string('status')->default((string) SeriesStatus::UPCOMING);
+            $table->string('status')->default(SeriesStatus::UPCOMING->value);
             $table->dateTime('start_date')->nullable();
             $table->timestamps();
         });

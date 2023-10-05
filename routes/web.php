@@ -34,6 +34,9 @@ Route::resource('matches', SeriesController::class)
     ->name('index', 'matches.index')
     ->name('show', 'matches.show');
 
+Route::get('matches/{match}/{slug}', [SeriesController::class, 'show'])
+    ->name('matches.show.seo');
+
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () {

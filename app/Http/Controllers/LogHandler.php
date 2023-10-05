@@ -22,7 +22,10 @@ class LogHandler extends Controller
     {
         // logger(json_encode($request->headers->all()));
         try {
+            // logger('Log Received');
+
             if (!$serverInstanceToken = $request->header('x-server-instance-token')) {
+                logger('No Instance token ' . $request->ip());
                 abort(403);
             }
 
@@ -30,15 +33,6 @@ class LogHandler extends Controller
 
             if (Cache::has('series-' . $serverInstanceToken)) {
                 $series = Cache::get('series-' . $serverInstanceToken);
-            } else {
-                // Need to try and find the series by players featured in the game
-                // try {
-                //     $series = Series::where('secret', $serverInstanceToken)->firstOrFail();
-                // } catch (\Exception $e) {
-                //     logger('Couldnt find series with secret: ' . $serverInstanceToken);
-                //     throw $e;
-                // }
-                // Cache::put('series-' . $series->server_token, $series, 60);
             }
 
             $maps = null;
@@ -50,7 +44,7 @@ class LogHandler extends Controller
                 Cache::put('maps', $maps, Map::CACHE_TTL);
             }
 
-            $rawLog = file_get_contents('php://input');
+            $rawLog = $request->getContent();
 
             str($rawLog)->split("~\R~u")->each(function ($rawLogLine) use ($series, $serverInstanceToken, $maps) {
                 $log = Patterns::match($rawLogLine);
@@ -60,14 +54,13 @@ class LogHandler extends Controller
                     return;
                 }
 
+                // logger('Log Parsed');
+
                 if (!$series) {
                     logger('no series');
                     // Firstly figure out if this is a log that contains a player
                     // If it does, we can try and find the series by the player
                     if ($logSteamId = ($log?->steamId ?? $log?->killerSteamId ?? $log?->victimSteamId ?? $log?->throwerSteamId ?? null)) {
-
-                        $logSteamId = str($logSteamId)->replace('[', '')->replace(']', '')->__toString();
-
                         $series = Series::whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])
                             ->where(function ($query) use ($logSteamId) {
                                 $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
@@ -90,6 +83,9 @@ class LogHandler extends Controller
                         $series->server_token = $serverInstanceToken;
                         $series->save();
                         Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                    } else {
+                        logger('still no series');
+                        return;
                     }
                 }
 
@@ -119,6 +115,9 @@ class LogHandler extends Controller
                         'status'       => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
 
+                    if ($seriesMap->status === SeriesMapStatus::ONGOING) {
+                        $series->status = SeriesStatus::ONGOING;
+                    }
 
                     $series->current_series_map_id = $seriesMap->id;
                     $series->save();
@@ -134,8 +133,17 @@ class LogHandler extends Controller
                         })->update([
                             'status' => SeriesMapStatus::FINISHED,
                         ]);
+
+                        Cache::forget('series-map-' . $series->current_series_map_id);
+
                         $series->current_series_map_id = null;
+                        
+                        if (! $series->remainingMaps()) {
+                            $series->status = SeriesStatus::FINISHED;
+                        }
+
                         $series->save();
+
                         Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                     }
                 }

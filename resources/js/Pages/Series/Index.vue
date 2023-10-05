@@ -14,7 +14,10 @@ defineProps({
             <div class="divide-y">
                 <Link
                     v-for="game in series"
-                    :href="route('matches.show', game.id)"
+                    :href="route('matches.show.seo', {
+                        match: game.id,
+                        slug: game.slug,
+                    })"
                     class="flex gap-6 py-3 dark:border-zinc-800 items-center"
                 >
                     <div class="text-xs dark:bg-zinc-700 rounded-full px-1">
