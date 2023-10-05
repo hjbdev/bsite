@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,19 +17,29 @@ class Event extends Model implements HasMedia
 
     protected $fillable = ['name', 'description', 'start_date', 'end_date'];
 
+    protected $appends = ['logo'];
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this
             ->addMediaConversion('preview')
             ->performOnCollections('logo')
             ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('mini_preview')
             ->performOnCollections('logo')
             ->fit(Manipulations::FIT_CROP, 50, 50)
+            ->keepOriginalImageFormat()
             ->nonQueued();
+    }
+    
+    public function logo(): Attribute
+    {
+        $media = $this->getMedia('logo');
+        return new Attribute(fn() => count($media) ? $media[0]?->getUrl('preview') : null);
     }
 
     public function registerMediaCollections(): void

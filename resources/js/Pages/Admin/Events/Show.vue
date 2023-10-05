@@ -25,6 +25,8 @@ const props = defineProps({
             </div>
         </div>
 
+        <img :src="event.logo">
+
         <HH2>Players</HH2>
         todo
         <HH2>Matches</HH2>

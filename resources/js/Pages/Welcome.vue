@@ -16,19 +16,20 @@ defineProps({
         >
             <div
                 v-for="(event, eventIndex) in upcomingEvents"
-                class="relative overflow-hidden rounded-lg h-48 sm:w-[calc(33.3%-1rem)] lg:w-auto lg:h-auto"
+                class="relative overflow-hidden rounded-lg h-48 sm:w-[calc(33.3%-1rem)] lg:w-auto lg:h-auto group"
                 :class="{
                     'lg:row-span-2 lg:col-span-4': eventIndex === 0,
                     'lg:aspect-square': eventIndex !== 0,
                     'hidden sm:block': eventIndex > 1,
                 }"
             >
-                <img
-                    src="https://img-cdn.hltv.org/eventbanner/x0nhFPMFZFnn5Q_ZUEVlaa.png?ixlib=java-2.1.0&w=1276&s=d7fc2e98440b6bae9b7f89ef2b5869b8"
-                    class="w-full h-full object-cover object-center"
-                />
                 <div
-                    class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex text-lg items-end p-3 justify-between"
+                    class="absolute inset-0 bg-black/20 transition group-hover:bg-black/50 flex items-center justify-center"
+                >
+                    <img :src="event.logo" class="object-cover object-center" />
+                </div>
+                <div
+                    class="absolute inset-x-0 bottom-0 top-2/3 bg-gradient-to-t from-black to-transparent flex text-lg items-end p-3 justify-between"
                     :class="{
                         'lg:text-sm': eventIndex > 0,
                     }"

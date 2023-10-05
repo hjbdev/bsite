@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PlayerAutocomplete from "@/Components/Players/PlayerAutocomplete.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import {
     Container,
@@ -8,8 +7,6 @@ import {
     PrimaryButton,
     Card,
     Input,
-    CardTitle,
-    DangerButton,
 } from "@hjbdev/ui";
 
 defineOptions({ layout: AuthenticatedLayout });
@@ -22,6 +19,7 @@ const form = useForm({
     players: [],
     start_date: null,
     end_date: null,
+    logo: null,
     ...props.event,
     name: props.event?.name ?? "",
 });
@@ -73,6 +71,14 @@ function submit() {
                 :error="form.errors.end_date"
                 @input="(v) => (form.end_date = v.target.value)"
             />
+            <div class="inline-block">
+                <Input
+                    name="logo"
+                    label="Logo"
+                    type="file"
+                    @input="(v) => (form.logo = v.target.files[0])"
+                />
+            </div>
             <div class="flex justify-end">
                 <PrimaryButton @click="submit">Save</PrimaryButton>
             </div>

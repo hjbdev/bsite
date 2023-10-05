@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Events;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -26,6 +27,7 @@ class UpdateEventRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date'],
             'description' => ['nullable', 'string'],
+            'logo' => ['nullable', File::types(['png'])->max(2048)],
         ];
     }
 }

@@ -41,6 +41,11 @@ class EventController extends Controller
     {
         $event = Event::create($request->validated());
 
+        if ($request->has('logo')) {
+            $event->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
+
         return redirect()->route('admin.events.show', $event->id);
     }
 
@@ -72,6 +77,11 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         $event->update($request->validated());
+
+        if ($request->has('logo')) {
+            $event->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
 
         return redirect()->route('admin.events.show', $event->id);
     }

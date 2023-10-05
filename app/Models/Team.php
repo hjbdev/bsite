@@ -25,12 +25,14 @@ class Team extends Model implements HasMedia
         $this
             ->addMediaConversion('preview')
             ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('mini_preview')
             ->performOnCollections('logo')
             ->fit(Manipulations::FIT_CROP, 50, 50)
+            ->keepOriginalImageFormat()
             ->nonQueued();
     }
 
