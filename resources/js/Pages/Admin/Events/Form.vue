@@ -18,6 +18,8 @@ const props = defineProps({
 
 const form = useForm({
     players: [],
+    start_date: null,
+    end_date: null,
     ...props.event,
     name: props.event?.name ?? "",
 });
