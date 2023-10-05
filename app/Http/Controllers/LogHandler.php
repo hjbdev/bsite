@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SeriesMapStatus;
+use App\Enums\SeriesStatus;
 use App\Models\Map;
 use App\Models\Series;
 use App\Models\SeriesMap;
@@ -66,7 +68,7 @@ class LogHandler extends Controller
 
                         $logSteamId = str($logSteamId)->replace('[', '')->replace(']', '')->__toString();
 
-                        $series = Series::whereIn('status', ['upcoming', 'ongoing'])
+                        $series = Series::whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])
                             ->where(function ($query) use ($logSteamId) {
                                 $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
                                     $teamAQuery->whereHas('players', function ($teamAPlayerQuery) use ($logSteamId) {
@@ -102,8 +104,9 @@ class LogHandler extends Controller
                     $currentMap = $maps->firstWhere('name', $log->map);
 
                     if ($series->seriesMaps()->where('map_id', $currentMap->id)->doesntExist()) {
-                        $series->seriesMaps()->update([
-                            'status' => 'completed',
+                        // If we've started a new map, and the other one hasn't finished, mark it as cancelled.
+                        $series->seriesMaps()->where('status', SeriesMapStatus::ONGOING)->update([
+                            'status' => SeriesMapStatus::CANCELLED,
                         ]);
                     }
 
@@ -113,7 +116,7 @@ class LogHandler extends Controller
                         'team_a_score' => $log->scoreA,
                         'team_b_score' => $log->scoreB,
                         'start_date'   => $log->roundsPlayed > -1 ? now() : null,
-                        'status'       => $log->roundsPlayed > -1 ? 'ongoing' : 'upcoming',
+                        'status'       => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
 
 
@@ -129,7 +132,7 @@ class LogHandler extends Controller
                         Cache::get('series-map-' . $series->current_series_map_id, function () use ($series) {
                             return SeriesMap::find($series->current_series_map_id);
                         })->update([
-                            'status' => 'completed',
+                            'status' => SeriesMapStatus::COMPLETED,
                         ]);
                         $series->current_series_map_id = null;
                         $series->save();

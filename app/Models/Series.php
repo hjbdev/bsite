@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\SeriesMapStatus;
+use App\Enums\SeriesStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +28,10 @@ class Series extends Model
         'start_date',
     ];
 
+    protected $casts = [
+        'status' => SeriesStatus::class,
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -48,6 +54,12 @@ class Series extends Model
     public function currentSeriesMap(): BelongsTo
     {
         return $this->belongsTo(SeriesMap::class, 'current_series_map_id');
+    }
+
+    public function remainingMaps(): int
+    {
+        $mapCount = intval((string) str($this->type)->after('bo'));
+        return $mapCount - $this->seriesMaps()->whereIn('status', [SeriesMapStatus::COMPLETED, SeriesMapStatus::ONGOING])->count();
     }
 
     public function teamA(): BelongsTo
