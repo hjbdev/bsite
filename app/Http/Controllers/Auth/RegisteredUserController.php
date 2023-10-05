@@ -37,6 +37,10 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        if (!in_array($request->input('email'), explode(';', env('ALLOWED_EMAILS', '')))) {
+            return redirect()->back()->withErrors(['email' => 'You are not allowed to register with this email address.']);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
