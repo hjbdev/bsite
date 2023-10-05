@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SeriesMapStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->foreignId('series_id');
             $table->foreignId('map_id');
             $table->dateTime('start_date')->nullable();
-            $table->string('status')->default('upcoming');
+            $table->string('status')->default((string) SeriesMapStatus::UPCOMING);
             $table->timestamps();
         });
     }

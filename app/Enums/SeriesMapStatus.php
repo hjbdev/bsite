@@ -6,6 +6,6 @@ enum SeriesMapStatus: string
 {
     case UPCOMING = 'upcoming';
     case ONGOING = 'ongoing';
-    case COMPLETED = 'completed';
+    case FINISHED = 'finished';
     case CANCELLED = 'cancelled';
 }

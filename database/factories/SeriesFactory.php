@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SeriesStatus;
 use App\Models\Event;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +29,7 @@ class SeriesFactory extends Factory
             'team_a_score' => $this->faker->numberBetween(0, 2),
             'team_b_score' => $this->faker->numberBetween(0, 2),
             'type' => $this->faker->randomElement(['bo1', 'bo3', 'bo5']),
-            'status' => $this->faker->randomElement(['upcoming', 'ongoing', 'finished']),
+            'status' => $this->faker->randomElement([SeriesStatus::UPCOMING, SeriesStatus::ONGOING, SeriesStatus::FINISHED]),
             'start_date' => $this->faker->dateTimeBetween('-1 year', '+1 month'),
         ];
     }

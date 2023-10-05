@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SeriesStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->smallInteger('rounds_played')->default(0);
             $table->text('server_token')->nullable();
             $table->string('type');
-            $table->string('status')->default('upcoming');
+            $table->string('status')->default((string) SeriesStatus::UPCOMING);
             $table->dateTime('start_date')->nullable();
             $table->timestamps();
         });

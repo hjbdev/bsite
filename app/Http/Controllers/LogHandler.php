@@ -132,7 +132,7 @@ class LogHandler extends Controller
                         Cache::get('series-map-' . $series->current_series_map_id, function () use ($series) {
                             return SeriesMap::find($series->current_series_map_id);
                         })->update([
-                            'status' => SeriesMapStatus::COMPLETED,
+                            'status' => SeriesMapStatus::FINISHED,
                         ]);
                         $series->current_series_map_id = null;
                         $series->save();

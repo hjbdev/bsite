@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SeriesMapStatus;
 use App\Models\Map;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -35,7 +36,7 @@ class SeriesMapFactory extends Factory
         }
 
         return [
-            'status' => $isFinished ? 'finished' : 'upcoming',
+            'status' => $isFinished ? SeriesMapStatus::FINISHED : SeriesMapStatus::UPCOMING,
             'start_date' => $this->faker->dateTimeBetween('-1 year', '+1 month'),
             'map_id' => Map::inRandomOrder()->first(['id'])->id,
             'team_a_score' => $isFinished ? $teamAScore : 0,
