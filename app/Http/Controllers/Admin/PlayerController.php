@@ -8,6 +8,19 @@ use Illuminate\Http\Request;
 
 class PlayerController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Player::latest();
+
+        if ($request->has('search')) {
+            $query = $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        return inertia('Admin/Players/Index', [
+            'players' => $query->paginate(20),
+        ]);
+    }
+
     public function search(Request $request)
     {
         return Player::where('name', 'like', "%{$request->search}%")

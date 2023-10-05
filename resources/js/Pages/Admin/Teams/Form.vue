@@ -63,8 +63,8 @@ function submit() {
                         <Input 
                             type="text"
                             label="SteamID64"
-                            :value="form.players.steam_id64"
-                            @input="(v) => (form.players.steam_id64 = v.target.value)"
+                            :value="form.players[playerIndex].steam_id64"
+                            @input="(v) => (form.players[playerIndex].steam_id64 = v.target.value)"
                         />
                         <Input 
                             type="date"
@@ -72,7 +72,7 @@ function submit() {
                             :value="form.players[playerIndex]?.pivot?.start_date"
                             @input="(v) => (form.players[playerIndex].pivot.start_date = v.target.value)"
                         />
-                        <DangerButton class="mb-0.5">Remove</DangerButton>
+                        <DangerButton class="mb-0.5" @click="form.players.splice(playerIndex, 1)">Remove</DangerButton>
                     </div>
                     <div class="flex justify-end">
                         <PrimaryButton @click="form.players.push({

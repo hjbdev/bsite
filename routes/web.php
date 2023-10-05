@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
 use App\Http\Controllers\ProfileController;
@@ -39,7 +40,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return inertia('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
-    Route::resource('series', AdminSeriesController::class)
+    Route::resource('matches', AdminSeriesController::class)
         ->name('index', 'admin.series.index')
         ->name('create', 'admin.series.create')
         ->name('store', 'admin.series.store')
@@ -65,6 +66,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.events.edit')
         ->name('update', 'admin.events.update')
         ->name('destroy', 'admin.events.destroy');
+
+    Route::resource('players', AdminPlayerController::class)
+        ->name('index', 'admin.players.index')
+        ->name('create', 'admin.players.create')
+        ->name('store', 'admin.players.store')
+        ->name('show', 'admin.players.show')
+        ->name('edit', 'admin.players.edit')
+        ->name('update', 'admin.players.update')
+        ->name('destroy', 'admin.players.destroy');
 });
 
 Route::middleware('auth')->group(function () {

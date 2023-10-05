@@ -10,10 +10,16 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Team::latest();
+
+        if ($request->has('search')) {
+            $query = $query->where('name', 'like', '%' . $request->get('search') . '%');
+        }   
+
         return inertia('Admin/Teams/Index', [
-            'teams' => Team::paginate(12),
+            'teams' => $query->paginate(20),
         ]);
     }
 
@@ -42,7 +48,15 @@ class TeamController extends Controller
         foreach ($request->get('players') as $player) {
             if ($player['id']) {
                 $team->players()->attach($player['id'], ['start_date' => $player['pivot.start_date'] ?? now()]);
+                $playerModel = $team->players()->find($player['id']);
+                $playerModel->steam_id64 = $player['steam_id64'];
+                $playerModel->save();
                 continue;
+            } else {
+                $team->players()->create([
+                    'name' => $player['name'],
+                    'steam_id64' => $player['steam_id64'],
+                ], ['start_date' => $player['pivot.start_date'] ?? now()]);
             }
         }
 

@@ -10,10 +10,23 @@ use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Series::with('teamA', 'teamB')->orderByDesc('id');
+
+        if ($request->has('search')) {
+            $query = $query->where(function ($q) use ($request) {
+                $q->whereHas('teamA', function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->search}%");
+                });
+                $q->orWhereHas('teamB', function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->search}%");
+                });
+            });
+        }
+
         return inertia('Admin/Series/Index', [
-            'series' => Series::with('teamA', 'teamB')->orderByDesc('id')->paginate(12),
+            'series' => $query->paginate(12),
         ]);
     }
 

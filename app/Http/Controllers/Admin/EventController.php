@@ -13,10 +13,16 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Event::latest();
+
+        if ($request->has('search')) {
+            $query = $query->where('name', 'like', "%{$request->search}%");
+        }
+
         return inertia('Admin/Events/Index', [
-            'events' => Event::latest()->paginate(12)
+            'events' => $query->paginate(20)
         ]);
     }
 

@@ -21,7 +21,8 @@
     "vue": "^3.2.41"
   },
   "dependencies": {
-    "@hjbdev/ui": "0.0.25",
+    "@heroicons/vue": "^2.0.18",
+    "@hjbdev/ui": "0.0.27",
     "@vueuse/core": "^10.4.1",
     "laravel-echo": "^1.15.3",
     "pusher-js": "^8.3.0"

@@ -46,18 +46,21 @@ function submit() {
                     name="name"
                     label="Name"
                     :value="form.name"
+                    :error="form.errors.name"
                     @input="(v) => (form.name = v.target.value)"
                 />
                 <Input
                     name="description"
                     label="Description"
                     :value="form.description"
+                    :error="form.errors.description"
                     @input="(v) => (form.description = v.target.value)"
                 />
                 <Input
                     type="date"
                     label="Start Date"
                     :value="form.start_date"
+                    :error="form.errors.start_date"
                     @input="
                         (v) =>
                             (form.start_date =
@@ -68,6 +71,7 @@ function submit() {
                     type="date"
                     label="End Date"
                     :value="form.end_date"
+                    :error="form.errors.end_date"
                     @input="
                         (v) =>
                             (form.end_date =

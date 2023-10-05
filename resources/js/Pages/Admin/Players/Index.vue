@@ -1,16 +1,13 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { Container, HH1, PrimaryButton, Input } from "@hjbdev/ui";
-import Pagination from "@/Components/Pagination.vue";
-import { nextTick } from "vue";
-import { onMounted } from "vue";
-import { watch } from "vue";
-import { ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
-    events: Object,
+    players: Object,
 });
 
 const hasMounted = ref(false);
@@ -21,7 +18,7 @@ onMounted(() => {
     nextTick(() => {
         hasMounted.value = true;
         if (searchQuery.value) {
-            searchInput.value?.$el.querySelector("input")?.focus();
+            searchInput.value?.$el.querySelector('input')?.focus();
         }
     });
 });
@@ -44,16 +41,16 @@ watch(
 </script>
 
 <template>
-    <Head title="Events" />
+    <Head title="Players" />
 
     <AuthenticatedLayout>
         <Container class="py-6">
             <div class="flex items-center justify-between mb-6">
-                <HH1>Events</HH1>
+                <HH1>Players</HH1>
                 <div>
                     <PrimaryButton
                         :as="Link"
-                        :href="route('admin.events.create')"
+                        :href="route('admin.players.create')"
                         >Create</PrimaryButton
                     >
                 </div>
@@ -70,20 +67,21 @@ watch(
 
             <div class="divide-y">
                 <Link
-                    v-for="event in events.data"
+                    v-for="player in players.data"
                     :href="
-                        route('admin.events.show', {
-                            event: event.id,
+                        route('admin.players.show', {
+                            player: player.id,
                         })
                     "
                     class="dark:border-zinc-800 py-3 flex gap-3"
                 >
-                    <div class="w-16">{{ event.id }}</div>
-                    {{ event.name }}
+                    <div class="w-16">{{ player.id }}</div>
+                    <div class="w-48 truncate">{{ player.name }}</div>
+                    <div>{{ player.steam_id64 }}</div>
                 </Link>
 
                 <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
-                    <Pagination :links="events.links" />
+                    <Pagination :links="players.links" />
                 </div>
             </div>
         </Container>

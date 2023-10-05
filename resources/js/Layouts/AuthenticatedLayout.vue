@@ -6,9 +6,10 @@ import {
     SidebarItem,
     SidebarItemGroup,
 } from "@hjbdev/ui";
+import { Link } from "@inertiajs/vue3";
+import { HomeIcon, CalendarDaysIcon, PuzzlePieceIcon, UserGroupIcon, UserIcon } from '@heroicons/vue/20/solid';
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
@@ -16,16 +17,19 @@ import { Link } from "@inertiajs/vue3";
         <template #sidebar>
             <Sidebar>
                 <SidebarItemGroup>
-                    <SidebarItem :as="Link" :href="route('dashboard')" :active="route().current('dashboard')"
+                    <SidebarItem :as="Link" :href="route('dashboard')" :icon="HomeIcon" :active="route().current('dashboard')"
                         >Dashboard</SidebarItem
                     >
-                    <SidebarItem :as="Link" :href="route('admin.events.index')" :active="route().current('admin.events.index')"
+                    <SidebarItem :as="Link" :href="route('admin.events.index')" :icon="CalendarDaysIcon" :active="route().current('admin.events.index')"
                         >Events</SidebarItem
                     >
-                    <SidebarItem :as="Link" :href="route('admin.series.index')" :active="route().current('admin.series.index')"
+                    <SidebarItem :as="Link" :href="route('admin.series.index')" :icon="PuzzlePieceIcon" :active="route().current('admin.series.index')"
                         >Matches</SidebarItem
                     >
-                    <SidebarItem :as="Link" :href="route('admin.teams.index')" :active="route().current('admin.teams.index')"
+                    <SidebarItem :as="Link" :href="route('admin.players.index')" :icon="UserIcon" :active="route().current('admin.players.index')"
+                        >Players</SidebarItem
+                    >
+                    <SidebarItem :as="Link" :href="route('admin.teams.index')" :icon="UserGroupIcon" :active="route().current('admin.teams.index')"
                         >Teams</SidebarItem
                     >
                 </SidebarItemGroup>
