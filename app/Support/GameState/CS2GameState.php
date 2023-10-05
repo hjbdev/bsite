@@ -11,6 +11,8 @@ class CS2GameState
 {
     use InteractsWithGameStateDB;
 
+    public const CACHE_TTL = 60 * 5;
+
     public ?string $currentMap = null;
     public int $roundsPlayed = 0;
     public array $maps = [];

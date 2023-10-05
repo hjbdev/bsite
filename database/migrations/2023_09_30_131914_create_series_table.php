@@ -16,16 +16,17 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->nullable();
             $table->foreignId('event_id')->nullable();
-            $table->foreignId('team_a_id');
-            $table->foreignId('team_b_id');
+            $table->foreignId('team_a_id')->index();
+            $table->foreignId('team_b_id')->index();
             $table->foreignId('current_series_map_id')->nullable();
             $table->smallInteger('team_a_score')->default(0);
             $table->smallInteger('team_b_score')->default(0);
             $table->smallInteger('rounds_played')->default(0);
             $table->text('server_token')->nullable();
             $table->string('type');
-            $table->string('status')->default(SeriesStatus::UPCOMING->value);
+            $table->string('status')->index()->default(SeriesStatus::UPCOMING->value);
             $table->dateTime('start_date')->nullable();
+            $table->index(['team_a_id', 'team_b_id', 'status']);
             $table->timestamps();
         });
     }

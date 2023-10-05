@@ -17,9 +17,10 @@ return new class extends Migration
             $table->smallInteger('team_a_score')->default(0);
             $table->smallInteger('team_b_score')->default(0);
             $table->foreignId('series_id');
-            $table->foreignId('map_id');
+            $table->foreignId('map_id')->index();
             $table->dateTime('start_date')->nullable();
-            $table->string('status')->default(SeriesMapStatus::UPCOMING->value);
+            $table->string('status')->index()->default(SeriesMapStatus::UPCOMING->value);
+            $table->index(['map_id', 'status']);
             $table->timestamps();
         });
     }

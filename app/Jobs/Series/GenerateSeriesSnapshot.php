@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
 {
@@ -44,7 +45,8 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $gameState = new CS2GameState(Log::where('series_id', $this->seriesId)->get());
-        broadcast(new SeriesSnapshot($this->seriesId, $gameState->get()));
+        $gameState = (new CS2GameState(Log::where('series_id', $this->seriesId)->get()))->get();
+        Cache::put('series-' . $this->seriesId . '-game-state', $gameState, CS2GameState::CACHE_TTL);
+        broadcast(new SeriesSnapshot($this->seriesId, $gameState));
     }
 }

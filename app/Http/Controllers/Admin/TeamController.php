@@ -45,6 +45,11 @@ class TeamController extends Controller
         // Easier to just unlink and relink
         $team->players()->detach();
 
+        if ($request->has('logo')) {
+            $team->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
+
         foreach ($request->get('players') as $player) {
             if ($player['id']) {
                 $team->players()->attach($player['id'], ['start_date' => $player['pivot.start_date'] ?? now()]);
@@ -71,6 +76,11 @@ class TeamController extends Controller
     public function store(StoreTeamRequest $request)
     {
         $team = Team::create($request->validated());
+
+        if ($request->has('logo')) {
+            $team->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
 
         // Easier to just unlink and relink
         $team->players()->detach();

@@ -45,6 +45,11 @@ class Series extends Model
         });
     }
 
+    public function vetos(): HasMany
+    {
+        return $this->hasMany(Veto::class);
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

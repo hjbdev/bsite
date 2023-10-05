@@ -25,6 +25,7 @@ class StoreTeamRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'players' => ['required', 'array'],
             'players.*.id' => ['exists:players,id'],
+            'logo' => ['nullable', File::types(['png'])->max(2048)],
         ];
     }
 }

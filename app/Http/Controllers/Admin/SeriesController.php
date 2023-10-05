@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Series\UpdateSeriesRequest;
 use App\Http\Requests\Series\StoreSeriesRequest;
+use App\Models\Map;
 use App\Models\Series;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SeriesController extends Controller
 {
@@ -82,8 +84,16 @@ class SeriesController extends Controller
 
     public function show(string $id)
     {
+        if (Cache::has('maps')) {
+            $maps = Cache::get('maps');
+        } else {
+            $maps = Map::get();
+            Cache::put('maps', $maps, Map::CACHE_TTL);
+        }
+
         return inertia('Admin/Series/Show', [
-            'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps.map')->findOrFail($id)->makeVisible('secret')
+            'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps.map')->findOrFail($id)->makeVisible('secret'),
+            'maps' => $maps
         ]);
     }
 }

@@ -49,6 +49,7 @@ class TestDataSeeder extends Seeder
                 Series::factory()/*->has(
                     SeriesMap::factory()->count(fake()->randomElement([1, 3]))
                 )*/->create([
+                    'start_date' => now()->addDay(),
                     'team_a_id' => $t->id
                 ])
             );

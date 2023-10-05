@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Teams;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class UpdateTeamRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class UpdateTeamRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'players' => ['required', 'array'],
             'players.*.id' => ['exists:players,id'],
+            'logo' => ['nullable', File::types(['png'])->max(2048)],
         ];
     }
 }

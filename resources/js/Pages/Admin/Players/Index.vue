@@ -6,6 +6,8 @@ import { useDebounceFn } from "@vueuse/core";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Pagination from "@/Components/Pagination.vue";
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     players: Object,
 });
@@ -18,7 +20,7 @@ onMounted(() => {
     nextTick(() => {
         hasMounted.value = true;
         if (searchQuery.value) {
-            searchInput.value?.$el.querySelector('input')?.focus();
+            searchInput.value?.$el.querySelector("input")?.focus();
         }
     });
 });
@@ -43,47 +45,43 @@ watch(
 <template>
     <Head title="Players" />
 
-    <AuthenticatedLayout>
-        <Container class="py-6">
-            <div class="flex items-center justify-between mb-6">
-                <HH1>Players</HH1>
-                <div>
-                    <PrimaryButton
-                        :as="Link"
-                        :href="route('admin.players.create')"
-                        >Create</PrimaryButton
-                    >
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <Input
-                    ref="searchInput"
-                    placeholder="Search"
-                    :value="searchQuery"
-                    @input="(v) => (searchQuery = v.target.value)"
-                />
-            </div>
-
-            <div class="divide-y">
-                <Link
-                    v-for="player in players.data"
-                    :href="
-                        route('admin.players.show', {
-                            player: player.id,
-                        })
-                    "
-                    class="dark:border-zinc-800 py-3 flex gap-3"
+    <Container class="py-6">
+        <div class="flex items-center justify-between mb-6">
+            <HH1>Players</HH1>
+            <div>
+                <PrimaryButton :as="Link" :href="route('admin.players.create')"
+                    >Create</PrimaryButton
                 >
-                    <div class="w-16">{{ player.id }}</div>
-                    <div class="w-48 truncate">{{ player.name }}</div>
-                    <div>{{ player.steam_id64 }}</div>
-                </Link>
-
-                <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
-                    <Pagination :links="players.links" />
-                </div>
             </div>
-        </Container>
-    </AuthenticatedLayout>
+        </div>
+
+        <div class="flex justify-end">
+            <Input
+                ref="searchInput"
+                placeholder="Search"
+                :value="searchQuery"
+                @input="(v) => (searchQuery = v.target.value)"
+            />
+        </div>
+
+        <div class="divide-y">
+            <Link
+                v-for="player in players.data"
+                :href="
+                    route('admin.players.show', {
+                        player: player.id,
+                    })
+                "
+                class="dark:border-zinc-800 py-3 flex gap-3"
+            >
+                <div class="w-16">{{ player.id }}</div>
+                <div class="w-48 truncate">{{ player.name }}</div>
+                <div>{{ player.steam_id64 }}</div>
+            </Link>
+
+            <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
+                <Pagination :links="players.links" />
+            </div>
+        </div>
+    </Container>
 </template>

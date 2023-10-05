@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('full_name')->nullable();
             $table->string('nationality')->nullable();
-            $table->string('steam_id3')->nullable();
+            $table->string('steam_id3')->index()->nullable();
             $table->string('steam_id64')->nullable();
             $table->date('birthday')->nullable();
             $table->timestamps();

@@ -9,6 +9,8 @@ import { nextTick } from "vue";
 import { watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     teams: Object,
 });
@@ -46,44 +48,42 @@ watch(
 <template>
     <Head title="Teams" />
 
-    <AuthenticatedLayout>
-        <Container class="py-6">
-            <div class="flex items-center justify-between mb-6">
-                <HH1>Teams</HH1>
-                <div>
-                    <PrimaryButton
-                        :as="Link"
-                        :href="route('admin.teams.create')"
-                        >Create</PrimaryButton
-                    >
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <Input
-                    ref="searchInput"
-                    placeholder="Search"
-                    :value="searchQuery"
-                    @input="(v) => (searchQuery = v.target.value)"
-                />
-            </div>
-
-            <div class="divide-y">
-                <Link
-                    v-for="team in teams.data"
-                    :href="route('admin.teams.show', {
-                        team: team.id
-                    })"
-                    class="dark:border-zinc-800 py-3 flex gap-3"
+    <Container class="py-6">
+        <div class="flex items-center justify-between mb-6">
+            <HH1>Teams</HH1>
+            <div>
+                <PrimaryButton :as="Link" :href="route('admin.teams.create')"
+                    >Create</PrimaryButton
                 >
-                    <div class="w-16">{{ team.id }}</div>
-                    {{ team.name }}
-                </Link>
-
-                <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
-                    <Pagination :links="teams.links" />
-                </div>
             </div>
-        </Container>
-    </AuthenticatedLayout>
+        </div>
+
+        <div class="flex justify-end">
+            <Input
+                ref="searchInput"
+                placeholder="Search"
+                :value="searchQuery"
+                @input="(v) => (searchQuery = v.target.value)"
+            />
+        </div>
+
+        <div class="divide-y">
+            <Link
+                v-for="team in teams.data"
+                :href="
+                    route('admin.teams.show', {
+                        team: team.id,
+                    })
+                "
+                class="dark:border-zinc-800 py-3 flex gap-3"
+            >
+                <div class="w-16">{{ team.id }}</div>
+                {{ team.name }}
+            </Link>
+
+            <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
+                <Pagination :links="teams.links" />
+            </div>
+        </div>
+    </Container>
 </template>

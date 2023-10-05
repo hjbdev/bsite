@@ -9,6 +9,8 @@ import { nextTick } from "vue";
 import { watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     series: Object,
 });
@@ -46,44 +48,40 @@ watch(
 <template>
     <Head title="series" />
 
-    <AuthenticatedLayout>
-        <Container class="py-6">
-            <div class="flex items-center justify-between mb-6">
-                <HH1>Series</HH1>
-                <div>
-                    <PrimaryButton
-                        :as="Link"
-                        :href="route('admin.series.create')"
-                        >Create</PrimaryButton
-                    >
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <Input
-                    ref="searchInput"
-                    placeholder="Search"
-                    :value="searchQuery"
-                    @input="(v) => (searchQuery = v.target.value)"
-                />
-            </div>
-
-            <div class="divide-y">
-                <Link
-                    v-for="game in series.data"
-                    :href="route('admin.series.show', game.id)"
-                    class="dark:border-zinc-800 py-3 flex gap-3"
+    <Container class="py-6">
+        <div class="flex items-center justify-between mb-6">
+            <HH1>Series</HH1>
+            <div>
+                <PrimaryButton :as="Link" :href="route('admin.series.create')"
+                    >Create</PrimaryButton
                 >
-                    <div class="w-16">{{ game.id }}</div>
-                    <div>
-                        <h4>{{ game.team_a.name }}</h4>
-                        <h4>{{ game.team_b.name }}</h4>
-                    </div>
-                </Link>
-                <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
-                    <Pagination :links="series.links" />
-                </div>
             </div>
-        </Container>
-    </AuthenticatedLayout>
+        </div>
+
+        <div class="flex justify-end">
+            <Input
+                ref="searchInput"
+                placeholder="Search"
+                :value="searchQuery"
+                @input="(v) => (searchQuery = v.target.value)"
+            />
+        </div>
+
+        <div class="divide-y">
+            <Link
+                v-for="game in series.data"
+                :href="route('admin.series.show', game.id)"
+                class="dark:border-zinc-800 py-3 flex gap-3"
+            >
+                <div class="w-16">{{ game.id }}</div>
+                <div>
+                    <h4>{{ game.team_a.name }}</h4>
+                    <h4>{{ game.team_b.name }}</h4>
+                </div>
+            </Link>
+            <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
+                <Pagination :links="series.links" />
+            </div>
+        </div>
+    </Container>
 </template>

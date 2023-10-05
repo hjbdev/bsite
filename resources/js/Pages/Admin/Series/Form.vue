@@ -12,6 +12,8 @@ import {
 import TeamAutocomplete from "@/Components/Teams/TeamAutocomplete.vue";
 import EventAutocomplete from "@/Components/Events/EventAutocomplete.vue";
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     series: Object,
 });
@@ -50,57 +52,55 @@ function submit() {
 <template>
     <Head :title="series ? `Edit Series ${series.id}` : 'Create Series'" />
 
-    <AuthenticatedLayout>
-        <Container class="py-6">
-            <div class="flex items-center justify-between mb-6">
-                <HH1 v-if="series">Edit Series {{ series?.id }}</HH1>
-                <HH1 v-else>Create Series</HH1>
+    <Container class="py-6">
+        <div class="flex items-center justify-between mb-6">
+            <HH1 v-if="series">Edit Series {{ series?.id }}</HH1>
+            <HH1 v-else>Create Series</HH1>
+        </div>
+
+        <Card class="space-y-6">
+            <EventAutocomplete
+                v-model="form.event"
+                label="Event"
+                :error="form.errors['event.id'] ?? null"
+                :display-value="(t) => t?.name"
+            />
+
+            <TeamAutocomplete
+                v-model="form.team_a"
+                label="Team A"
+                :error="form.errors['team_a.id'] ?? null"
+                :display-value="(t) => t?.name"
+            />
+            <Input
+                label="Team A Score"
+                :value="form.team_a_score"
+                :error="form.errors['team_a_score'] ?? null"
+                type="number"
+                @input="(v) => (form.team_a_score = v.target.value)"
+            />
+            <TeamAutocomplete
+                v-model="form.team_b"
+                label="Team B"
+                :error="form.errors['team_b.id'] ?? null"
+                :display-value="(t) => t?.name"
+            />
+            <Input
+                label="Team B Score"
+                :value="form.team_b_score"
+                type="number"
+                :error="form.errors['team_b_score'] ?? null"
+                @input="(v) => (form.team_b_score = v.target.value)"
+            />
+            <SelectInput
+                label="Type"
+                v-model="form.type"
+                :error="form.errors['type.id'] ?? null"
+                :options="typeOptions"
+            />
+            <div class="flex justify-end mt-6">
+                <PrimaryButton @click="submit">Save</PrimaryButton>
             </div>
-
-            <Card class="space-y-6">
-                <EventAutocomplete
-                    v-model="form.event"
-                    label="Event"
-                    :error="form.errors['event.id'] ?? null"
-                    :display-value="(t) => t?.name"
-                />
-
-                <TeamAutocomplete
-                    v-model="form.team_a"
-                    label="Team A"
-                    :error="form.errors['team_a.id'] ?? null"
-                    :display-value="(t) => t?.name"
-                />
-                <Input
-                    label="Team A Score"
-                    :value="form.team_a_score"
-                    :error="form.errors['team_a_score'] ?? null"
-                    type="number"
-                    @input="(v) => (form.team_a_score = v.target.value)"
-                />
-                <TeamAutocomplete
-                    v-model="form.team_b"
-                    label="Team B"
-                    :error="form.errors['team_b.id'] ?? null"
-                    :display-value="(t) => t?.name"
-                />
-                <Input
-                    label="Team B Score"
-                    :value="form.team_b_score"
-                    type="number"
-                    :error="form.errors['team_b_score'] ?? null"
-                    @input="(v) => (form.team_b_score = v.target.value)"
-                />
-                <SelectInput
-                    label="Type"
-                    v-model="form.type"
-                    :error="form.errors['type.id'] ?? null"
-                    :options="typeOptions"
-                />
-                <div class="flex justify-end mt-6">
-                    <PrimaryButton @click="submit">Save</PrimaryButton>
-                </div>
-            </Card>
-        </Container>
-    </AuthenticatedLayout>
+        </Card>
+    </Container>
 </template>

@@ -21,4 +21,9 @@ class Map extends Model
     {
         return $this->hasMany(SeriesMap::class);
     }
+
+    public function vetos(): HasMany
+    {
+        return $this->hasMany(Veto::class);
+    }
 }
