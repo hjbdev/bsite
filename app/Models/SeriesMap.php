@@ -20,6 +20,8 @@ class SeriesMap extends Model
 
     public static function boot(): void
     {
+        parent::boot();
+
         static::updated(function ($seriesMap) {
             event(new SeriesMapUpdated($seriesMap->id, $seriesMap->series_id));
         });
