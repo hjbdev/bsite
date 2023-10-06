@@ -18,7 +18,7 @@ defineProps({
                 v-for="(event, eventIndex) in upcomingEvents"
                 class="relative overflow-hidden rounded-lg h-48 sm:w-[calc(33.3%-1rem)] lg:w-auto lg:h-auto group"
                 :class="{
-                    'lg:row-span-2 lg:col-span-4': eventIndex === 0,
+                    'lg:row-span-2 lg:col-span-4 lg:min-h-64': eventIndex === 0,
                     'lg:aspect-square': eventIndex !== 0,
                     'hidden sm:block': eventIndex > 1,
                 }"

@@ -12,6 +12,7 @@
     "@vue/server-renderer": "^3.2.31",
     "autoprefixer": "^10.4.12",
     "axios": "^1.1.2",
+    "chokidar": "^3.5.3",
     "laravel-vite-plugin": "^0.8.0",
     "postcss": "^8.4.18",
     "prettier": "^3.0.3",

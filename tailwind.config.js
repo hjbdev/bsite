@@ -16,6 +16,12 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
+            minHeight: ({ theme }) => ({
+                ...theme('spacing')
+            }),
+            minWidth: ({ theme }) => ({
+                ...theme('spacing')
+            }),
         },
     },
 
