@@ -28,11 +28,11 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
         //
     }
 
-    public $uniqueFor = 1;
+    public $uniqueFor = 2;
 
     public function uniqueId(): string
     {
-        return "series-snapshot" . $this->seriesId;
+        return "series-snapshot-" . $this->seriesId;
     }
 
     // public function middleware(): array
