@@ -255,7 +255,7 @@ const seriesMaps = computed(() => {
                     <tr
                         v-for="player in snapshot.maps[
                             selectedSnapshotMap
-                        ].players.filter((p) => p.side === 'TERRORIST')"
+                        ].players.filter((p) => p.team === 'TERRORIST')"
                         class="bg-red-950"
                     >
                         <td class="p-2">{{ player.name }}</td>
@@ -277,7 +277,7 @@ const seriesMaps = computed(() => {
                     <tr
                         v-for="player in snapshot.maps[
                             selectedSnapshotMap
-                        ].players.filter((p) => p.side === 'CT')"
+                        ].players.filter((p) => p.team === 'CT')"
                     >
                         <td class="p-2">{{ player.name }}</td>
                         <td class="p-2 text-right">{{ player.kills }}</td>
