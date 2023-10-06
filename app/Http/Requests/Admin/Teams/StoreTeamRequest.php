@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Teams;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class StoreTeamRequest extends FormRequest
 {
