@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\SeriesMapStatus;
 use App\Enums\SeriesStatus;
+use App\Events\Series\SeriesUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,10 @@ class Series extends Model
 
         static::updating(function ($series) {
             $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
+        });
+
+        static::updated(function ($series) {
+            event(new SeriesUpdated($series->id));
         });
     }
 

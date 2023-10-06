@@ -2,7 +2,7 @@
 import { Container, HH1, SecondaryButton, HH2, Card } from "@hjbdev/ui";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import useEcho from "@/Composables/useEcho";
 import WeaponIcon from "@/Components/WeaponIcon.vue";
 import { Head } from "@inertiajs/vue3";
@@ -40,7 +40,17 @@ onMounted(() => {
         })
         .listen("Series\\SeriesSnapshot", (e) => {
             snapshot.value = e.snapshot;
+        })
+        .listen("Series\\SeriesUpdated", () => {
+            router.reload({ only: ["series"] });
+        })
+        .listen("SeriesMaps\\SeriesMapUpdated", () => {
+            router.reload({ only: ["series"] });
         });
+});
+
+onUnmounted(() => {
+    echo.leaveChannel(`series.${props.series.id}`);
 });
 
 function padArrayEnd(arr, len, padding) {
