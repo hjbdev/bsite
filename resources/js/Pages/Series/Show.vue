@@ -113,7 +113,7 @@ const seriesMaps = computed(() => {
             >
                 <img
                     v-if="seriesMap.map?.title !== 'TBD'"
-                    :src="`https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}_thumb.jpg`"
+                    :src="series.type === 'bo1' ? `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}.jpg` : `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}_thumb.jpg`"
                     class="w-full h-full object-cover"
                 />
                 <div
