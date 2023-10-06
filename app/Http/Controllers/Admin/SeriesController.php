@@ -92,7 +92,7 @@ class SeriesController extends Controller
         }
 
         return inertia('Admin/Series/Show', [
-            'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps.map')->findOrFail($id)->makeVisible('secret'),
+            'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'vetos.map', 'vetos.team')->findOrFail($id)->makeVisible('secret'),
             'maps' => $maps
         ]);
     }

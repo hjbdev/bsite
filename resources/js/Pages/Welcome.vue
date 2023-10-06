@@ -1,6 +1,7 @@
 <script setup>
 import { Container, HH2 } from "@hjbdev/ui";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: PublicLayout });
 
@@ -9,6 +10,7 @@ defineProps({
 });
 </script>
 <template>
+    <Head title="UKCSTV: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
         <HH2 class="mb-6">Upcoming Events</HH2>
         <section

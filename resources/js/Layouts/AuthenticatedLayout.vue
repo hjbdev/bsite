@@ -5,6 +5,8 @@ import {
     SidebarItem,
     SidebarItemGroup,
     FadeTransition,
+    Modals,
+    Dialogs
 } from "@hjbdev/ui";
 import { Link } from "@inertiajs/vue3";
 import {
@@ -20,6 +22,8 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 
 <template>
     <SidebarLayout class="dark:text-white">
+        <Dialogs />
+        <Modals />
         <template #sidebar>
             <Sidebar>
                 <SidebarItemGroup>
