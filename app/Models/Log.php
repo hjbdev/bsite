@@ -36,7 +36,7 @@ class Log extends Model
             if (in_array($log->type, self::BROADCASTABLE_EVENTS)) {
                 broadcast(new LogCreated($log));
             }
-            dispatch(new GenerateSeriesSnapshot($log->series_id));
+            // dispatch(new GenerateSeriesSnapshot($log->series_id));
         });
     }
 }
