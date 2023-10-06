@@ -125,13 +125,13 @@ class CS2GameState
     public function handleKillAssist(Log $log): void
     {
         $this->players()->updateOrInsert([
-            'steamId' => $log->data['steamId'],
+            'steamId' => $log->data['assisterSteamId'],
         ], [
-            'name' => $log->data['userName'],
-            'side' => $log->data['userTeam'],
+            'name' => $log->data['assisterName'],
+            'side' => $log->data['assisterTeam'],
         ]);
 
-        $this->players()->where('steamId', $log->data['steamId'])->update([
+        $this->players()->where('steamId', $log->data['assisterSteamId'])->update([
             'assists' => DB::raw('assists + 1')
         ]);
     }
