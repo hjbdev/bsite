@@ -45,7 +45,7 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $gameState = (new CS2GameState(Log::where('series_id', $this->seriesId)->get()))->get();
+        $gameState = (new CS2GameState($this->seriesId))->get();
         Cache::put('series-' . $this->seriesId . '-game-state', $gameState, CS2GameState::CACHE_TTL);
         broadcast(new SeriesSnapshot($this->seriesId, $gameState));
     }

@@ -35,7 +35,7 @@ class SeriesController extends Controller
         if (Cache::has('series-' . $series->id . '-game-state')) {
             $gameState = Cache::get('series-' . $series->id . '-game-state');
         } else {
-            $gameState = (new CS2GameState(Log::where('series_id', $id)->get()))->get();
+            $gameState = (new CS2GameState($id))->get();
             Cache::put('series-' . $series->id . '-game-state', $gameState, CS2GameState::CACHE_TTL);
         }
 

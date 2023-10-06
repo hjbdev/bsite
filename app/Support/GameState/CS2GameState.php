@@ -19,12 +19,12 @@ class CS2GameState
 
     // Team A = 1; Team 1 Starts CT
 
-    public function __construct(Collection $logs)
+    public function __construct(protected int $seriesId)
     {
         $this->initialize();
 
         try {
-            $this->analyseLogs($logs);
+            $this->analyseLogs();
         } catch (\Exception $e) {
             throw $e;
         } finally {
@@ -42,13 +42,16 @@ class CS2GameState
         ];
     }
 
-    public function analyseLogs($logs): void
+    public function analyseLogs(): void
     {
-        foreach ($logs as $log) {
-            if (method_exists($this, 'handle' . $log->type)) {
-                $this->{'handle' . $log->type}($log);
+        Log::where('series_id', $this->seriesId)->orderBy('id', 'asc')->chunk(1000, function (Collection $logs) {
+            foreach ($logs as $log) {
+                if (method_exists($this, 'handle' . $log->type)) {
+                    $this->{'handle' . $log->type}($log);
+                }
             }
-        }
+        });
+        
     }
 
     public function handleMatchStatus(Log $log): void
