@@ -15,14 +15,13 @@ class SeriesMapUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public int $seriesId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $seriesMapId)
+    public function __construct(public int $seriesMapId, public int $seriesId)
     {
-        $this->seriesId = SeriesMap::findOrFail($seriesMapId)->series_id;
+        //
     }
 
     /**
