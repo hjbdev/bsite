@@ -15,7 +15,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
         ></div>
 
         <div
-            class="dark:bg-zinc-800/50 bg-zinc-100/50 backdrop-blur-md h-16 shadow-md sticky top-0 mb-6"
+            class="dark:bg-zinc-800/50 bg-zinc-100/50 backdrop-blur-md h-16 shadow-md sticky top-0 mb-6 z-30"
         >
             <Container class="flex justify-between gap-6 items-center h-full">
                 <div>
