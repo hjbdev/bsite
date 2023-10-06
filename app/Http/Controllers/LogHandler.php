@@ -200,11 +200,13 @@ class LogHandler extends Controller
                         
                         if (! $series->remainingMaps()) {
                             $series->status = SeriesStatus::FINISHED;
+                            $series->save();
+                            Cache::forget('series-' . $series->server_token);
+                        } else {
+                            $series->save();
+                            Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                         }
 
-                        $series->save();
-
-                        Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                     }
                 }
             });
