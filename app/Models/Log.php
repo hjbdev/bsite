@@ -11,6 +11,10 @@ class Log extends Model
 {
     use HasFactory;
 
+    public const BROADCASTABLE_EVENTS = [
+        'Kill', 'RoundEnd', 'MatchStatus', 'BombPlanting', 'Blinded', 'BombDefusing'
+    ];
+
     protected $fillable = [
         'series_id',
         'player_id',
@@ -29,7 +33,9 @@ class Log extends Model
         parent::boot();
 
         static::created(function (Log $log) {
-            broadcast(new LogCreated($log));
+            if ($log->type !== 'Connected') {
+                broadcast(new LogCreated($log));
+            }
             dispatch(new GenerateSeriesSnapshot($log->series_id));
         });
     }

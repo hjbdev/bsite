@@ -17,18 +17,18 @@ class Player extends Model
     {
         parent::boot();
 
-        $convertSteamId = function (Player $player): void {
-            try {
-                $steamId = new SteamID($player->steam_id64);
-                $player->steam_id3 = $steamId->RenderSteam3();
-            } catch (\Exception $e) {
-                $player->steam_id3 = null;
-                logger("Failed to convert SteamID for " . $player->name);
-            }
-        };
+        // $convertSteamId = function (Player $player): void {
+        //     try {
+        //         $steamId = new SteamID($player->steam_id64);
+        //         $player->steam_id3 = $steamId->RenderSteam3();
+        //     } catch (\Exception $e) {
+        //         $player->steam_id3 = null;
+        //         logger("Failed to convert SteamID for " . $player->name);
+        //     }
+        // };
 
-        static::creating($convertSteamId);
-        static::updating($convertSteamId);
+        // static::creating($convertSteamId);
+        // static::updating($convertSteamId);
     }
 
     // public function logs(): HasMany

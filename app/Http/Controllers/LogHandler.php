@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Enums\SeriesMapStatus;
 use App\Enums\SeriesStatus;
 use App\Models\Map;
+use App\Models\Player;
 use App\Models\Series;
 use App\Models\SeriesMap;
+use App\Models\Team;
 use CSLog\CS2\Models\MatchEnd;
 use CSLog\CS2\Models\MatchStatus;
+use CSLog\CS2\Models\SwitchTeam;
+use CSLog\CS2\Models\TeamScored;
 use CSLog\CS2\Patterns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -109,11 +113,13 @@ class LogHandler extends Controller
                     $seriesMap = $series->seriesMaps()->updateOrCreate([
                         'map_id' => $currentMap->id,
                     ], [
-                        'team_a_score' => $log->scoreA,
-                        'team_b_score' => $log->scoreB,
-                        'start_date'   => $log->roundsPlayed > -1 ? now() : null,
                         'status'       => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
+
+                    if ($seriesMap->wasRecentlyCreated) {
+                        $seriesMap->start_date = $log->roundsPlayed > -1 ? now() : null;
+                        $seriesMap->save();
+                    }
 
                     if ($seriesMap->status === SeriesMapStatus::ONGOING) {
                         $series->status = SeriesStatus::ONGOING;
@@ -126,9 +132,63 @@ class LogHandler extends Controller
                     Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                 }
 
+                if ($log instanceof SwitchTeam && $series) {
+                    // determine which team is which
+                    // $player = Player::where('steam_id3', $log->steamId)->first();
+                    $team = Team::whereHas('players', function ($query) use ($log) {
+                        $query->where('players.steam_id3', $log->steamId);
+                        $query->whereNull('player_team.end_date');
+                    })->first(['id']);
+
+                    if ($team) {
+                        // We can now determine, based on this log, which team is which
+                        if ($team->id !== $series->team_a_id && $team->id !== $series->team_b_id) {
+                            // this is a problem.
+                            logger('We\'ve matched a player to a team that is not participating in this series.');
+                        } else {
+                            $isTeamA = $team->id === $series->team_a_id;
+
+                            if ($log->newTeam === 'TERRORIST') {
+                                // Associate the found team with T side
+                                $series->terroristTeam()->associate($team);
+                                // Associate the other team with the other side (CT)
+                                $series->ctTeam()->associate($isTeamA ? $series->team_b_id : $series->team_a_id);
+                            } else {
+                                $series->ctTeam()->associate($team);
+                                $series->terroristTeam()->associate($isTeamA ? $series->team_b_id : $series->team_a_id);
+                            }
+                        }
+
+                        $series->save();
+                        Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                    }
+                }
+
+                if ($log instanceof TeamScored) {
+                    if ($series->current_series_map_id) {
+                        $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
+                            return SeriesMap::find($series->current_series_map_id);
+                        });
+
+                        if ($log->team === 'TERRORIST') {
+                            // figure out which team is T
+                            $scoreKey = $series->terrorist_team_id === $series->team_a_id ? 'team_a_score' : 'team_b_score';
+                            $seriesMap->{$scoreKey} = $log->score;
+                            logger('log team terrorist ' . $scoreKey . ' score: ' . $log->score . ' series T team id: ' . $series->terrorist_team_id . ' series team A ID: ' . $series->team_a_id);
+                        } else {
+                            $scoreKey = $series->ct_team_id === $series->team_a_id ? 'team_a_score' : 'team_b_score';
+                            $seriesMap->{$scoreKey} = $log->score;
+                            logger('log team ct ' . $scoreKey . ' ' . $log->score . ' ' . $series->ct_team_id . ' ' . $series->team_a_id);
+                        }
+
+                        $seriesMap->save();
+                        Cache::put('series-map-' . $series->current_series_map_id, $seriesMap, Series::CACHE_TTL);
+                    }
+                }
+
                 if ($log instanceof MatchEnd && $series) {
                     if ($series->current_series_map_id) {
-                        Cache::get('series-map-' . $series->current_series_map_id, function () use ($series) {
+                        Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
                             return SeriesMap::find($series->current_series_map_id);
                         })->update([
                             'status' => SeriesMapStatus::FINISHED,

@@ -19,8 +19,11 @@ const form = useForm({
 });
 
 if (props.data.series.vetos.length) {
-    if (props.data.series.vetos.slice(-1)[0]?.team_id === props.data.series.team_a_id) {
-        console.log('a');
+    if (
+        props.data.series.vetos.slice(-1)[0]?.team_id ===
+        props.data.series.team_a_id
+    ) {
+        console.log("a");
         form.team_id = props.data.series.team_b_id;
     } else {
         form.team_id = props.data.series.team_a_id;
@@ -49,7 +52,7 @@ if (props.data.series.type === "bo5") {
     }
 }
 
-if (props.data.series.type === 'bo1') {
+if (props.data.series.type === "bo1") {
     if (props.data.series.vetos.length < 6) {
         form.type = "ban";
     } else {
@@ -57,8 +60,6 @@ if (props.data.series.type === 'bo1') {
         form.team_id = null;
     }
 }
-
-
 
 function submit() {
     form.post(route("admin.series.vetos.store", props.data.series.id), {
@@ -120,7 +121,9 @@ function submit() {
                 v-for="map in data.maps.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 )"
-                :disabled="data.series.vetos.find((veto) => veto.map_id === map.id)"
+                :disabled="
+                    data.series.vetos.find((veto) => veto.map_id === map.id)
+                "
                 class="disabled:opacity-50 disabled:cursor-not-allowed"
                 :is="form.map_id === map.id ? PrimaryButton : SecondaryButton"
                 @click="form.map_id = map.id"

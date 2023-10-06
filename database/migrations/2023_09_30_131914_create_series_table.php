@@ -23,6 +23,8 @@ return new class extends Migration
             $table->smallInteger('team_b_score')->default(0);
             $table->smallInteger('rounds_played')->default(0);
             $table->text('server_token')->nullable();
+            $table->foreignId('terrorist_team_id')->nullable();
+            $table->foreignId('ct_team_id')->nullable();
             $table->string('type');
             $table->string('status')->index()->default(SeriesStatus::UPCOMING->value);
             $table->dateTime('start_date')->nullable();

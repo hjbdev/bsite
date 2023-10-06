@@ -19,7 +19,7 @@ class SeriesVetoController extends Controller
 
         $veto = $series->vetos()->create($request->validated());
 
-        if ($veto->type === 'pick') {
+        if ($veto->type === 'pick' || $veto->type === 'left-over') {
             if ($series->seriesMaps()->where('map_id', $veto->map_id)->doesntExist()) {
                 $series->seriesMaps()->create([
                     'map_id' => $veto->map_id,
@@ -28,7 +28,9 @@ class SeriesVetoController extends Controller
             }
         }
 
-        return redirect()->back();
+        session()->flash('message', 'veto added');
+
+        return redirect()->back()->with('veto', true);
     }
 
     /**

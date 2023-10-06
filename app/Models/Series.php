@@ -39,7 +39,7 @@ class Series extends Model
         static::creating(function ($series) {
             $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
         });
-        
+
         static::updating(function ($series) {
             $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
         });
@@ -81,8 +81,20 @@ class Series extends Model
         return $this->belongsTo(Team::class, 'team_b_id');
     }
 
+    public function terroristTeam(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'terrorist_team_id');
+    }
+
+    public function ctTeam(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'ct_team_id');
+    }
+
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
     }
+
+    // public function recalculateScores
 }

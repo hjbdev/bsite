@@ -5,6 +5,7 @@ import PublicLayout from "@/Layouts/PublicLayout.vue";
 import { computed, onMounted, ref } from "vue";
 import useEcho from "@/Composables/useEcho";
 import WeaponIcon from "@/Components/WeaponIcon.vue";
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: PublicLayout });
 
@@ -57,6 +58,8 @@ const seriesMaps = computed(() => {
 });
 </script>
 <template>
+    <Head :title="`${series.team_a.name} vs ${series.team_b.name} at ${series.event.name}`" />
+
     <Container class="space-y-6">
         <Card class="flex">
             <div class="flex items-center gap-3">
@@ -141,6 +144,12 @@ const seriesMaps = computed(() => {
                         class="absolute inset-0 bg-gradient-to-bl from-black/80 to-black/90 overflow-y-auto flex flex-col items-start gap-1 p-1"
                     >
                         <template v-for="log in logs">
+                            <div 
+                                v-if="log.type === 'Blinded'"
+                                class="flex gap-1 px-1 py-0.5 border-blue-800 border-2 rounded"
+                            >
+                                {{ log.data.throwerName }} blinded {{ log.data.victimName }} with a flashbang for {{ log.data.time }}s
+                            </div>
                             <div
                                 v-if="log.type === 'Kill'"
                                 :key="`log${log.id}`"
