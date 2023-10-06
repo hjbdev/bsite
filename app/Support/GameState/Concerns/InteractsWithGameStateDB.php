@@ -23,12 +23,15 @@ trait InteractsWithGameStateDB
 
         config()->set('database.connections.gameState-' . $this->stateKey, [
             'driver' => 'sqlite',
-            'database' => $databaseFile,
+            // 'database' => $databaseFile,
+            'database' => ':memory:',
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ]);
 
         $this->db = DB::connection('gameState-' . $this->stateKey);
+
+        $this->db->unprepared('PRAGMA journal_mode=WAL;');
 
         $this->db->unprepared("CREATE TABLE players (
             steamId TEXT PRIMARY KEY,
@@ -40,6 +43,8 @@ trait InteractsWithGameStateDB
             assists INTEGER DEFAULT 0,
             damage INTEGER DEFAULT 0 
         )");
+
+        $this->db->unprepared("CREATE INDEX players_steamid_index ON players (steamId)");
     }
 
     public function tearDown(): void
