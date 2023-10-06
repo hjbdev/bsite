@@ -34,7 +34,7 @@ class SeriesMapUpdated implements ShouldBroadcast
     {
         return [
             new Channel('series-maps-' . $this->seriesMapId),
-            new Channel('series-' . $this->seriesId)
+            new Channel('series-' . $this->seriesId),
         ];
     }
 }
