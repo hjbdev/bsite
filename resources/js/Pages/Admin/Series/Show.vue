@@ -159,7 +159,7 @@ const baseUrl = window.location.origin;
                     baseUrl === "http://localhost"
                         ? "http://192.168.5.137"
                         : baseUrl
-                }}/api/log-handler</code
+                }}/api/log-handler"</code
             >
         </Card>
     </Container>
