@@ -18,7 +18,7 @@ class SeriesUpdated implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public $seriesId
+        public int $seriesId
     )
     {
         //
