@@ -102,7 +102,12 @@ const seriesMaps = computed(() => {
                 <div span class="dark:text-zinc-500 text-zinc-200">
                     Best of {{ series.type.replace("bo", "") }}
                 </div>
-                <div class="text-2xl font-bold">
+                <div v-if="series.type === 'bo1' && seriesMaps.length" class="text-2xl font-bold">
+                    {{ seriesMaps[0].team_a_score }}
+                    <span class="dark:text-zinc-500 text-zinc-200">-</span>
+                    {{ seriesMaps[0].team_b_score }}
+                </div>
+                <div v-else class="text-2xl font-bold">
                     {{ series.team_a_score }}
                     <span class="dark:text-zinc-500 text-zinc-200">-</span>
                     {{ series.team_b_score }}
