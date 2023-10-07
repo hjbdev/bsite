@@ -8,7 +8,8 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
 <template>
     <SidebarLayout class="dark:text-white h-screen">
         <div
-            class="absolute inset-0 bg-cover z-0 blur-md [mask-image:linear-gradient(to_bottom_left,transparent_25%,rgba(0,0,0,0.25)_75%)]"
+            id="bg-image"
+            class="absolute inset-0 bg-cover z-0 blur-sm [mask-image:linear-gradient(to_bottom_left,transparent_25%,rgba(0,0,0,0.25)_75%)]"
             style="
                 background-image: url(&quot;https://stratbox.app/images/maps/ancient.jpg&quot;);
             "
