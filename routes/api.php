@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\LogHandler;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +29,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/search', [EventController::class, 'search'])->name('admin.events.search');
 });
 
-Route::withoutMiddleware('throttle')->post('log-handler', LogHandler::class);
+Route::withoutMiddleware(ThrottleRequests::class)->post('log-handler', LogHandler::class);
