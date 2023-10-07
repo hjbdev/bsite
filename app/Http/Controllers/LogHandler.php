@@ -215,7 +215,7 @@ class LogHandler extends Controller
             logger($e->getMessage());
             logger($e->getTraceAsString());
         } finally {
-            return response(200);
+            return response('', 200);
             // No matter what happens, we want to return a 200
             // Otherwise the server will keep trying to send the log
         }
