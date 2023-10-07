@@ -46,6 +46,8 @@ class CS2GameState
     {
         $steamIds = collect([]);
 
+        logger(json_encode($this->maps));
+
         foreach ($this->maps as $map => $mapData) {
             if ($mapData['players'] ?? false) {
                 foreach ($mapData['players'] as $player) {
