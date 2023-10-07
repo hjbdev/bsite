@@ -16,6 +16,7 @@ use CSLog\CS2\Models\TeamScored;
 use CSLog\CS2\Patterns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 class LogHandler extends Controller
 {
