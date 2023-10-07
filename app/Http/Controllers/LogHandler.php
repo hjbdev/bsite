@@ -9,6 +9,7 @@ use App\Models\Player;
 use App\Models\Series;
 use App\Models\SeriesMap;
 use App\Models\Team;
+use CSLog\CS2\Models\Kill;
 use CSLog\CS2\Models\MatchEnd;
 use CSLog\CS2\Models\MatchStatus;
 use CSLog\CS2\Models\SwitchTeam;
@@ -99,8 +100,41 @@ class LogHandler extends Controller
                     'data' => (array) $log,
                 ]);
 
+                if ($log instanceof Kill && $series) {
+                    if (!$series->terrorist_team_id || $series->ct_team_id) {
+                        $team = Team::whereHas('players', function ($query) use ($log) {
+                            $query->where('players.steam_id3', $log->killerSteamId);
+                            $query->whereNull('player_team.end_date');
+                        })->first(['id']);
+
+                        if ($team) {
+                            // We can now determine, based on this log, which team is which
+                            if ($team->id !== $series->team_a_id && $team->id !== $series->team_b_id) {
+                                // this is a problem.
+                                logger('We\'ve matched a player to a team that is not participating in this series.');
+                            } else {
+                                $isTeamA = $team->id === $series->team_a_id;
+
+                                if ($log->killerTeam === 'TERRORIST') {
+                                    // Associate the found team with T side
+                                    $series->terroristTeam()->associate($team);
+                                    // Associate the other team with the other side (CT)
+                                    $series->ctTeam()->associate($isTeamA ? $series->team_b_id : $series->team_a_id);
+                                } else {
+                                    $series->ctTeam()->associate($team);
+                                    $series->terroristTeam()->associate($isTeamA ? $series->team_b_id : $series->team_a_id);
+                                }
+                            }
+
+                            $series->save();
+                            Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                        }
+                    }
+                }
+
                 if ($log instanceof MatchStatus && $series) {
                     $series->rounds_played = $log->roundsPlayed;
+
                     $currentMap = $maps->firstWhere('name', $log->map);
 
                     if ($series->seriesMaps()->where('map_id', $currentMap->id)->doesntExist()) {
@@ -197,8 +231,8 @@ class LogHandler extends Controller
                         Cache::forget('series-map-' . $series->current_series_map_id);
 
                         $series->current_series_map_id = null;
-                        
-                        if (! $series->remainingMaps()) {
+
+                        if (!$series->remainingMaps()) {
                             $series->status = SeriesStatus::FINISHED;
                             $series->save();
                             Cache::forget('series-' . $series->server_token);
@@ -206,7 +240,6 @@ class LogHandler extends Controller
                             $series->save();
                             Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                         }
-
                     }
                 }
             });
