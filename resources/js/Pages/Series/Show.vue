@@ -2,10 +2,11 @@
 import { Container, HH1, SecondaryButton, HH2, Card } from "@hjbdev/ui";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import useEcho from "@/Composables/useEcho";
 import WeaponIcon from "@/Components/WeaponIcon.vue";
 import { Head } from "@inertiajs/vue3";
+import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 
 defineOptions({ layout: PublicLayout });
 
@@ -25,6 +26,18 @@ const selectedSnapshotMap = ref();
 const currentMap = ref(
     props.series?.current_series_map?.map?.title?.toLowerCase(),
 );
+
+onMounted(() => {
+    document.getElementById(
+        "bg-image",
+    ).style.backgroundImage = `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
+});
+
+watch(currentMap, () => {
+    document.getElementById(
+        "bg-image",
+    ).style.backgroundImage = `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
+});
 
 if (Object.keys(props.snapshot?.maps ?? {})[0] ?? null) {
     selectedSnapshotMap.value = Object.keys(props.snapshot?.maps ?? {})[0];
@@ -68,12 +81,18 @@ const seriesMaps = computed(() => {
 });
 </script>
 <template>
-    <Head :title="`${series.team_a.name} vs ${series.team_b.name} at ${series.event.name}`" />
+    <Head
+        :title="`${series.team_a.name} vs ${series.team_b.name} at ${series.event.name}`"
+    />
 
     <Container class="space-y-6">
-        <Card class="flex">
+        <FrostedGlassCard class="flex">
             <div class="flex items-center gap-3">
-                <img v-if="series.team_a.logo" :src="series.team_a.logo" class="h-10 w-10" />
+                <img
+                    v-if="series.team_a.logo"
+                    :src="series.team_a.logo"
+                    class="h-10 w-10"
+                />
                 <QuestionMarkCircleIcon v-else class="h-10 w-10" />
                 <h4 class="text-3xl font-medium tracking-tighter">
                     {{ series.team_a.name }}
@@ -93,10 +112,14 @@ const seriesMaps = computed(() => {
                 <h4 class="text-3xl font-medium tracking-tighter">
                     {{ series.team_b.name }}
                 </h4>
-                <img v-if="series.team_b.logo" :src="series.team_b.logo" class="h-10 w-10" />
+                <img
+                    v-if="series.team_b.logo"
+                    :src="series.team_b.logo"
+                    class="h-10 w-10"
+                />
                 <QuestionMarkCircleIcon v-else class="h-10 w-10" />
             </div>
-        </Card>
+        </FrostedGlassCard>
         <HH2>Maps</HH2>
         <div
             class="grid gap-6"
@@ -107,14 +130,19 @@ const seriesMaps = computed(() => {
                 'lg:grid-cols-1': series.type === 'bo1',
             }"
         >
-            <div
+            <FrostedGlassCard
                 v-for="seriesMap in seriesMaps"
-                class="relative overflow-hidden rounded-lg h-48"
+                flush
+                class="relative overflow-hidden h-48 group"
             >
                 <img
                     v-if="seriesMap.map?.title !== 'TBD'"
-                    :src="series.type === 'bo1' ? `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}.jpg` : `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}_thumb.jpg`"
-                    class="w-full h-full object-cover"
+                    :src="
+                        series.type === 'bo1'
+                            ? `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}.jpg`
+                            : `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}_thumb.jpg`
+                    "
+                    class="w-full h-full object-cover opacity-25 transition-all group-hover:opacity-75"
                 />
                 <div
                     class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-6 text-lg justify-between"
@@ -139,26 +167,28 @@ const seriesMaps = computed(() => {
                         {{ seriesMap.status }}
                     </div>
                 </div>
-            </div>
+            </FrostedGlassCard>
         </div>
         <div class="grid lg:grid-cols-2 gap-6">
             <div>
                 <HH2 class="mb-6">Match Feed</HH2>
-                <div
-                    class="h-64 relative text-white w-full bg-cover bg-center rounded-md overflow-hidden"
-                    :style="{
-                        backgroundImage: `url(https://stratbox.app/images/maps/${series?.current_series_map?.map?.title?.toLowerCase()}.jpg)`,
-                    }"
-                >
+                <FrostedGlassCard class="h-64 relative">
+                    <!-- <img
+                        :src="`https://stratbox.app/images/maps/${series?.current_series_map?.map?.title?.toLowerCase()}.jpg`"
+                        alt=""
+                        class="absolute inset-0 backdrop-blur-2xl"
+                    /> -->
                     <div
-                        class="absolute inset-0 bg-gradient-to-bl from-black/80 to-black/90 overflow-y-auto flex flex-col items-start gap-1 p-1"
+                        class="absolute inset-0 overflow-y-auto flex flex-col items-start gap-1 p-3"
                     >
                         <template v-for="log in logs">
-                            <div 
+                            <div
                                 v-if="log.type === 'Blinded'"
                                 class="flex gap-1 px-1 py-0.5 border-blue-800 border-2 rounded"
                             >
-                                {{ log.data.throwerName }} blinded {{ log.data.victimName }} with a flashbang for {{ log.data.time }}s
+                                {{ log.data.throwerName }} blinded
+                                {{ log.data.victimName }} with a flashbang for
+                                {{ log.data.time }}s
                             </div>
                             <div
                                 v-if="log.type === 'Kill'"
@@ -205,11 +235,11 @@ const seriesMaps = computed(() => {
                             </div>
                         </template>
                     </div>
-                </div>
+                </FrostedGlassCard>
             </div>
             <div>
                 <HH2 class="mb-6">Streams</HH2>
-                <Card flush class="overflow-hidden">
+                <FrostedGlassCard flush class="overflow-hidden">
                     <ul>
                         <li
                             class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition"
@@ -222,22 +252,24 @@ const seriesMaps = computed(() => {
                             EPICLAN1
                         </li>
                     </ul>
-                </Card>
+                </FrostedGlassCard>
             </div>
         </div>
 
         <HH2>Scoreboard</HH2>
-        <div>
-            <SecondaryButton
-                v-for="mapName in Object.keys(snapshot?.maps ?? {})"
-                class="mr-1 last:mr-0"
-                :class="{
-                    '!bg-zinc-600': selectedSnapshotMap === mapName,
-                }"
-                @click="selectedSnapshotMap = mapName"
-            >
-                {{ mapName }}
-            </SecondaryButton>
+        <FrostedGlassCard flush>
+            <div class="p-2">
+                <SecondaryButton
+                    v-for="mapName in Object.keys(snapshot?.maps ?? {})"
+                    class="mr-1 last:mr-0"
+                    :class="{
+                        '!bg-zinc-600': selectedSnapshotMap === mapName,
+                    }"
+                    @click="selectedSnapshotMap = mapName"
+                >
+                    {{ mapName }}
+                </SecondaryButton>
+            </div>
             <table
                 v-if="snapshot.maps[selectedSnapshotMap]?.players"
                 class="dark:text-white w-full"
@@ -256,7 +288,7 @@ const seriesMaps = computed(() => {
                         v-for="player in snapshot.maps[
                             selectedSnapshotMap
                         ].players.filter((p) => p.team === 'TERRORIST')"
-                        class="bg-red-950"
+                        class="bg-red-600/20"
                     >
                         <td class="p-2">{{ player.name }}</td>
                         <td class="p-2 text-right">{{ player.kills }}</td>
@@ -273,7 +305,7 @@ const seriesMaps = computed(() => {
                         </td>
                     </tr>
                 </tbody>
-                <tbody class="bg-blue-950">
+                <tbody class="bg-blue-600/20">
                     <tr
                         v-for="player in snapshot.maps[
                             selectedSnapshotMap
@@ -295,6 +327,6 @@ const seriesMaps = computed(() => {
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </FrostedGlassCard>
     </Container>
 </template>
