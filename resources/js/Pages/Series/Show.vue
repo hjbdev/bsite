@@ -5,7 +5,7 @@ import PublicLayout from "@/Layouts/PublicLayout.vue";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import useEcho from "@/Composables/useEcho";
 import WeaponIcon from "@/Components/WeaponIcon.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 
 defineOptions({ layout: PublicLayout });
