@@ -165,7 +165,7 @@ class CS2GameState
 
     public function handleMatchStatus(Log $log): void
     {
-        logger('MATCHSTATUS : logDataRoundsPlayed ' . $log->data['roundsPlayed'] . ' roundsPlayed ' . $this->roundsPlayed . ' currentMap ' . $this->currentMap);
+        // logger('MATCHSTATUS : logDataRoundsPlayed ' . $log->data['roundsPlayed'] . ' roundsPlayed ' . $this->roundsPlayed . ' currentMap ' . $this->currentMap);
 
         if ($log->data['roundsPlayed'] === 0) {
             if ($log->data['map']) {
