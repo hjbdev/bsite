@@ -3,9 +3,7 @@
 use App\Http\Controllers\Admin\PlayerController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\LogHandler;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,5 +26,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/players/search', [PlayerController::class, 'search'])->name('admin.players.search');
     Route::get('/events/search', [EventController::class, 'search'])->name('admin.events.search');
 });
-
-Route::withoutMiddleware(ThrottleRequests::class)->post('log-handler', LogHandler::class);
