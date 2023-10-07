@@ -42,7 +42,7 @@ class SeriesController extends Controller
         return inertia('Series/Show', [
             'series' => $series,
             'snapshot' => $gameState,
-            'logs' => $series->logs()->latest()->whereIn('type', Log::BROADCASTABLE_EVENTS)->limit(10)->get(),
+            'logs' => $series->logs()->latest()->whereIn('type', Log::BROADCASTABLE_EVENTS)->limit(20)->get(),
         ]);
     }
 }

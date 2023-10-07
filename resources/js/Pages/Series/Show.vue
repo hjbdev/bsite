@@ -186,16 +186,50 @@ const seriesMaps = computed(() => {
                                 v-if="log.type === 'Blinded'"
                                 class="flex gap-1 px-1 py-0.5 border-blue-800 border-2 rounded"
                             >
-                                {{ log.data.throwerName }} blinded
-                                {{ log.data.victimName }} with a flashbang for
-                                {{ log.data.time }}s
+                                <span
+                                    :class="{
+                                        'text-orange-400':
+                                            log.data.throwerTeam ===
+                                            'TERRORIST',
+                                        'text-blue-400':
+                                            log.data.throwerTeam === 'CT',
+                                    }"
+                                >
+                                    {{ log.data.throwerName }}
+                                </span>
+                                blinded
+                                <Suspense>
+                                    <WeaponIcon
+                                        weapon-name="flashbang"
+                                        class="h-6"
+                                    />
+                                </Suspense>
+                                <span
+                                    :class="{
+                                        'text-orange-400':
+                                            log.data.victimTeam === 'TERRORIST',
+                                        'text-blue-400':
+                                            log.data.victimTeam === 'CT',
+                                    }"
+                                    >{{ log.data.victimName }}</span
+                                >
+                                for {{ log.data.time }}s
                             </div>
                             <div
                                 v-if="log.type === 'Kill'"
                                 :key="`log${log.id}`"
                                 class="flex gap-1 px-1 py-0.5 border-red-800 border-2 rounded"
                             >
-                                {{ log.data.killerName }}
+                                <span
+                                    :class="{
+                                        'text-orange-400':
+                                            log.data.killerTeam === 'TERRORIST',
+                                        'text-blue-400':
+                                            log.data.killerTeam === 'CT',
+                                    }"
+                                >
+                                    {{ log.data.killerName }}
+                                </span>
                                 <Suspense>
                                     <WeaponIcon
                                         :weapon-name="log.data.weapon"
@@ -207,7 +241,16 @@ const seriesMaps = computed(() => {
                                     class="invert h-5"
                                     src="../../../assets/headshot_icon.webp"
                                 />
-                                {{ log.data.killedName }}
+                                <span
+                                    :class="{
+                                        'text-orange-400':
+                                            log.data.killedTeam === 'TERRORIST',
+                                        'text-blue-400':
+                                            log.data.killedTeam === 'CT',
+                                    }"
+                                >
+                                    {{ log.data.killedName }}
+                                </span>
                             </div>
                             <div
                                 v-if="log.type === 'RoundEnd'"
