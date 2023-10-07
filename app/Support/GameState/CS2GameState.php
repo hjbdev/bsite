@@ -86,7 +86,7 @@ class CS2GameState
 
         $logs->groupBy('data.map')->each(function ($logs, $map) use (&$minIds) {
             $minIds[] = [
-                'minId' => $logs->first()?->id,
+                'minId' => $logs->first()?->id ?? 1,
                 'map' => $map,
             ];
         });
