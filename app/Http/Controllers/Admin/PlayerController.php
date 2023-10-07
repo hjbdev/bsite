@@ -30,6 +30,7 @@ class PlayerController extends Controller
                 return [
                     'id' => $player->id,
                     'name' => $player->name,
+                    'steam_id64' => $player->steam_id64,
                 ];
             });
     }
