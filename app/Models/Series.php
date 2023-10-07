@@ -46,7 +46,7 @@ class Series extends Model
         });
 
         static::updated(function ($series) {
-            event(new SeriesUpdated($series->id));
+            broadcast(new SeriesUpdated($series->id));
         });
     }
 
