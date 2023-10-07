@@ -96,6 +96,16 @@ function submit() {
                                     v.target.value)
                         "
                     />
+                    <Input
+                        type="date"
+                        label="Leave Date"
+                        :value="form.players[playerIndex]?.pivot?.end_date"
+                        @input="
+                            (v) =>
+                                (form.players[playerIndex].pivot.end_date =
+                                    v.target.value)
+                        "
+                    />
                     <DangerButton
                         class="mb-0.5"
                         @click="form.players.splice(playerIndex, 1)"

@@ -25,10 +25,7 @@ class LogHandler extends Controller
      */
     public function __invoke(Request $request)
     {
-        // logger(json_encode($request->headers->all()));
         try {
-            // logger('Log Received');
-
             if (!$serverInstanceToken = $request->header('x-server-instance-token')) {
                 logger('No Instance token ' . $request->ip());
                 abort(403);
@@ -70,11 +67,13 @@ class LogHandler extends Controller
                             ->where(function ($query) use ($logSteamId) {
                                 $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
                                     $teamAQuery->whereHas('players', function ($teamAPlayerQuery) use ($logSteamId) {
+                                        $teamAPlayerQuery->whereNull('player_team.end_date');
                                         $teamAPlayerQuery->where('steam_id3', $logSteamId);
                                     });
                                 });
                                 $query->orWhereHas('teamB', function ($teamBQuery) use ($logSteamId) {
                                     $teamBQuery->whereHas('players', function ($teamBPlayerQuery) use ($logSteamId) {
+                                        $teamBPlayerQuery->whereNull('player_team.end_date');
                                         $teamBPlayerQuery->where('steam_id3', $logSteamId);
                                     });
                                 });
