@@ -3,8 +3,10 @@
 namespace App\Support\GameState;
 
 use App\Models\Log;
+use App\Models\Map;
 use App\Models\Player;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CS2GameState
@@ -81,8 +83,31 @@ class CS2GameState
     public function analyseLogs(): void
     {
         // We need to get the LAST MatchStatus event for each map, then we can use these to limit the queries.
-        $logs = Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->roundsPlayed', 0)->orderBy('id', 'desc')->get();
+        $logs = Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->roundsPlayed', 0)->distinct('data->map')->orderBy('id', 'desc')->get();
         $minIds = [];
+
+        $maps = null;
+
+        if (Cache::has('maps')) {
+            $maps = Cache::get('maps');
+        } else {
+            $maps = Map::get();
+            Cache::put('maps', $maps, Map::CACHE_TTL);
+        }
+
+        foreach ($maps as $map) {
+            if ($logs->where('data.map', $map->name)->count() > 0) {
+                $minIds[] = [
+                    'minId' => $logs->where('data.map', $map->name)->first()?->id ?? 0,
+                    'map' => $map->name,
+                ];
+            } else if (Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->map', $map->name)->exists()) {
+                $minIds[] = [
+                    'minId' => 0,
+                    'map' => $map->name
+                ];
+            }
+        }
 
         $logs->groupBy('data.map')->each(function ($logs, $map) use (&$minIds) {
             $minIds[] = [
