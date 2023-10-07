@@ -32,7 +32,7 @@ class SeriesUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('series-' . $this->seriesId),
+            new Channel('series.' . $this->seriesId),
         ];
     }
 }
