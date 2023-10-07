@@ -47,8 +47,10 @@ class CS2GameState
         $steamIds = collect([]);
 
         foreach ($this->maps as $map => $mapData) {
-            foreach ($mapData['players'] as $player) {
-                $steamIds->push($player['steamId']);
+            if ($mapData['players'] ?? false) {
+                foreach ($mapData['players'] as $player) {
+                    $steamIds->push($player['steamId']);
+                }
             }
         }
 
