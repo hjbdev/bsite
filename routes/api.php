@@ -28,4 +28,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/search', [EventController::class, 'search'])->name('admin.events.search');
 });
 
-Route::middleware('throttle:3000,0.01')->post('log-handler', LogHandler::class);
+Route::withoutMiddleware('throttle')->post('log-handler', LogHandler::class);
