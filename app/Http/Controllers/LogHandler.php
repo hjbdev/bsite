@@ -113,7 +113,7 @@ class LogHandler extends Controller
                     $seriesMap = $series->seriesMaps()->updateOrCreate([
                         'map_id' => $currentMap->id,
                     ], [
-                        'status'       => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
+                        'status' => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
 
                     if ($seriesMap->wasRecentlyCreated) {
