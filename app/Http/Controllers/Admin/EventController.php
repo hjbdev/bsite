@@ -83,6 +83,8 @@ class EventController extends Controller
                 ->toMediaCollection('logo');
         }
 
+        $event->save();
+
         return redirect()->route('admin.events.show', $event->id);
     }
 
