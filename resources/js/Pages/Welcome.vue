@@ -1,7 +1,7 @@
 <script setup>
 import { Container, HH2 } from "@hjbdev/ui";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 
 defineOptions({ layout: PublicLayout });
 
@@ -25,6 +25,7 @@ defineProps({
                     'hidden sm:block': eventIndex > 1,
                 }"
             >
+                <Link :href="route('events.show', event.id)" class="absolute inset-0 z-10"></Link>
                 <div
                     class="absolute inset-0 bg-black/20 transition group-hover:bg-black/50 flex items-center justify-center"
                 >

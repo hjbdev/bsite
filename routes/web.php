@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\SeriesSeriesMapController;
 use App\Http\Controllers\Admin\SeriesVetoController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FinishedSeriesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeriesController;
 use App\Models\Event;
@@ -33,8 +35,17 @@ Route::get('/', function () {
 });
 
 Route::resource('matches', SeriesController::class)
+    ->only('index', 'show')
     ->name('index', 'matches.index')
     ->name('show', 'matches.show');
+
+Route::resource('results', FinishedSeriesController::class)
+    ->only('index')
+    ->name('index', 'results.index');
+
+Route::resource('events', EventController::class)
+    ->only('index', 'show')
+    ->name('show', 'events.show');
 
 Route::get('matches/{match}/{slug}', [SeriesController::class, 'show'])
     ->name('matches.show.seo');

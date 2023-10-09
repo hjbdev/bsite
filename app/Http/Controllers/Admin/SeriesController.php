@@ -2,33 +2,38 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Filters\SeriesSearchFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Series\UpdateSeriesRequest;
 use App\Http\Requests\Series\StoreSeriesRequest;
+use App\Models\Event;
 use App\Models\Map;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SeriesController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Series::with('teamA', 'teamB')->orderByDesc('id');
+        $query = QueryBuilder::for(Series::class)->with('teamA', 'teamB')
+            ->orderByDesc('id')
+            ->allowedFilters([
+                AllowedFilter::custom('search', new SeriesSearchFilter),
+                AllowedFilter::exact('event_id'),
+            ]);
 
-        if ($request->has('search')) {
-            $query = $query->where(function ($q) use ($request) {
-                $q->whereHas('teamA', function ($q) use ($request) {
-                    $q->where('name', 'like', "%{$request->search}%");
-                });
-                $q->orWhereHas('teamB', function ($q) use ($request) {
-                    $q->where('name', 'like', "%{$request->search}%");
-                });
-            });
+        $event = null;
+
+        if ($request->has('filter.event_id')) {
+            $event = Event::findOrFail($request->input('filter.event_id'))->first();
         }
 
         return inertia('Admin/Series/Index', [
             'series' => $query->paginate(12),
+            'event' => $event
         ]);
     }
 

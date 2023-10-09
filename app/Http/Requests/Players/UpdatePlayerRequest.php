@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\Teams;
+namespace App\Http\Requests\Players;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
-class UpdateTeamRequest extends FormRequest
+class UpdatePlayerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,12 @@ class UpdateTeamRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'players' => ['required', 'array'],
-            'players.*.id' => ['exists:players,id'],
-            'logo' => ['nullable', 'sometimes', File::types(['png', 'jpg'])->max(2048)],
+            'full_name' => ['nullable', 'string', 'max:255'],
+            'nationality' => ['nullable', 'string_or_array'],
+            'steam_id3' => ['required', 'string', 'max:255'],
+            'steam_id64' => ['nullable', 'string', 'max:255'],
+            'birthday' => ['nullable', 'date'],
+            'picture' => ['nullable', File::types(['png', 'jpg'])->max(5192)],
         ];
     }
 }
