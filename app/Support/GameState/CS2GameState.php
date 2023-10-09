@@ -16,8 +16,11 @@ class CS2GameState
     public const CACHE_TTL = 60 * 30;
 
     public ?string $currentMap = null;
+
     public int $roundsPlayed = 0;
+
     public array $maps = [];
+
     public array $players = [];
 
     // Team A = 1; Team 1 Starts CT
@@ -115,10 +118,10 @@ class CS2GameState
                     'minId' => $logs->where('data.map', $map->name)->first()?->id ?? 0,
                     'map' => $map->name,
                 ];
-            } else if (Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->map', $map->name)->exists()) {
+            } elseif (Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->map', $map->name)->exists()) {
                 $minIds[] = [
                     'minId' => 0,
-                    'map' => $map->name
+                    'map' => $map->name,
                 ];
             }
         }
@@ -154,8 +157,8 @@ class CS2GameState
 
             $q->chunk(5000, function (Collection $logs) {
                 foreach ($logs as $log) {
-                    if (method_exists($this, 'handle' . $log->type)) {
-                        $this->{'handle' . $log->type}($log);
+                    if (method_exists($this, 'handle'.$log->type)) {
+                        $this->{'handle'.$log->type}($log);
                     }
                 }
             });

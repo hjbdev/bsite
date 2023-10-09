@@ -23,7 +23,7 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        if (!$slug) {
+        if (! $slug) {
             return redirect()->route('events.show.seo', [
                 'match' => $event->id,
                 'slug' => $event->slug,

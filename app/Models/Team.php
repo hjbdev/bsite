@@ -44,7 +44,8 @@ class Team extends Model implements HasMedia
     public function logo(): Attribute
     {
         $media = $this->getMedia('logo');
-        return new Attribute(fn() => count($media) ? $media[0]?->getUrl('preview') : null);
+
+        return new Attribute(fn () => count($media) ? $media[0]?->getUrl('preview') : null);
     }
 
     public function seriesA(): HasMany

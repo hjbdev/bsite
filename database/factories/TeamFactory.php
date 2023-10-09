@@ -58,12 +58,12 @@ class TeamFactory extends Factory
             'Lucid Dream',
         ];
 
-        $name = "";
+        $name = '';
 
         $disambiguation = $this->faker->numberBetween(1, 9);
 
         $name .= $this->faker->randomElement($organisations);
-        $name .= " " . $disambiguation;
+        $name .= ' '.$disambiguation;
 
         return [
             'name' => $name,

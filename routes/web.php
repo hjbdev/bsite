@@ -53,7 +53,6 @@ Route::resource('events', EventController::class)
 Route::get('events/{match}/{slug}', [EventController::class, 'show'])
     ->name('events.show.seo');
 
-
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return inertia('Dashboard');
@@ -111,4 +110,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

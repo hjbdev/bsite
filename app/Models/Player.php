@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Manipulations;
@@ -24,13 +23,15 @@ class Player extends Model implements HasMedia
         parent::boot();
 
         $convertSteamId = function (Player $player): void {
-            if (!extension_loaded('gmp')) return;
+            if (! extension_loaded('gmp')) {
+                return;
+            }
             try {
                 $steamId = new SteamID($player->steam_id64);
                 $player->steam_id3 = $steamId->RenderSteam3();
             } catch (\Exception $e) {
                 $player->steam_id3 = null;
-                logger("Failed to convert SteamID for " . $player->name);
+                logger('Failed to convert SteamID for '.$player->name);
             }
         };
 

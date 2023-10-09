@@ -23,8 +23,8 @@ class EventFactory extends Factory
 
         $name = '';
 
-        $name .= $this->faker->randomElement($organisers) . ' ';
-        $name .= $this->faker->randomElement($events) . ' ';
+        $name .= $this->faker->randomElement($organisers).' ';
+        $name .= $this->faker->randomElement($events).' ';
         $name .= $this->faker->randomElement([...$distinguishers, $this->faker->randomNumber(2)]);
 
         $startDate = $this->faker->dateTimeBetween('-1 year', '+1 year');

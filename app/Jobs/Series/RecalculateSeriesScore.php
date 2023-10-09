@@ -5,7 +5,6 @@ namespace App\Jobs\Series;
 use App\Enums\SeriesMapStatus;
 use App\Models\Series;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,8 +19,7 @@ class RecalculateSeriesScore implements ShouldQueue
      */
     public function __construct(
         public int $seriesId
-    )
-    {
+    ) {
         //
     }
 

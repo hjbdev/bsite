@@ -22,7 +22,7 @@ class StoreSeriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event.id' => ['nullable', 'exists:events,id'], #
+            'event.id' => ['nullable', 'exists:events,id'], //
             'team_a.id' => ['required', 'exists:teams,id'],
             'team_b.id' => ['required', 'exists:teams,id'],
             'team_a_score' => ['required', 'integer', 'min:0'],

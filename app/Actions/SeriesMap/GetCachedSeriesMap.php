@@ -10,8 +10,8 @@ class GetCachedSeriesMap
 {
     public function execute($id, $cacheKey = null): SeriesMap
     {
-        if (!$cacheKey) {
-            $cacheKey = 'series-map-' . $id;
+        if (! $cacheKey) {
+            $cacheKey = 'series-map-'.$id;
         }
 
         return Cache::remember(

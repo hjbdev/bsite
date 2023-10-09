@@ -2,11 +2,8 @@
 
 namespace App\Events\SeriesMaps;
 
-use App\Models\SeriesMap;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,7 +11,6 @@ use Illuminate\Queue\SerializesModels;
 class SeriesMapUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
 
     /**
      * Create a new event instance.
@@ -32,8 +28,8 @@ class SeriesMapUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('series.' . $this->seriesId),
-            new Channel('series-maps.' . $this->seriesMapId),
+            new Channel('series.'.$this->seriesId),
+            new Channel('series-maps.'.$this->seriesMapId),
         ];
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Log;
 use App\Models\Series;
 use App\Support\GameState\CS2GameState;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class SeriesController extends Controller
@@ -14,13 +13,13 @@ class SeriesController extends Controller
     {
         return inertia('Series/Index', [
             'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps')->where('start_date', '>', now()->startOfDay())->orderBy('start_date')->paginate(12),
-            'title' => 'Matches'
+            'title' => 'Matches',
         ]);
     }
 
     public function show(string $id, string $slug = null)
     {
-        if (!$slug) {
+        if (! $slug) {
             $series = Series::with('teamA', 'teamB', 'event')->findOrFail($id);
 
             return redirect()->route('matches.show.seo', [
@@ -31,13 +30,13 @@ class SeriesController extends Controller
 
         $gameState = null;
 
-        $series =  Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'currentSeriesMap.map')->findOrFail($id);
+        $series = Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'currentSeriesMap.map')->findOrFail($id);
 
-        if (Cache::has('series-' . $series->id . '-game-state')) {
-            $gameState = Cache::get('series-' . $series->id . '-game-state');
+        if (Cache::has('series-'.$series->id.'-game-state')) {
+            $gameState = Cache::get('series-'.$series->id.'-game-state');
         } else {
             $gameState = (new CS2GameState($id))->get();
-            Cache::put('series-' . $series->id . '-game-state', $gameState, CS2GameState::CACHE_TTL);
+            Cache::put('series-'.$series->id.'-game-state', $gameState, CS2GameState::CACHE_TTL);
         }
 
         return inertia('Series/Show', [

@@ -38,11 +38,11 @@ class Series extends Model
         parent::boot();
 
         static::creating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
+            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB->name)->slug().'-'.str($series->event->name)->slug();
         });
 
         static::updating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug() . '-vs-' . str($series->teamB->name)->slug() . '-' . str($series->event->name)->slug();
+            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB->name)->slug().'-'.str($series->event->name)->slug();
         });
 
         static::updated(function ($series) {
@@ -73,6 +73,7 @@ class Series extends Model
     public function remainingMaps(): int
     {
         $mapCount = intval((string) str($this->type)->after('bo'));
+
         return $mapCount - $this->seriesMaps()->whereIn('status', [SeriesMapStatus::FINISHED, SeriesMapStatus::ONGOING])->count();
     }
 

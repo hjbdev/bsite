@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\Logs\LogCreated;
 use App\Jobs\Series\GenerateSeriesSnapshot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +11,7 @@ class Log extends Model
     use HasFactory;
 
     public const BROADCASTABLE_EVENTS = [
-        'Kill', 'RoundEnd', 'MatchStatus', 'BombPlanting', 'Blinded', 'BombDefusing'
+        'Kill', 'RoundEnd', 'MatchStatus', 'BombPlanting', 'Blinded', 'BombDefusing',
     ];
 
     protected $fillable = [

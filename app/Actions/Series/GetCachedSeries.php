@@ -9,8 +9,8 @@ class GetCachedSeries
 {
     public function execute($id, $cacheKey = null): Series
     {
-        if (!$cacheKey) {
-            $cacheKey = 'series-' . $id;
+        if (! $cacheKey) {
+            $cacheKey = 'series-'.$id;
         }
 
         return Cache::remember(
