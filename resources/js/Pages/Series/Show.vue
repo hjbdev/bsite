@@ -1,10 +1,9 @@
 <script setup>
-import { Container, HH1, SecondaryButton, HH2, Card } from "@hjbdev/ui";
+import { Container, SecondaryButton, HH2 } from "@hjbdev/ui";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import useEcho from "@/Composables/useEcho";
-import WeaponIcon from "@/Components/WeaponIcon.vue";
 import { Head, router } from "@inertiajs/vue3";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import MatchFeed from "@/Components/Series/MatchFeed.vue";
@@ -110,7 +109,7 @@ const seriesMaps = computed(() => {
     />
 
     <Container class="space-y-6">
-        <FrostedGlassCard class="flex">
+        <FrostedGlassCard class="flex flex-wrap sm:flex-nowrap">
             <div class="flex items-center gap-3">
                 <img
                     v-if="series.team_a.logo"
@@ -118,11 +117,11 @@ const seriesMaps = computed(() => {
                     class="h-10 w-10"
                 />
                 <QuestionMarkCircleIcon v-else class="h-10 w-10" />
-                <h4 class="text-3xl font-medium tracking-tighter">
+                <h4 class="text-xl sm:text-3xl font-medium tracking-tighter">
                     {{ series.team_a.name }}
                 </h4>
             </div>
-            <div class="mx-auto text-center">
+            <div class="ml-auto sm:mx-auto sm:text-center">
                 <div span class="dark:text-zinc-500 text-zinc-200">
                     Best of {{ series.type.replace("bo", "") }}
                 </div>
@@ -140,8 +139,8 @@ const seriesMaps = computed(() => {
                     {{ series.team_b_score }}
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <h4 class="text-3xl font-medium tracking-tighter">
+            <div class="flex items-center gap-3 w-full justify-end sm:justify-start sm:w-auto flex-row-reverse sm:flex-row">
+                <h4 class="text-xl sm:text-3xl font-medium tracking-tighter">
                     {{ series.team_b.name }}
                 </h4>
                 <img
