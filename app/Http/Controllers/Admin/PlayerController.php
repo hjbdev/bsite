@@ -42,6 +42,11 @@ class PlayerController extends Controller
             'nationality' => $request->nationality['id'] ?? $request->nationality ?? null,
         ]);
 
+        if ($request->has('picture') && $request->file('picture')) {
+            $player->addMediaFromRequest('picture')
+                ->toMediaCollection('picture');
+        }
+
         return redirect()->route('admin.players.show', $player);
     }
 
@@ -60,6 +65,11 @@ class PlayerController extends Controller
             ...$request->validated(),
             'nationality' => $request->nationality['id'] ?? $request->nationality ?? null,
         ]);
+
+        if ($request->has('picture') && $request->file('picture')) {
+            $player->addMediaFromRequest('picture')
+                ->toMediaCollection('picture');
+        }
 
         return redirect()->route('admin.players.show', $player);
     }
