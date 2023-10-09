@@ -2,9 +2,11 @@
 
 namespace App\Support\GameState;
 
+use App\Models\Event;
 use App\Models\Log;
 use App\Models\Map;
 use App\Models\Player;
+use App\Models\Series;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -87,7 +89,15 @@ class CS2GameState
     public function analyseLogs(): void
     {
         // We need to get the LAST MatchStatus event for each map, then we can use these to limit the queries.
-        $logs = Log::where('series_id', $this->seriesId)->where('type', 'MatchStatus')->where('data->roundsPlayed', 0)->distinct('data->map')->orderBy('id', 'desc')->get();
+        $series = Series::with('event')->findOrFail($this->seriesId);
+        $logs = Log::where('series_id', $this->seriesId)
+            ->where('created_at', '<', now()->subSeconds($series->event->delay))
+            ->where('type', 'MatchStatus')
+            ->where('data->roundsPlayed', 0)
+            ->distinct('data->map')
+            ->orderBy('id', 'desc')
+            ->get();
+
         $minIds = [];
 
         $maps = null;
@@ -129,11 +139,12 @@ class CS2GameState
             }
 
             // Find the first MatchEnd event after this MatchStatus
-            if ($matchEnd = Log::where('type', 'MatchEnd')->where('series_id', $this->seriesId)->where('id', '>', $map['minId'])->first()) {
+            if ($matchEnd = Log::where('type', 'MatchEnd')->where('created_at', '<', now()->subSeconds($series->event->delay))->where('series_id', $this->seriesId)->where('id', '>', $map['minId'])->first()) {
                 $maxId = $matchEnd->id;
             }
 
             $q = Log::where('series_id', $this->seriesId)
+                ->where('created_at', '<', now()->subSeconds($series->event->delay)) // integrity!
                 ->where('id', '>=', $map['minId'])
                 ->orderBy('id', 'asc');
 
