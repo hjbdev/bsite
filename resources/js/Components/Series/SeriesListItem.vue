@@ -55,8 +55,56 @@ function getDate(date) {
             </h4>
         </div>
         <div class="flex flex-col gap-2 w-16">
-            <div>{{ series.team_a_score }}</div>
-            <div>{{ series.team_b_score }}</div>
+            <template
+                v-if="series.type === 'bo1' && series.series_maps?.length"
+            >
+                <div
+                    :class="{
+                        'text-green-500':
+                            series.series_maps[0].team_a_score >
+                            series.series_maps[0].team_b_score,
+                        'text-red-500':
+                            series.series_maps[0].team_a_score <
+                            series.series_maps[0].team_b_score,
+                    }"
+                >
+                    {{ series.series_maps[0].team_a_score }}
+                </div>
+                <div
+                    :class="{
+                        'text-green-500':
+                            series.series_maps[0].team_a_score <
+                            series.series_maps[0].team_b_score,
+                        'text-red-500':
+                            series.series_maps[0].team_a_score >
+                            series.series_maps[0].team_b_score,
+                    }"
+                >
+                    {{ series.series_maps[0].team_b_score }}
+                </div>
+            </template>
+            <template v-else>
+                <div
+                    :class="{
+                        'text-green-500':
+                            series.team_a_score > series.team_b_score,
+                        'text-red-500':
+                            series.team_a_score < series.team_b_score,
+                    }"
+                >
+                    {{ series.team_a_score }}
+                </div>
+                <div
+                    :class="{
+                        'text-green-500':
+                            series.team_a_score < series.team_b_score,
+                        'text-red-500':
+                            series.team_a_score > series.team_b_score,
+                    }"
+                >
+                    {{ series.team_b_score }}
+                </div>
+            </template>
         </div>
         <div v-if="series.event">{{ series.event.name }}</div>
     </Link>

@@ -31,7 +31,7 @@ class EventController extends Controller
 
         return inertia('Events/Show', [
             'event' => $event,
-            'series' => $event->series()->orderBy('start_date', 'asc')->with('teamA', 'teamB')->paginate(5)->setPageName('matches'),
+            'series' => $event->series()->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('matches'),
         ]);
     }
 
