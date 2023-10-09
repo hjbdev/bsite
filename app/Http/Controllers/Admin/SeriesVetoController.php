@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesVetos\DestroySeriesVetoRequest;
 use App\Http\Requests\SeriesVetos\StoreSeriesVetoRequest;
 use App\Models\Series;
-use Illuminate\Http\Request;
 
 class SeriesVetoController extends Controller
 {

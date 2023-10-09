@@ -33,7 +33,7 @@ class SeriesController extends Controller
 
         return inertia('Admin/Series/Index', [
             'series' => $query->paginate(12),
-            'event' => $event
+            'event' => $event,
         ]);
     }
 
@@ -45,7 +45,7 @@ class SeriesController extends Controller
     public function edit(string $id)
     {
         return inertia('Admin/Series/Form', [
-            'series' => Series::with('teamA', 'teamB', 'event')->findOrFail($id)
+            'series' => Series::with('teamA', 'teamB', 'event')->findOrFail($id),
         ]);
     }
 
@@ -98,7 +98,7 @@ class SeriesController extends Controller
 
         return inertia('Admin/Series/Show', [
             'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'vetos.map', 'vetos.team')->findOrFail($id)->makeVisible('secret'),
-            'maps' => $maps
+            'maps' => $maps,
         ]);
     }
 }

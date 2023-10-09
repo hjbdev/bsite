@@ -3,7 +3,6 @@
 namespace App\Jobs\Series;
 
 use App\Events\Series\SeriesSnapshot;
-use App\Models\Log;
 use App\Models\Series;
 use App\Support\GameState\CS2GameState;
 use Illuminate\Bus\Queueable;
@@ -15,7 +14,7 @@ use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
+class GenerateSeriesSnapshot implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,7 +31,7 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId(): string
     {
-        return "series-snapshot-" . $this->seriesId;
+        return 'series-snapshot-'.$this->seriesId;
     }
 
     // public function middleware(): array
@@ -46,7 +45,7 @@ class GenerateSeriesSnapshot implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $gameState = (new CS2GameState($this->seriesId))->get();
-        Cache::put('series-' . $this->seriesId . '-game-state', $gameState, CS2GameState::CACHE_TTL);
+        Cache::put('series-'.$this->seriesId.'-game-state', $gameState, CS2GameState::CACHE_TTL);
         broadcast(new SeriesSnapshot($this->seriesId, $gameState));
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesMaps\DestroySeriesMapRequest;
 use App\Models\Series;
-use Illuminate\Http\Request;
 
 class SeriesSeriesMapController extends Controller
 {

@@ -22,7 +22,7 @@ class EventController extends Controller
         }
 
         return inertia('Admin/Events/Index', [
-            'events' => $query->paginate(20)
+            'events' => $query->paginate(20),
         ]);
     }
 
@@ -55,7 +55,7 @@ class EventController extends Controller
     public function show(string $id)
     {
         return inertia('Admin/Events/Show', [
-            'event' => Event::findOrFail($id)
+            'event' => Event::findOrFail($id),
         ]);
     }
 
@@ -65,7 +65,7 @@ class EventController extends Controller
     public function edit(string $id)
     {
         return inertia('Admin/Events/Form', [
-            'event' => Event::findOrFail($id)
+            'event' => Event::findOrFail($id),
         ]);
     }
 

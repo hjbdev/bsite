@@ -29,11 +29,13 @@ class FindSeriesFromLog
                     });
                 })->with('event')->first();
 
-            if (!$series) {
+            if (! $series) {
                 return null;
             }
+
             return $series;
         }
+
         return null;
     }
 }

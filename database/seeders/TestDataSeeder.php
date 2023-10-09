@@ -16,7 +16,7 @@ class TestDataSeeder extends Seeder
     {
         User::factory()->create([
             'email' => 'harry@hjb.dev',
-            'name' => 'index'
+            'name' => 'index',
         ]);
 
         Team::factory(200)
@@ -38,7 +38,7 @@ class TestDataSeeder extends Seeder
         ]);
 
         $t = Team::factory()->has(Player::factory()->count(4))->create([
-            'name' => 'undefined'
+            'name' => 'undefined',
         ]);
 
         $t->players()->attach($p);
@@ -48,9 +48,9 @@ class TestDataSeeder extends Seeder
             ->save(
                 Series::factory()/*->has(
                     SeriesMap::factory()->count(fake()->randomElement([1, 3]))
-                )*/->create([
+                )*/ ->create([
                     'start_date' => now()->addDay(),
-                    'team_a_id' => $t->id
+                    'team_a_id' => $t->id,
                 ])
             );
     }

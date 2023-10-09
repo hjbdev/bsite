@@ -5,7 +5,6 @@ namespace App\Jobs\SeriesMaps;
 use App\Models\Series;
 use App\Models\SeriesMap;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -23,8 +22,7 @@ class UpdateSeriesMapScore implements ShouldQueue
         public int $seriesMapId,
         public string $scoreKey,
         public int $score
-    )
-    {
+    ) {
         //
     }
 
@@ -36,7 +34,7 @@ class UpdateSeriesMapScore implements ShouldQueue
         $seriesMap = SeriesMap::findOrFail($this->seriesMapId);
         $seriesMap->{$this->scoreKey} = $this->score;
         $seriesMap->save();
-        
-        Cache::put('series-map-' . $seriesMap->id, $seriesMap, Series::CACHE_TTL);
+
+        Cache::put('series-map-'.$seriesMap->id, $seriesMap, Series::CACHE_TTL);
     }
 }

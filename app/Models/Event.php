@@ -19,7 +19,8 @@ class Event extends Model implements HasMedia
 
     protected $appends = ['logo'];
 
-    public static function boot(): void{
+    public static function boot(): void
+    {
         parent::boot();
 
         static::creating(function ($event) {
@@ -47,11 +48,12 @@ class Event extends Model implements HasMedia
             ->keepOriginalImageFormat()
             ->nonQueued();
     }
-    
+
     public function logo(): Attribute
     {
         $media = $this->getMedia('logo');
-        return new Attribute(fn() => count($media) ? $media[0]?->getUrl('preview') : null);
+
+        return new Attribute(fn () => count($media) ? $media[0]?->getUrl('preview') : null);
     }
 
     public function registerMediaCollections(): void

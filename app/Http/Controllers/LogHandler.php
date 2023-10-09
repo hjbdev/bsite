@@ -24,7 +24,6 @@ use CSLog\CS2\Models\TeamScored;
 use CSLog\CS2\Patterns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 
 class LogHandler extends Controller
 {
@@ -34,15 +33,15 @@ class LogHandler extends Controller
     public function __invoke(Request $request)
     {
         try {
-            if (!$serverInstanceToken = $request->header('x-server-instance-token')) {
-                logger('No Instance token ' . $request->ip());
+            if (! $serverInstanceToken = $request->header('x-server-instance-token')) {
+                logger('No Instance token '.$request->ip());
                 abort(403);
             }
 
             $series = null;
 
-            if (Cache::has('series-' . $serverInstanceToken)) {
-                $series = Cache::get('series-' . $serverInstanceToken);
+            if (Cache::has('series-'.$serverInstanceToken)) {
+                $series = Cache::get('series-'.$serverInstanceToken);
             }
 
             $maps = null;
@@ -59,23 +58,24 @@ class LogHandler extends Controller
             str($rawLog)->split("~\R~u")->each(function ($rawLogLine) use ($series, $serverInstanceToken, $maps) {
                 $log = Patterns::match($rawLogLine);
 
-                if (!$log) {
+                if (! $log) {
                     return;
                 }
 
-                if (!$series) {
+                if (! $series) {
                     logger('no series');
                     $series = app(FindSeriesFromLog::class)->execute($log);
 
-                    if (!$series) {
+                    if (! $series) {
                         logger('still no series');
+
                         return;
                     }
 
                     logger('found series');
                     $series->server_token = $serverInstanceToken;
                     $series->save();
-                    Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                    Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
                 }
 
                 $logModel = $series?->logs()->create([
@@ -91,7 +91,7 @@ class LogHandler extends Controller
                 unset($logModel); // I don't want to play with you anymore.
 
                 if ($log instanceof Kill && $series) {
-                    if (!$series->terrorist_team_id || $series->ct_team_id) {
+                    if (! $series->terrorist_team_id || $series->ct_team_id) {
                         $team = Team::whereHas('players', function ($query) use ($log) {
                             $query->where('players.steam_id3', $log->killerSteamId);
                             $query->whereNull('player_team.end_date');
@@ -117,7 +117,7 @@ class LogHandler extends Controller
                             }
 
                             $series->save();
-                            Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                            Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
                         }
                     }
                 }
@@ -143,7 +143,7 @@ class LogHandler extends Controller
                     if ($seriesMap->wasRecentlyCreated && $log->roundsPlayed > -1) {
                         $seriesMap->start_date = now();
                         $seriesMap->save();
-                        if (!$series->start_date) {
+                        if (! $series->start_date) {
                             $series->start_date = now();
                         }
                     }
@@ -155,8 +155,8 @@ class LogHandler extends Controller
                     $series->current_series_map_id = $seriesMap->id;
                     $series->save();
 
-                    Cache::put('series-map-' . $seriesMap->id, $seriesMap, Series::CACHE_TTL);
-                    Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                    Cache::put('series-map-'.$seriesMap->id, $seriesMap, Series::CACHE_TTL);
+                    Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
                 }
 
                 if ($log instanceof SwitchTeam && $series) {
@@ -187,7 +187,7 @@ class LogHandler extends Controller
                         }
 
                         $series->save();
-                        Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                        Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
                     }
                 }
 
@@ -217,7 +217,7 @@ class LogHandler extends Controller
                             'status' => SeriesMapStatus::FINISHED,
                         ]);
 
-                        Cache::forget('series-map-' . $series->current_series_map_id);
+                        Cache::forget('series-map-'.$series->current_series_map_id);
 
                         $series->current_series_map_id = null;
 
@@ -226,13 +226,13 @@ class LogHandler extends Controller
                         // This is just in case.
                         dispatch(new RecalculateSeriesScore($series->id))->delay($series->event->delay + 120);
 
-                        if (!$series->remainingMaps()) {
+                        if (! $series->remainingMaps()) {
                             $series->status = SeriesStatus::FINISHED;
                             $series->save();
-                            Cache::forget('series-' . $series->server_token);
+                            Cache::forget('series-'.$series->server_token);
                         } else {
                             $series->save();
-                            Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
+                            Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
                         }
                     } else {
                         logger("We received a MatchEnd event, with series {$series->id}, but there is no current map.");

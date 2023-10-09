@@ -15,8 +15,8 @@ class TeamController extends Controller
         $query = Team::latest();
 
         if ($request->has('search')) {
-            $query = $query->where('name', 'like', '%' . $request->get('search') . '%');
-        }   
+            $query = $query->where('name', 'like', '%'.$request->get('search').'%');
+        }
 
         return inertia('Admin/Teams/Index', [
             'teams' => $query->paginate(20),
@@ -26,20 +26,20 @@ class TeamController extends Controller
     public function show(string $id)
     {
         return inertia('Admin/Teams/Show', [
-            'team' => Team::findOrFail($id)
+            'team' => Team::findOrFail($id),
         ]);
     }
 
     public function edit(string $id)
     {
         return inertia('Admin/Teams/Form', [
-            'team' => Team::with('players')->findOrFail($id)
+            'team' => Team::with('players')->findOrFail($id),
         ]);
     }
 
     public function update(string $id, UpdateTeamRequest $request)
     {
-        $team =  Team::findOrFail($id);
+        $team = Team::findOrFail($id);
         $team->update($request->validated());
 
         // Easier to just unlink and relink
@@ -56,6 +56,7 @@ class TeamController extends Controller
                 $playerModel = $team->players()->find($player['id']);
                 $playerModel->steam_id64 = $player['steam_id64'];
                 $playerModel->save();
+
                 continue;
             } else {
                 $team->players()->create([
@@ -88,6 +89,7 @@ class TeamController extends Controller
         foreach ($request->get('players') as $player) {
             if ($player['id']) {
                 $team->players()->attach($player['id'], ['start_date' => $player['pivot.start_date'] ?? now()]);
+
                 continue;
             }
         }

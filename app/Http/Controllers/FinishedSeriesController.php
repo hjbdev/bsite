@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\SeriesStatus;
 use App\Models\Series;
-use Illuminate\Http\Request;
 
 class FinishedSeriesController extends Controller
 {
@@ -15,7 +14,7 @@ class FinishedSeriesController extends Controller
     {
         return inertia('Series/Index', [
             'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps')->where('status', SeriesStatus::FINISHED)->paginate(12),
-            'title' => 'Results'
+            'title' => 'Results',
         ]);
     }
 }
