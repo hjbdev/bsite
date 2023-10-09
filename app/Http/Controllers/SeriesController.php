@@ -14,6 +14,7 @@ class SeriesController extends Controller
     {
         return inertia('Series/Index', [
             'series' => Series::with('teamA', 'teamB', 'event')->where('start_date', '>', now()->startOfDay())->orderBy('start_date')->paginate(12),
+            'title' => 'Matches'
         ]);
     }
 

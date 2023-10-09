@@ -15,9 +15,21 @@ class Event extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name', 'description', 'start_date', 'end_date'];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'prize_pool', 'location'];
 
     protected $appends = ['logo'];
+
+    public static function boot(): void{
+        parent::boot();
+
+        static::creating(function ($event) {
+            $event->slug = str($event->name)->slug();
+        });
+
+        static::updating(function ($event) {
+            $event->slug = str($event->name)->slug();
+        });
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { Container, HH1, PrimaryButton, Input } from "@hjbdev/ui";
+import { Container, HH1, PrimaryButton, Input, SecondaryButton } from "@hjbdev/ui";
 import Pagination from "@/Components/Pagination.vue";
 import { ref } from "vue";
 import { onMounted } from "vue";
@@ -13,6 +13,7 @@ defineOptions({ layout: AuthenticatedLayout });
 
 const props = defineProps({
     series: Object,
+    event: Object
 });
 
 const hasMounted = ref(false);
@@ -30,8 +31,8 @@ onMounted(() => {
 
 const url = new URL(window.location.href);
 
-if (url.searchParams.has("search")) {
-    searchQuery.value = url.searchParams.get("search");
+if (url.searchParams.has("filter[search]")) {
+    searchQuery.value = url.searchParams.get("filter[search]");
 }
 
 watch(
@@ -39,26 +40,39 @@ watch(
     useDebounceFn((q, oldQ) => {
         if (!hasMounted.value) return;
         const url = new URL(window.location.href);
-        url.searchParams.set("search", q);
+        url.searchParams.set("filter[search]", q);
         router.visit(url);
     }, 500),
 );
+
+function clearFilter(key) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete(`filter[${key}]`);
+    router.visit(url);
+}
 </script>
 
 <template>
-    <Head title="series" />
+    <Head title="Matches" />
 
     <Container class="py-6">
         <div class="flex items-center justify-between mb-6">
-            <HH1>Series</HH1>
-            <div>
+            <HH1>Matches</HH1>
+            <div class="space-x-1">
+                <SecondaryButton v-if="event" :as="Link" :href="route('admin.events.show', event.id)">Back to {{ event.name }}</SecondaryButton>
                 <PrimaryButton :as="Link" :href="route('admin.series.create')"
                     >Create</PrimaryButton
                 >
             </div>
         </div>
 
-        <div class="flex justify-end">
+        <div class="flex justify-between items-center">
+            <div>
+                <div v-if="event" class="border dark:border-zinc-600 px-2 py-0.5 rounded" @click="clearFilter('event_id')">
+                    <strong>Event:</strong> {{ event.name }}
+                    <button class="py-0.25 px-1">&times;</button>
+                </div>
+            </div>
             <Input
                 ref="searchInput"
                 placeholder="Search"

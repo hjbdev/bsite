@@ -6,7 +6,7 @@ import {
     SidebarItemGroup,
     FadeTransition,
     Modals,
-    Dialogs
+    Dialogs,
 } from "@hjbdev/ui";
 import { Link } from "@inertiajs/vue3";
 import {
@@ -106,10 +106,6 @@ import DropdownLink from "@/Components/DropdownLink.vue";
             </Sidebar>
         </template>
 
-        <FadeTransition mode="out-in">
-            <div :key="$page.url">
-                <slot />
-            </div>
-        </FadeTransition>
+        <slot />
     </SidebarLayout>
 </template>

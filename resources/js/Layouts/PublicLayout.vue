@@ -9,7 +9,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
     <SidebarLayout class="dark:text-white h-screen">
         <div
             id="bg-image"
-            class="absolute inset-0 bg-cover z-0 blur-sm [mask-image:linear-gradient(to_bottom_left,transparent_25%,rgba(0,0,0,0.25)_75%)]"
+            class="absolute inset-0 bg-cover z-0 blur-sm [mask-image:linear-gradient(to_bottom_left,transparent_25%,rgba(0,0,0,0.33)_75%)]"
             style="
                 background-image: url(&quot;https://stratbox.app/images/maps/ancient.jpg&quot;);
             "
@@ -33,7 +33,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
         </div>
 
         <FadeTransition mode="out-in">
-            <div class="relative z-[1]" :key="$page.url">
+            <div class="relative z-[5]" :key="$page.url">
                 <slot />
             </div>
         </FadeTransition>

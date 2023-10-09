@@ -1,6 +1,6 @@
 <script setup>
 import { Container, HH1 } from "@hjbdev/ui";
-import { Link } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import { isToday, format, formatDistanceToNow } from "date-fns";
 import Pagination from "@/Components/Pagination.vue";
@@ -10,6 +10,7 @@ defineOptions({ layout: PublicLayout });
 
 defineProps({
     series: Object,
+    title: String
 });
 
 function getDate(date) {
@@ -19,12 +20,12 @@ function getDate(date) {
     } else {
         return formatDistanceToNow(d, new Date());
     }
-    // return
 }
 </script>
 <template>
     <Container>
-        <HH1 class="mb-6">Matches</HH1>
+        <Head :title="title"></Head>
+        <HH1 class="mb-6">{{ title }}</HH1>
         <div class="divide-y">
             <Link
                 v-for="game in series.data"
@@ -62,6 +63,9 @@ function getDate(date) {
                 </div>
                 <div>{{ game.event.name }}</div>
             </Link>
+            <div v-if="!series?.data?.length" class="text-center opacity-50 mb-6">
+                No Matches Found
+            </div>
             <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
                 <Pagination :links="series.links" />
             </div>

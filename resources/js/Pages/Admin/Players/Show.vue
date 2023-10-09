@@ -6,26 +6,27 @@ import { Container, HH1, PrimaryButton, SecondaryButton } from "@hjbdev/ui";
 defineOptions({ layout: AuthenticatedLayout });
 
 const props = defineProps({
-    event: Object,
+    player: Object,
 });
 </script>
 
 <template>
-    <Head :title="event.name" />
+    <Head :title="player.name" />
 
     <Container class="py-6">
         <div class="flex items-center justify-between mb-6">
-            <HH1>{{ event.name }}</HH1>
+            <HH1>{{ player.name }}</HH1>
             <div class="space-x-1">
-                <SecondaryButton :as="Link" :href="route('admin.series.index') + `?filter[event_id]=${event.id}`">Matches</SecondaryButton>
                 <PrimaryButton
                     :as="Link"
-                    :href="route('admin.events.edit', event.id)"
+                    :href="route('admin.players.edit', player.id)"
                     >Edit</PrimaryButton
                 >
             </div>
         </div>
 
-        <img :src="event.logo" />
+        <img :src="player.picture" />
+
+        Coming soon.
     </Container>
 </template>

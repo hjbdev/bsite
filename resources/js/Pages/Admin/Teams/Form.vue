@@ -26,6 +26,9 @@ const form = useForm({
 });
 
 function submit() {
+    if (typeof form.logo === 'string') {
+        form.logo = null;
+    }
     if (props.team) {
         form.patch(route("admin.teams.update", props.team.id));
     } else {
@@ -49,6 +52,7 @@ function submit() {
                     name="name"
                     label="Name"
                     :value="form.name"
+                    :error="form.errors.name"
                     accept=".png"
                     @input="(v) => (form.name = v.target.value)"
                 />
@@ -57,6 +61,7 @@ function submit() {
                 <Input
                     name="logo"
                     label="Logo"
+                    :error="form.errors.logo"
                     type="file"
                     @input="(v) => (form.logo = v.target.files[0])"
                 />

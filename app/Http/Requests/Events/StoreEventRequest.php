@@ -27,7 +27,9 @@ class StoreEventRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date'],
             'description' => ['nullable', 'string'],
-            'logo' => ['nullable', File::types(['png'])->max(2048)],
+            'logo' => ['nullable', File::types(['png'])->max(5192)],
+            'prize_pool' => ['nullable', 'string'],
+            'location' => ['nullable', 'string'],
         ];
     }
 }

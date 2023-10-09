@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\SeriesMapStatus;
 use App\Enums\SeriesStatus;
+use App\Jobs\Series\RecalculateSeriesScore;
 use App\Models\Map;
 use App\Models\Player;
 use App\Models\Series;
@@ -150,9 +151,12 @@ class LogHandler extends Controller
                         'status' => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
 
-                    if ($seriesMap->wasRecentlyCreated) {
-                        $seriesMap->start_date = $log->roundsPlayed > -1 ? now() : null;
+                    if ($seriesMap->wasRecentlyCreated && $log->roundsPlayed > -1) {
+                        $seriesMap->start_date = now();
                         $seriesMap->save();
+                        if (!$series->start_date) {
+                            $series->start_date = now();
+                        }
                     }
 
                     if ($seriesMap->status === SeriesMapStatus::ONGOING) {
@@ -231,6 +235,8 @@ class LogHandler extends Controller
                         Cache::forget('series-map-' . $series->current_series_map_id);
 
                         $series->current_series_map_id = null;
+
+                        dispatch(new RecalculateSeriesScore($series->id));
 
                         if (!$series->remainingMaps()) {
                             $series->status = SeriesStatus::FINISHED;

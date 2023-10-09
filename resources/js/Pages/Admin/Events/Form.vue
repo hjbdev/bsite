@@ -20,11 +20,16 @@ const form = useForm({
     start_date: null,
     end_date: null,
     logo: null,
+    prize_pool: null,
+    location: null,
     ...props.event,
     name: props.event?.name ?? "",
 });
 
 function submit() {
+    if (typeof form.logo === 'string') {
+        form.logo = null;
+    }
     if (props.event) {
         form.patch(route("admin.events.update", props.event.id));
     } else {
@@ -34,9 +39,10 @@ function submit() {
 </script>
 
 <template>
-    <Head :title="event ? `Edit ${event.name}` : 'Create Event'" />
 
     <Container class="py-6 space-y-6">
+        <Head :title="event ? `Edit ${event.name}` : 'Create Event'" />
+
         <div class="flex items-center justify-between">
             <HH1 v-if="event">Edit {{ event?.name }}</HH1>
             <HH1 v-else>Create Event</HH1>
@@ -71,11 +77,26 @@ function submit() {
                 :error="form.errors.end_date"
                 @input="(v) => (form.end_date = v.target.value)"
             />
+            <Input
+                name="prize_pool"
+                label="Prize Pool"
+                :value="form.prize_pool"
+                :error="form.errors.prize_pool"
+                @input="(v) => (form.prize_pool = v.target.value)"
+            />
+            <Input
+                name="location"
+                label="Location"
+                :value="form.location"
+                :error="form.errors.location"
+                @input="(v) => (form.location = v.target.value)"
+            />
             <div class="inline-block">
                 <Input
                     name="logo"
                     label="Logo"
                     type="file"
+                    :error="form.errors.logo"
                     @input="(v) => (form.logo = v.target.files[0])"
                 />
             </div>
