@@ -14,7 +14,7 @@ class FinishedSeriesController extends Controller
     public function index()
     {
         return inertia('Series/Index', [
-            'series' => Series::with('teamA', 'teamB', 'event')->where('status', SeriesStatus::FINISHED)->paginate(12),
+            'series' => Series::with('teamA', 'teamB', 'event', 'seriesMaps')->where('status', SeriesStatus::FINISHED)->paginate(12),
             'title' => 'Results'
         ]);
     }
