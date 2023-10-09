@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Series\FindSeriesFromLog;
+use App\Actions\SeriesMap\GetCachedSeriesMap;
 use App\Enums\SeriesMapStatus;
 use App\Enums\SeriesStatus;
+use App\Events\Logs\LogCreated;
+use App\Jobs\Logs\BroadcastLogCreated;
 use App\Jobs\Series\RecalculateSeriesScore;
+use App\Jobs\SeriesMaps\UpdateSeriesMapScore;
+use App\Models\Log;
 use App\Models\Map;
 use App\Models\Player;
 use App\Models\Series;
@@ -54,52 +60,35 @@ class LogHandler extends Controller
                 $log = Patterns::match($rawLogLine);
 
                 if (!$log) {
-                    // logger('NO LOG--' . $rawLogLine);
                     return;
                 }
 
-                // logger('Log Parsed');
-
                 if (!$series) {
                     logger('no series');
-                    // Firstly figure out if this is a log that contains a player
-                    // If it does, we can try and find the series by the player
-                    if ($logSteamId = ($log?->steamId ?? $log?->killerSteamId ?? $log?->victimSteamId ?? $log?->throwerSteamId ?? null)) {
-                        $series = Series::whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])
-                            ->where(function ($query) use ($logSteamId) {
-                                $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
-                                    $teamAQuery->whereHas('players', function ($teamAPlayerQuery) use ($logSteamId) {
-                                        $teamAPlayerQuery->whereNull('player_team.end_date');
-                                        $teamAPlayerQuery->where('steam_id3', $logSteamId);
-                                    });
-                                });
-                                $query->orWhereHas('teamB', function ($teamBQuery) use ($logSteamId) {
-                                    $teamBQuery->whereHas('players', function ($teamBPlayerQuery) use ($logSteamId) {
-                                        $teamBPlayerQuery->whereNull('player_team.end_date');
-                                        $teamBPlayerQuery->where('steam_id3', $logSteamId);
-                                    });
-                                });
-                            })->first();
+                    $series = app(FindSeriesFromLog::class)->execute($log);
 
-                        if (!$series) {
-                            logger('still no series');
-                            return;
-                        }
-
-                        $series->server_token = $serverInstanceToken;
-                        $series->save();
-                        Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
-                    } else {
+                    if (!$series) {
                         logger('still no series');
                         return;
                     }
+
+                    logger('found series');
+                    $series->server_token = $serverInstanceToken;
+                    $series->save();
+                    Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                 }
 
-                // logger(json_encode($log));
-                $series?->logs()->create([
+                $logModel = $series?->logs()->create([
                     'type' => $log->type,
                     'data' => (array) $log,
                 ]);
+
+                if (in_array($logModel->type, Log::BROADCASTABLE_EVENTS)) {
+                    // broadcast(new LogCreated($log));
+                    dispatch(new BroadcastLogCreated($logModel))->delay($series->event->delay);
+                }
+
+                unset($logModel); // I don't want to play with you anymore.
 
                 if ($log instanceof Kill && $series) {
                     if (!$series->terrorist_team_id || $series->ct_team_id) {
@@ -204,31 +193,27 @@ class LogHandler extends Controller
 
                 if ($log instanceof TeamScored) {
                     if ($series->current_series_map_id) {
-                        $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
-                            return SeriesMap::find($series->current_series_map_id);
-                        });
+                        $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+                        // $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
+                        //     return SeriesMap::find($series->current_series_map_id);
+                        // });
 
                         if ($log->team === 'TERRORIST') {
                             // figure out which team is T
                             $scoreKey = $series->terrorist_team_id === $series->team_a_id ? 'team_a_score' : 'team_b_score';
-                            $seriesMap->{$scoreKey} = $log->score;
-                            logger('log team terrorist ' . $scoreKey . ' score: ' . $log->score . ' series T team id: ' . $series->terrorist_team_id . ' series team A ID: ' . $series->team_a_id);
+                            dispatch(new UpdateSeriesMapScore($seriesMap->id, $scoreKey, $log->score))->delay($series->event->delay);
+                            // logger('log team terrorist ' . $scoreKey . ' score: ' . $log->score . ' series T team id: ' . $series->terrorist_team_id . ' series team A ID: ' . $series->team_a_id);
                         } else {
                             $scoreKey = $series->ct_team_id === $series->team_a_id ? 'team_a_score' : 'team_b_score';
-                            $seriesMap->{$scoreKey} = $log->score;
-                            logger('log team ct ' . $scoreKey . ' ' . $log->score . ' ' . $series->ct_team_id . ' ' . $series->team_a_id);
+                            dispatch(new UpdateSeriesMapScore($seriesMap->id, $scoreKey, $log->score))->delay($series->event->delay);
+                            // logger('log team ct ' . $scoreKey . ' ' . $log->score . ' ' . $series->ct_team_id . ' ' . $series->team_a_id);
                         }
-
-                        $seriesMap->save();
-                        Cache::put('series-map-' . $series->current_series_map_id, $seriesMap, Series::CACHE_TTL);
                     }
                 }
 
                 if ($log instanceof MatchEnd && $series) {
                     if ($series->current_series_map_id) {
-                        Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
-                            return SeriesMap::find($series->current_series_map_id);
-                        })->update([
+                        app(GetCachedSeriesMap::class)->execute($series->current_series_map_id)->update([
                             'status' => SeriesMapStatus::FINISHED,
                         ]);
 
@@ -236,7 +221,10 @@ class LogHandler extends Controller
 
                         $series->current_series_map_id = null;
 
-                        dispatch(new RecalculateSeriesScore($series->id));
+                        // This should be fine
+                        dispatch(new RecalculateSeriesScore($series->id))->delay($series->event->delay);
+                        // This is just in case.
+                        dispatch(new RecalculateSeriesScore($series->id))->delay($series->event->delay + 120);
 
                         if (!$series->remainingMaps()) {
                             $series->status = SeriesStatus::FINISHED;
@@ -246,6 +234,8 @@ class LogHandler extends Controller
                             $series->save();
                             Cache::put('series-' . $series->server_token, $series, Series::CACHE_TTL);
                         }
+                    } else {
+                        logger("We received a MatchEnd event, with series {$series->id}, but there is no current map.");
                     }
                 }
             });
