@@ -39,6 +39,9 @@ Route::resource('matches', SeriesController::class)
     ->name('index', 'matches.index')
     ->name('show', 'matches.show');
 
+Route::get('matches/{match}/{slug}', [SeriesController::class, 'show'])
+    ->name('matches.show.seo');
+
 Route::resource('results', FinishedSeriesController::class)
     ->only('index')
     ->name('index', 'results.index');
@@ -47,8 +50,8 @@ Route::resource('events', EventController::class)
     ->only('index', 'show')
     ->name('show', 'events.show');
 
-Route::get('matches/{match}/{slug}', [SeriesController::class, 'show'])
-    ->name('matches.show.seo');
+Route::get('events/{match}/{slug}', [EventController::class, 'show'])
+    ->name('events.show.seo');
 
 
 Route::prefix('admin')->middleware('auth')->group(function () {

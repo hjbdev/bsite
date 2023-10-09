@@ -18,10 +18,20 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Event $event)
+    public function show(string $id, string $slug = null)
     {
+        $event = Event::findOrFail($id);
+
+        if (!$slug) {
+            return redirect()->route('events.show.seo', [
+                'match' => $event->id,
+                'slug' => $event->slug,
+            ]);
+        }
+
         return inertia('Events/Show', [
-            'event' => $event->load('series.seriesMaps', 'series.teamA', 'series.teamB'),
+            'event' => $event,
+            'series' => $event->series()->orderBy('start_date', 'asc')->with('teamA', 'teamB')->paginate(5)->setPageName('matches'),
         ]);
     }
 

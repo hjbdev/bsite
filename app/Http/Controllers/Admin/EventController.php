@@ -41,7 +41,7 @@ class EventController extends Controller
     {
         $event = Event::create($request->validated());
 
-        if ($request->has('logo')) {
+        if ($request->has('logo') && $request->file('logo')) {
             $event->addMediaFromRequest('logo')
                 ->toMediaCollection('logo');
         }
@@ -78,7 +78,7 @@ class EventController extends Controller
 
         $event->update($request->validated());
 
-        if ($request->has('logo')) {
+        if ($request->has('logo') && $request->file('logo')) {
             $event->addMediaFromRequest('logo')
                 ->toMediaCollection('logo');
         }
