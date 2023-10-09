@@ -4,7 +4,6 @@ import {
     Sidebar,
     SidebarItem,
     SidebarItemGroup,
-    FadeTransition,
     Modals,
     Dialogs,
 } from "@hjbdev/ui";
