@@ -32,10 +32,10 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
             </Container>
         </div>
 
-        <FadeTransition mode="out-in">
-            <div class="relative z-[5]" :key="$page.url">
+        <!-- <FadeTransition mode="out-in"> -->
+            <div class="relative z-[5]">
                 <slot />
             </div>
-        </FadeTransition>
+        <!-- </FadeTransition> -->
     </SidebarLayout>
 </template>
