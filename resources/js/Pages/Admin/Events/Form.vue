@@ -22,6 +22,7 @@ const form = useForm({
     logo: null,
     prize_pool: null,
     location: null,
+    delay: 0,
     ...props.event,
     name: props.event?.name ?? "",
 });
@@ -62,6 +63,14 @@ function submit() {
                 :value="form.description"
                 :error="form.errors.description"
                 @input="(v) => (form.description = v.target.value)"
+            />
+            <Input
+                name="delay"
+                type="number"
+                label="Delay"
+                :value="form.delay"
+                :error="form.errors.delay"
+                @input="(v) => (form.delay = v.target.value)"
             />
             <Input
                 type="date"

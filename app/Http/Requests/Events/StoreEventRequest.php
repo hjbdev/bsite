@@ -26,6 +26,7 @@ class StoreEventRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date'],
+            'delay' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'logo' => ['nullable', File::types(['png'])->max(5192)],
             'prize_pool' => ['nullable', 'string'],
