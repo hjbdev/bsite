@@ -11,7 +11,8 @@ defineOptions({ layout: PublicLayout });
 
 defineProps({
     event: Object,
-    series: Object
+    series: Object,
+    pastSeries: Object
 });
 </script>
 <template>
@@ -54,9 +55,20 @@ defineProps({
             <HH2 class="mb-3">Matches</HH2>
             <FrostedGlassCard flush class="overflow-hidden">
                 <SeriesListItem v-for="game in series.data" :series="game"></SeriesListItem>
+                <div v-if="!series?.data?.length" class="p-3 text-center">No Upcoming Matches</div>
             </FrostedGlassCard>
             <div class="flex justify-end mt-2 gap-1">
                 <Pagination :links="series.links"></Pagination>
+            </div>
+        </div>
+        <div>
+            <HH2 class="mb-3">Results</HH2>
+            <FrostedGlassCard flush class="overflow-hidden">
+                <SeriesListItem v-for="game in pastSeries.data" :series="game"></SeriesListItem>
+                <div v-if="!pastSeries?.data?.length" class="p-3 text-center">No Past Matches</div>
+            </FrostedGlassCard>
+            <div class="flex justify-end mt-2 gap-1">
+                <Pagination :links="pastSeries.links"></Pagination>
             </div>
         </div>
     </Container>
