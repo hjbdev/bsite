@@ -32,6 +32,9 @@ class RecalculateSeriesScore implements ShouldQueue
     {
         $series = Series::findOrFail($this->seriesId);
 
+        $series->team_a_score = 0;
+        $series->team_b_score = 0;
+
         foreach ($series->seriesMaps as $seriesMap) {
             if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                 if ($seriesMap->team_a_score > $seriesMap->team_b_score) {
