@@ -33,9 +33,6 @@ class Log extends Model
         parent::boot();
 
         static::created(function (Log $log) {
-            if (in_array($log->type, self::BROADCASTABLE_EVENTS)) {
-                broadcast(new LogCreated($log));
-            }
             dispatch(new GenerateSeriesSnapshot($log->series_id));
         });
     }
