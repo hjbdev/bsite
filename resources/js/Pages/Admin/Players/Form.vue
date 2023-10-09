@@ -8,7 +8,6 @@ import {
     PrimaryButton,
     Card,
     Input,
-    SelectInput,
 } from "@hjbdev/ui";
 import nationalities from "../../../../assets/nationalities.json";
 import { computed } from "vue";

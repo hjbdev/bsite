@@ -1,5 +1,5 @@
 <script setup>
-import { SidebarLayout, Container, HH2, FadeTransition } from "@hjbdev/ui";
+import { SidebarLayout, Container, HH2 } from "@hjbdev/ui";
 import TopNavItem from "@/Components/TopNav/TopNavItem.vue";
 import { Link } from "@inertiajs/vue3";
 

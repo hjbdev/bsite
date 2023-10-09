@@ -1,8 +1,6 @@
 <script setup>
 import { Container, HH1 } from "@hjbdev/ui";
-import { Head, Link } from "@inertiajs/vue3";
-import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
-import { isToday, format, formatDistanceToNow } from "date-fns";
+import { Head } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import SeriesListItem from "@/Components/Series/SeriesListItem.vue";

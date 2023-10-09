@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { Container, HH1, PrimaryButton, SecondaryButton } from "@hjbdev/ui";
+import { Container, HH1, PrimaryButton } from "@hjbdev/ui";
 
 defineOptions({ layout: AuthenticatedLayout });
 
