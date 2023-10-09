@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SeriesStatus;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,8 @@ class EventController extends Controller
 
         return inertia('Events/Show', [
             'event' => $event,
-            'series' => $event->series()->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('matches'),
+            'series' => $event->series()->whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('matches'),
+            'pastSeries' => $event->series()->where('status', SeriesStatus::FINISHED)->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('results'),
         ]);
     }
 
