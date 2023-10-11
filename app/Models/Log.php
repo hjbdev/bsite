@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Jobs\Series\GenerateSeriesSnapshot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,7 +31,7 @@ class Log extends Model
         parent::boot();
 
         static::created(function (Log $log) {
-            dispatch(new GenerateSeriesSnapshot($log->series_id));
+            // dispatch(new GenerateSeriesSnapshot($log->series_id));
         });
     }
 }

@@ -30,7 +30,7 @@ class SeriesController extends Controller
 
         $gameState = null;
 
-        $series = Series::with('teamA', 'teamB', 'event', 'seriesMaps.map', 'currentSeriesMap.map')->findOrFail($id);
+        $series = Series::with('teamA.players', 'teamB.players', 'event', 'seriesMaps.map', 'currentSeriesMap.map', 'seriesMaps.players')->findOrFail($id);
 
         if (Cache::has('series-'.$series->id.'-game-state')) {
             $gameState = Cache::get('series-'.$series->id.'-game-state');

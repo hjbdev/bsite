@@ -156,7 +156,7 @@ const baseUrl = window.location.origin;
             <code class="block"
                 >logaddress_add_http "{{
                     baseUrl === "http://localhost"
-                        ? "http://192.168.5.137"
+                        ? "http://192.168.1.23"
                         : baseUrl
                 }}/api/log-handler"</code
             >

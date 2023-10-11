@@ -139,7 +139,9 @@ const seriesMaps = computed(() => {
                     {{ series.team_b_score }}
                 </div>
             </div>
-            <div class="flex items-center gap-3 w-full justify-end sm:justify-start sm:w-auto flex-row-reverse sm:flex-row">
+            <div
+                class="flex items-center gap-3 w-full justify-end sm:justify-start sm:w-auto flex-row-reverse sm:flex-row"
+            >
                 <h4 class="text-xl sm:text-3xl font-medium tracking-tighter">
                     {{ series.team_b.name }}
                 </h4>
@@ -176,16 +178,18 @@ const seriesMaps = computed(() => {
                     class="w-full h-full object-cover transition-all group-hover:opacity-75"
                     :class="{
                         'opacity-25': seriesMap.status !== 'ongoing',
-                        'opacity-75': seriesMap.status === 'ongoing'
-                    }"    
+                        'opacity-75': seriesMap.status === 'ongoing',
+                    }"
                 />
                 <div
                     class="absolute inset-0 bg-gradient-to-t flex items-end p-6 text-lg justify-between text-white"
                     :class="{
                         'from-black/20 to-transparent':
-                            seriesMap.map?.title !== 'TBD' && seriesMap.status === 'ongoing',
+                            seriesMap.map?.title !== 'TBD' &&
+                            seriesMap.status === 'ongoing',
                         'from-black/75 to-transparent':
-                            seriesMap.map?.title !== 'TBD' && seriesMap.status !== 'ongoing',
+                            seriesMap.map?.title !== 'TBD' &&
+                            seriesMap.status !== 'ongoing',
                         'from-black/40 to-black/70':
                             seriesMap.map?.title === 'TBD',
                     }"
@@ -244,7 +248,8 @@ const seriesMaps = computed(() => {
                     v-for="mapName in Object.keys(snapshot?.maps ?? {})"
                     class="mr-1 last:mr-0"
                     :class="{
-                        'bg-zinc-200 !dark:bg-zinc-600': selectedSnapshotMap === mapName,
+                        'bg-zinc-200 !dark:bg-zinc-600':
+                            selectedSnapshotMap === mapName,
                     }"
                     @click="selectedSnapshotMap = mapName"
                 >
@@ -252,7 +257,7 @@ const seriesMaps = computed(() => {
                 </SecondaryButton>
             </div>
             <table
-                v-if="snapshot.maps[selectedSnapshotMap]?.players"
+                v-if="series.series_maps.length"
                 class="dark:text-white w-full"
             >
                 <thead>
@@ -264,49 +269,46 @@ const seriesMaps = computed(() => {
                         <th class="p-2 text-right">ADR</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr
-                        v-for="player in snapshot.maps[
-                            selectedSnapshotMap
-                        ].players.filter((p) => p.team === 'TERRORIST').sort((a, b) => b.damage - a.damage)"
-                        class="bg-orange-600/20"
-                    >
-                        <td class="p-2">{{ player.name }}</td>
-                        <td class="p-2 text-right">{{ player.kills }}</td>
-                        <td class="p-2 text-right">{{ player.assists }}</td>
-                        <td class="p-2 text-right">{{ player.deaths }}</td>
-                        <td class="p-2 text-right">
-                            {{
-                                (
-                                    player.damage /
-                                    snapshot.maps[selectedSnapshotMap]
-                                        .roundsPlayed
-                                ).toFixed(0)
-                            }}
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="bg-blue-600/20">
-                    <tr
-                        v-for="player in snapshot.maps[
-                            selectedSnapshotMap
-                        ].players.filter((p) => p.team === 'CT').sort((a, b) => b.damage - a.damage)"
-                    >
-                        <td class="p-2">{{ player.name }}</td>
-                        <td class="p-2 text-right">{{ player.kills }}</td>
-                        <td class="p-2 text-right">{{ player.assists }}</td>
-                        <td class="p-2 text-right">{{ player.deaths }}</td>
-                        <td class="p-2 text-right">
-                            {{
-                                (
-                                    player.damage /
-                                    snapshot.maps[selectedSnapshotMap]
-                                        .roundsPlayed
-                                ).toFixed(0)
-                            }}
-                        </td>
-                    </tr>
-                </tbody>
+                <template v-for="seriesMap in series.series_maps">
+                    <tbody v-if="seriesMap.map.name === selectedSnapshotMap">
+                        <tr
+                            v-for="player in seriesMap.players
+                                .sort((a, b) => b.pivot.damage - a.pivot.damage)
+                                .sort((a, b) => b.team_id - a.team_id)"
+                            :class="{
+                                'bg-orange-600/20':
+                                    series.team_a.players.some(
+                                        (p) => p.id === player.id,
+                                    ) &&
+                                    series.terrorist_team_id ===
+                                        series.team_a_id,
+                                'bg-blue-600/20':
+                                    series.team_a.players.some(
+                                        (p) => p.id === player.id,
+                                    ) && series.ct_team_id === series.team_a_id,
+                            }"
+                        >
+                            <td class="p-2">{{ player.name }}</td>
+                            <td class="p-2 text-right">
+                                {{ player.pivot.kills }}
+                            </td>
+                            <td class="p-2 text-right">
+                                {{ player.pivot.assists }}
+                            </td>
+                            <td class="p-2 text-right">
+                                {{ player.pivot.deaths }}
+                            </td>
+                            <td class="p-2 text-right">
+                                {{
+                                    (
+                                        player.pivot.damage /
+                                        (seriesMap.rounds_played ?? 0)
+                                    ).toFixed(0)
+                                }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
             </table>
         </FrostedGlassCard>
     </Container>
