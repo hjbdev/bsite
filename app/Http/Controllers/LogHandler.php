@@ -99,7 +99,7 @@ class LogHandler extends Controller
                 unset($logModel); // I don't want to play with you anymore.
 
                 if ($log instanceof Kill && $series) {
-                    if (! $series->terrorist_team_id || $series->ct_team_id) {
+                    if (! ($series->terrorist_team_id || $series->ct_team_id)) {
                         $team = Team::whereHas('players', function ($query) use ($log) {
                             $query->where('players.steam_id3', $log->killerSteamId);
                             $query->whereNull('player_team.end_date');
