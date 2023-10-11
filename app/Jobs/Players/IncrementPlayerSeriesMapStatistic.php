@@ -5,7 +5,6 @@ namespace App\Jobs\Players;
 use App\Actions\SeriesMap\GetCachedSeriesMap;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -49,7 +48,7 @@ class IncrementPlayerSeriesMapStatistic implements ShouldQueue
             'player_id' => $this->playerId,
             'series_map_id' => $this->seriesMapId,
         ], [
-            $this->statistic => DB::raw($this->statistic . ' + ' . $this->value),
+            $this->statistic => DB::raw($this->statistic.' + '.$this->value),
         ]);
     }
 }
