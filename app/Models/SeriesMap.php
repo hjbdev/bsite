@@ -7,6 +7,7 @@ use App\Events\SeriesMaps\SeriesMapUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SeriesMap extends Model
 {
@@ -16,6 +17,7 @@ class SeriesMap extends Model
 
     protected $casts = [
         'status' => SeriesMapStatus::class,
+        'start_date' => 'datetime',
     ];
 
     public static function boot(): void
@@ -35,5 +37,10 @@ class SeriesMap extends Model
     public function map(): BelongsTo
     {
         return $this->belongsTo(Map::class);
+    }
+
+    public function players(): BelongsToMany
+    {
+        return $this->belongsToMany(Player::class)->withPivot(['kills', 'assists', 'deaths', 'damage', 'traded', 'kast', 'rating']);
     }
 }
