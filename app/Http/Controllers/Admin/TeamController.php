@@ -45,7 +45,7 @@ class TeamController extends Controller
         // Easier to just unlink and relink
         $team->players()->detach();
 
-        if ($request->has('logo')) {
+        if ($request->has('logo') && $request->file('logo')) {
             $team->addMediaFromRequest('logo')
                 ->toMediaCollection('logo');
         }
@@ -78,7 +78,7 @@ class TeamController extends Controller
     {
         $team = Team::create($request->validated());
 
-        if ($request->has('logo')) {
+        if ($request->has('logo') && $request->file('logo')) {
             $team->addMediaFromRequest('logo')
                 ->toMediaCollection('logo');
         }

@@ -11,6 +11,7 @@ use App\Events\Logs\LogCreated;
 use App\Jobs\Logs\BroadcastLogCreated;
 use App\Jobs\Players\IncrementPlayerSeriesMapStatistic;
 use App\Jobs\Series\RecalculateSeriesScore;
+use App\Jobs\SeriesMaps\SetSeriesMapRoundsPlayed;
 use App\Jobs\SeriesMaps\UpdateSeriesMapScore;
 use App\Models\Log;
 use App\Models\Map;
@@ -75,7 +76,6 @@ class LogHandler extends Controller
 
                     if (!$series) {
                         logger('still no series');
-
                         return;
                     }
 
@@ -238,6 +238,7 @@ class LogHandler extends Controller
                         $seriesMap->start_date = $logReceivedAt;
                         // reset stats
                         $seriesMap->players()->detach();
+                        $seriesMap->save();
 
 
                         if (!$series->start_date) {
@@ -250,8 +251,7 @@ class LogHandler extends Controller
                         $series->status = SeriesStatus::ONGOING;
                     }
 
-                    $seriesMap->rounds_played = $log->roundsPlayed;
-                    $seriesMap->save();
+                    dispatch(new SetSeriesMapRoundsPlayed($seriesMap->id, $log->roundsPlayed, $logReceivedAt))->delay($series->event->delay);
 
                     $series->current_series_map_id = $seriesMap->id;
                     $series->save();

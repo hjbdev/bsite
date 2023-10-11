@@ -10,7 +10,7 @@ class GetCachedPlayerWithSteamId3
     public function execute(string $steamId3)
     {
         return Cache::remember('player-' . $steamId3, Player::CACHE_TTL, function () use ($steamId3) {
-            return Player::where('steam_id_3', $steamId3)->first();
+            return Player::where('steam_id3', $steamId3)->first();
         });
     }
 }
