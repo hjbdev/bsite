@@ -31,7 +31,7 @@ class SetSeriesMapRoundsPlayed implements ShouldQueue
     {
         $seriesMap = app(GetCachedSeriesMap::class)->execute($this->seriesMapId);
 
-        if (!$seriesMap) {
+        if (! $seriesMap) {
             return;
         }
 
@@ -43,6 +43,6 @@ class SetSeriesMapRoundsPlayed implements ShouldQueue
         $seriesMap->rounds_played = $this->roundsPlayed;
         $seriesMap->save();
 
-        Cache::put('series-map-' . $seriesMap->id, $seriesMap, Series::CACHE_TTL);
+        Cache::put('series-map-'.$seriesMap->id, $seriesMap, Series::CACHE_TTL);
     }
 }

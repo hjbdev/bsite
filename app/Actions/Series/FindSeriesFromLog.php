@@ -13,7 +13,7 @@ class FindSeriesFromLog
         // Firstly figure out if this is a log that contains a player
         // If it does, we can try and find the series by the player
         if ($logSteamId = ($log?->steamId ?? $log?->killerSteamId ?? $log?->victimSteamId ?? $log?->throwerSteamId ?? null)) {
-            logger('attempting to find series with ' . $logSteamId);
+            logger('attempting to find series with '.$logSteamId);
             $series = Series::whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])
                 ->where(function ($query) use ($logSteamId) {
                     $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
