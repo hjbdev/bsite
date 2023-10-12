@@ -12,9 +12,9 @@ defineProps({
 <template>
     <Head title="UKCSTV: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
-        <div class="relative mb-6 hover:scale-[101%] transition opacity-80 hover:opacity-100">
-            <Link class="absolute inset-0" :href="route('introducing-stattrak')"></Link>
-            <img src="../../assets/introducing-stattrak.jpg" class="object-cover object-center rounded-lg h-96 w-full shadow-lg">
+        <div class="relative mb-6 transition opacity-80 hover:opacity-100">
+            <Link class="absolute inset-0" :href="route('introducing-b-site')"></Link>
+            <img src="../../assets/introducing-b-site.jpg" class="object-cover object-center rounded-lg h-96 w-full shadow-lg">
         </div>
         <HH2 class="mb-6">Upcoming Events</HH2>
         <section

@@ -34,7 +34,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::inertia('/introducing-stattrak', 'IntroducingStattrak')->name('introducing-stattrak');
+Route::inertia('/introducing-b-site', 'IntroducingBSite')->name('introducing-b-site');
 
 Route::resource('matches', SeriesController::class)
     ->only('index', 'show')

@@ -21,7 +21,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
             <Container class="flex justify-between gap-6 items-center h-full">
                 <div>
                     <Link href="/">
-                        <img src="../../assets/stattrak.svg" class="h-12">
+                        <img src="../../assets/bsite.svg" class="h-12">
                         <!-- <HH2>{{ appName }}</HH2> -->
                     </Link>
                 </div>
