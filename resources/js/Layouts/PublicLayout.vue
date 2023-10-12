@@ -27,6 +27,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
                 </div>
                 <div class="flex dark:border-zinc-900">
                     <TopNavItem href="/matches">Matches</TopNavItem>
+                    <TopNavItem href="/results">Results</TopNavItem>
                     <TopNavItem href="/teams">Teams</TopNavItem>
                     <TopNavItem href="/players">Players</TopNavItem>
                 </div>
