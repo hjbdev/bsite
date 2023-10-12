@@ -23,7 +23,7 @@ defineProps({
                 :series="game"
             />
             <div v-if="!series?.data?.length" class="text-center opacity-50 mb-6">
-                No Matches Found
+                No Upcoming Matches Found
             </div>
             <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
                 <Pagination :links="series.links" />
