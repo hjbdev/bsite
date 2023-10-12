@@ -104,7 +104,6 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                 </SidebarItemGroup>
             </Sidebar>
         </template>
-
         <slot />
     </SidebarLayout>
 </template>
