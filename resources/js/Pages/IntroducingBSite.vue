@@ -12,7 +12,7 @@ defineProps({
 <template>
     <Head title="UKCSTV: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
-        <HH1 class="mb-6">Welcome to StatTrak</HH1>
+        <HH1 class="mb-6">Welcome to B-Site</HH1>
         <div class="prose prose-zinc dark:prose-invert">
             <p>
                 The UK scene currently lacks a live match coverage site such as
@@ -38,17 +38,17 @@ defineProps({
                 to take a step back from the project.
             </p>
             <p>
-                With CS2 being released, I hope StatTrak can help to bolster
+                With CS2 being released, I hope B-Site can help to bolster
                 coverage for the scene for years to come.
             </p>
             <h2>Tournaments</h2>
             <p>
-                StatTrak won't work without tournament operators getting on
+                B-Site won't work without tournament operators getting on
                 board. I've reached out to a couple of TOs already, and I'm
                 hoping to have more news to share soon.
             </p>
             <p>
-                The StatTrak bot works the same way HLTV's bot does, using the
+                The B-Site bot works the same way HLTV's bot does, using the
                 <code>logaddress_add_http</code> command native to CS.
             </p>
             <h2>Sustainability and the Future</h2>
