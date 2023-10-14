@@ -33,6 +33,9 @@ function getDate(date) {
             <div class="text-xs dark:bg-zinc-700 rounded-full px-1 mt-1">
                 {{ series.type }}
             </div>
+            <div class="text-xs rounded-full px-1 mt-1 opacity-50">
+                {{ series.status }}
+            </div>
         </div>
         <div class="flex flex-col gap-2 w-48">
             <h4 href="/" class="font-semibold flex gap-2 items-center">

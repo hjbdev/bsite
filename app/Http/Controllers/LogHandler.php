@@ -236,6 +236,7 @@ class LogHandler extends Controller
                     ]);
 
                     if ($seriesMap->wasRecentlyCreated && $log->roundsPlayed > -1) {
+                        // if seriesMap is created in advance THIS DOESNT RUN -- FIX
                         $seriesMap->start_date = $logReceivedAt;
                         // reset stats
                         $seriesMap->players()->detach();
