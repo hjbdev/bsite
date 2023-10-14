@@ -277,15 +277,22 @@ const seriesMaps = computed(() => {
                                 .sort((a, b) => b.team_id - a.team_id)"
                             :class="{
                                 'bg-orange-600/20':
-                                    series.team_a.players.some(
+                                    (series.team_a.players.some(
                                         (p) => p.id === player.id,
                                     ) &&
-                                    series.terrorist_team_id ===
-                                        series.team_a_id,
+                                        series.terrorist_team_id ===
+                                            series.team_a_id) ||
+                                    (series.team_b.players.some(
+                                        (p) => p.id === player.id,
+                                    ) &&
+                                        series.terrorist_team_id ===
+                                            series.team_b_id),
                                 'bg-blue-600/20':
                                     series.team_a.players.some(
                                         (p) => p.id === player.id,
-                                    ) && series.ct_team_id === series.team_a_id,
+                                    ) && series.ct_team_id === series.team_a_id || series.team_b.players.some(
+                                        (p) => p.id === player.id,
+                                    ) && series.ct_team_id === series.team_b_id,
                             }"
                         >
                             <td class="p-2">{{ player.name }}</td>
