@@ -15,10 +15,8 @@ defineProps({
         <HH1 class="mb-6">Welcome to B-Site</HH1>
         <div class="prose prose-zinc dark:prose-invert">
             <p>
-                The UK scene currently lacks a live match coverage site such as
-                dust2.dk or VaKarM.net. Despite great work by UKCSGO with their
-                event coverage and Mischief with his database, we still have a
-                gap that needs to be filled.
+                The UK scene currently lacks a live score coverage site such as
+                dust2.dk or VaKarM.net
             </p>
             <p>
                 If you want to find upcoming UKCS matches, you have to trawl
