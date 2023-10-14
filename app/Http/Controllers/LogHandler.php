@@ -235,7 +235,7 @@ class LogHandler extends Controller
                         'status' => $log->roundsPlayed > -1 ? SeriesMapStatus::ONGOING : SeriesMapStatus::UPCOMING,
                     ]);
 
-                    if ($seriesMap->wasRecentlyCreated && $log->roundsPlayed > -1) {
+                    if ($log->roundsPlayed === 0) {
                         // if seriesMap is created in advance THIS DOESNT RUN -- FIX
                         $seriesMap->start_date = $logReceivedAt;
                         // reset stats
