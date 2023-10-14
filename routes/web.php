@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\SeriesSeriesMapController;
+use App\Http\Controllers\Admin\SeriesStreamController;
 use App\Http\Controllers\Admin\SeriesVetoController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
 use App\Http\Controllers\EventController;
@@ -68,6 +69,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.series.edit')
         ->name('update', 'admin.series.update')
         ->name('destroy', 'admin.series.destroy');
+
+    Route::resource('matches/{match}/streams', SeriesStreamController::class)
+        ->only('create', 'store', 'destroy')
+        ->name('create', 'admin.series.streams.create')
+        ->name('store', 'admin.series.streams.store')
+        ->name('destroy', 'admin.series.streams.destroy');
 
     Route::resource('matches/{match}/vetos', SeriesVetoController::class)
         ->only('store', 'destroy')

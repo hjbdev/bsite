@@ -151,6 +151,21 @@ const baseUrl = window.location.origin;
 
         <Card>
             <template #header>
+                <CardTitle>Streams</CardTitle>
+            </template>
+            <template #extra>
+                <PrimaryButton :as="Link" :href="route('admin.series.streams.create', series.id)">Add</PrimaryButton>
+            </template>
+
+            <ul>
+                <li v-for="stream in series.streams" class="flex gap-2">
+                    {{ stream.name }} | {{ stream.url }}
+                </li>
+            </ul>
+        </Card>
+
+        <Card>
+            <template #header>
                 <CardTitle>Command</CardTitle>
             </template>
             <code class="block"

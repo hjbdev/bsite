@@ -220,14 +220,10 @@ const seriesMaps = computed(() => {
                 <FrostedGlassCard flush class="overflow-hidden">
                     <ul>
                         <li
-                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition"
+                            v-for="stream in series.streams"
+                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition relative"
                         >
-                            index
-                        </li>
-                        <li
-                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition"
-                        >
-                            EPICLAN1
+                            <a class="absolute inset-0" :href="stream.url" target="_blank"></a> {{ stream.name }} 
                         </li>
                     </ul>
                 </FrostedGlassCard>
