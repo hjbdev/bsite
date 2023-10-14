@@ -83,6 +83,11 @@ class Series extends Model
         return $mapCount - $this->seriesMaps()->whereIn('status', [SeriesMapStatus::FINISHED, SeriesMapStatus::ONGOING])->count();
     }
 
+    public function mapCount(): int
+    {
+        return intval((string) str($this->type)->after('bo'));
+    }
+
     public function teamA(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'team_a_id');
