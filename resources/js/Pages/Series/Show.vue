@@ -223,7 +223,18 @@ const seriesMaps = computed(() => {
                             v-for="stream in series.streams"
                             class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition relative"
                         >
-                            <a class="absolute inset-0" :href="stream.url" target="_blank"></a> {{ stream.name }} 
+                            <a
+                                class="absolute inset-0"
+                                :href="stream.url"
+                                target="_blank"
+                            ></a>
+                            {{ stream.name }}
+                        </li>
+                        <li
+                            v-if="!series.streams.length"
+                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition relative"
+                        >
+                            No Streams Available
                         </li>
                     </ul>
                 </FrostedGlassCard>
