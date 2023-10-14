@@ -14,7 +14,7 @@ class ImportPlayersFromFaceitTournament extends Command
      *
      * @var string
      */
-    protected $signature = 'app:import-players-from-faceit-tournament {tournamentId}';
+    protected $signature = 'app:import-players-from-faceit-tournament {tournamentId} {--offset=0}';
 
     /**
      * The console command description.
@@ -28,7 +28,7 @@ class ImportPlayersFromFaceitTournament extends Command
      */
     public function handle()
     {
-        $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/' . $this->argument('tournamentId') . '/subscriptions?offset=0&limit=50');
+        $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/' . $this->argument('tournamentId') . '/subscriptions?offset=0&limit=10');
 
         if (!$response->ok()) {
             $this->error('Error while fetching players from faceit');
@@ -108,6 +108,13 @@ class ImportPlayersFromFaceitTournament extends Command
 
                 $teamModel->players()->syncWithoutDetaching([$playerModel->id => ['start_date' => now(), 'substitute' => true]]);
             }
+        }
+
+        if (count($teams) === 10) {
+            $this->call('app:import-players-from-faceit-tournament', [
+                'tournamentId' => $this->argument('tournamentId'),
+                '--offset' => $this->option('offset') + 10
+            ]);
         }
     }
 }
