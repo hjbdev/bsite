@@ -12,15 +12,11 @@ defineOptions({ layout: PublicLayout });
 
 const props = defineProps({
     series: Object,
-    snapshot: Object,
     logs: Array,
 });
 
 const echo = useEcho();
-
 const logs = ref(props.logs ?? []);
-
-const snapshot = ref(props.snapshot);
 const selectedSnapshotMap = ref();
 
 const currentMap = ref(
@@ -73,9 +69,6 @@ onMounted(() => {
             if (logs.value.length > 100) {
                 logs.value.pop();
             }
-        })
-        .listen("Series\\SeriesSnapshot", (e) => {
-            snapshot.value = e.snapshot;
         })
         .listen("Series\\SeriesUpdated", () => {
             router.reload({ only: ["series"] });

@@ -32,12 +32,12 @@ class SeriesController extends Controller
 
         $series = Series::with('teamA.players', 'teamB.players', 'event', 'seriesMaps.map', 'currentSeriesMap.map', 'seriesMaps.players')->findOrFail($id);
 
-        if (Cache::has('series-'.$series->id.'-game-state')) {
-            $gameState = Cache::get('series-'.$series->id.'-game-state');
-        } else {
-            $gameState = (new CS2GameState($id))->get();
-            Cache::put('series-'.$series->id.'-game-state', $gameState, CS2GameState::CACHE_TTL);
-        }
+        // if (Cache::has('series-'.$series->id.'-game-state')) {
+        //     $gameState = Cache::get('series-'.$series->id.'-game-state');
+        // } else {
+        //     $gameState = (new CS2GameState($id))->get();
+        //     Cache::put('series-'.$series->id.'-game-state', $gameState, CS2GameState::CACHE_TTL);
+        // }
 
         return inertia('Series/Show', [
             'series' => $series,
