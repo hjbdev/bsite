@@ -28,6 +28,9 @@ class Player extends Model implements HasMedia
             if (! extension_loaded('gmp')) {
                 return;
             }
+            if (! $player->steam_id64) {
+                return;
+            }
             try {
                 $steamId = new SteamID($player->steam_id64);
                 $player->steam_id3 = $steamId->RenderSteam3();
