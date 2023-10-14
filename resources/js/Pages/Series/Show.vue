@@ -59,8 +59,8 @@ watch(currentMap, () => {
     ).style.backgroundImage = `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
 });
 
-if (Object.keys(props.snapshot?.maps ?? {})[0] ?? null) {
-    selectedSnapshotMap.value = Object.keys(props.snapshot?.maps ?? {})[0];
+if (props.series.series_maps.length) {
+    selectedSnapshotMap.value = props.series.series_maps[0].map.name;
 }
 
 onMounted(() => {
@@ -245,15 +245,15 @@ const seriesMaps = computed(() => {
         <FrostedGlassCard flush class="overflow-hidden">
             <div class="p-2">
                 <SecondaryButton
-                    v-for="mapName in Object.keys(snapshot?.maps ?? {})"
+                    v-for="seriesMap in series.series_maps"
                     class="mr-1 last:mr-0"
                     :class="{
                         'bg-zinc-200 !dark:bg-zinc-600':
-                            selectedSnapshotMap === mapName,
+                            selectedSnapshotMap === seriesMap.map.name,
                     }"
-                    @click="selectedSnapshotMap = mapName"
+                    @click="selectedSnapshotMap = seriesMap.map.name"
                 >
-                    {{ mapName }}
+                    {{ seriesMap.map.name }}
                 </SecondaryButton>
             </div>
             <table
