@@ -28,7 +28,7 @@ class ImportPlayersFromFaceitTournament extends Command
      */
     public function handle()
     {
-        $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/' . $this->argument('tournamentId') . '/subscriptions?offset=0&limit=10');
+        $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/' . $this->argument('tournamentId') . '/subscriptions?offset='.$this->option('offset').'&limit=10');
 
         if (!$response->ok()) {
             $this->error('Error while fetching players from faceit');
