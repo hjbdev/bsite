@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Series extends Model
 {
@@ -48,6 +49,11 @@ class Series extends Model
         static::updated(function ($series) {
             broadcast(new SeriesUpdated($series->id));
         });
+    }
+
+    public function streams(): MorphMany
+    {
+        return $this->morphMany(Stream::class, 'streamable');
     }
 
     public function vetos(): HasMany
