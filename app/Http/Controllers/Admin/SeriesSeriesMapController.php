@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesMaps\DestroySeriesMapRequest;
 use App\Models\Series;
+use Illuminate\Support\Facades\Cache;
 
 class SeriesSeriesMapController extends Controller
 {
@@ -16,6 +17,9 @@ class SeriesSeriesMapController extends Controller
         $series = Series::findOrFail($seriesId);
 
         $series->seriesMaps()->findOrFail($id)->delete();
+
+        Cache::forget('series-map-' . $id);
+        Cache::forget('series-' . $series->server_token);
 
         return redirect()->back();
     }

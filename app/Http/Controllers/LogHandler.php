@@ -98,8 +98,6 @@ class LogHandler extends Controller
                     dispatch(new BroadcastLogCreated($logModel))->delay($series->event->delay);
                 }
 
-                unset($logModel); // I don't want to play with you anymore.
-
                 if ($log instanceof Kill && $series) {
                     if (! ($series->terrorist_team_id || $series->ct_team_id)) {
                         $team = Team::whereHas('players', function ($query) use ($log) {
@@ -179,8 +177,10 @@ class LogHandler extends Controller
                 }
 
                 if ($log instanceof Attack && $series && $series->current_series_map_id) {
+                    $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+                    $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
+
                     if ($log->attackerTeam !== $log->victimTeam) {
-                        $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
                         $attacker = app(GetCachedPlayerWithSteamId3::class)->execute($log->attackerSteamId);
 
                         if ($attacker) {
@@ -190,26 +190,26 @@ class LogHandler extends Controller
                             // ], [
                             //     'damage' => DB::raw('damage + ' . min($log->attackerDamage, 100))
                             // ]);
+
                             dispatch(new ModifyPlayerSeriesMapStatistic(
                                 playerId: $attacker->id,
                                 seriesMapId: $seriesMap->id,
                                 statistic: 'damage',
-                                value: min($log->attackerDamage, 100),
-                                logReceivedAt: $logReceivedAt
+                                value: $log->attackerDamage,
+                                logReceivedAt: $logReceivedAt,
+                                victimId: $victim?->id
                             ))->delay($series->event->delay);
                         }
 
                         unset($attacker);
                     }
 
-                    $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
-
                     if ($victim) {
                         dispatch(new ModifyPlayerSeriesMapStatistic(
                             playerId: $victim->id,
                             seriesMapId: $seriesMap->id,
                             statistic: 'health',
-                            value: $log->victimHealth,
+                            value: $log->attackerDamage,
                             logReceivedAt: $logReceivedAt,
                             operator: '-'
                         ))->delay($series->event->delay);

@@ -16,7 +16,7 @@ class GetCachedSeries
         return Cache::remember(
             $cacheKey,
             Series::CACHE_TTL,
-            fn () => Series::firstOrFail($id)
+            fn () => Series::findOrFail($id)
         );
     }
 }
