@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\News\GetUKCSGONews;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\OrganiserController as AdminOrganiserController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
@@ -32,7 +33,9 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(2)->get(),
+        'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
+        'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
+        'news' => app(GetUKCSGONews::class)->execute()->take(6)
     ]);
 });
 
