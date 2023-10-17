@@ -49,6 +49,13 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                     >
                     <SidebarItem
                         :as="Link"
+                        :href="route('admin.organisers.index')"
+                        :icon="PuzzlePieceIcon"
+                        :active="route().current('admin.organisers.index')"
+                        >Organisers</SidebarItem
+                    >
+                    <SidebarItem
+                        :as="Link"
                         :href="route('admin.players.index')"
                         :icon="UserIcon"
                         :active="route().current('admin.players.index')"

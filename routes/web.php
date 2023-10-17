@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Admin\OrganiserController as AdminOrganiserController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\SeriesSeriesMapController;
@@ -102,6 +103,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.events.edit')
         ->name('update', 'admin.events.update')
         ->name('destroy', 'admin.events.destroy');
+    
+    Route::resource('organisers', AdminOrganiserController::class)
+        ->name('index', 'admin.organisers.index')
+        ->name('create', 'admin.organisers.create')
+        ->name('store', 'admin.organisers.store')
+        ->name('show', 'admin.organisers.show')
+        ->name('edit', 'admin.organisers.edit')
+        ->name('update', 'admin.organisers.update')
+        ->name('destroy', 'admin.organisers.destroy');
 
     Route::resource('players', AdminPlayerController::class)
         ->name('index', 'admin.players.index')
