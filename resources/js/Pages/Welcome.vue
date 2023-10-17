@@ -39,7 +39,12 @@ defineProps({
                 <FrostedGlassCard flush>
                     <Link
                         v-for="(event, eventIndex) in upcomingEvents"
-                        :href="route('events.show', event.id)"
+                        :href="
+                            route('events.show.seo', {
+                                match: event.id,
+                                slug: event.slug,
+                            })
+                        "
                         class="p-4 flex gap-3 items-center hover:bg-black/25 transition rounded-xl"
                     >
                         <img
@@ -68,7 +73,12 @@ defineProps({
                 <FrostedGlassCard flush>
                     <Link
                         v-for="(event, eventIndex) in pastEvents"
-                        :href="route('events.show', event.id)"
+                        :href="
+                            route('events.show.seo', {
+                                match: event.id,
+                                slug: event.slug,
+                            })
+                        "
                         class="p-4 flex gap-3 items-center hover:bg-black/25 transition rounded-xl"
                     >
                         <img
