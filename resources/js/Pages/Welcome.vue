@@ -10,7 +10,7 @@ defineProps({
 });
 </script>
 <template>
-    <Head title="UKCSTV: Counter-Strike Coverage for the UK & Ireland"></Head>
+    <Head title="B-Site: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
         <div class="relative mb-6 transition opacity-80 hover:opacity-100">
             <Link class="absolute inset-0" :href="route('introducing-b-site')"></Link>

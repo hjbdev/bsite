@@ -9,8 +9,10 @@ use App\Enums\SeriesMapStatus;
 use App\Enums\SeriesStatus;
 use App\Events\Logs\LogCreated;
 use App\Jobs\Logs\BroadcastLogCreated;
-use App\Jobs\Players\IncrementPlayerSeriesMapStatistic;
+use App\Jobs\Players\ModifyPlayerSeriesMapStatistic;
+use App\Jobs\Players\ResetPlayerSeriesMapHealth;
 use App\Jobs\Series\RecalculateSeriesScore;
+use App\Jobs\SeriesMaps\RecordOpenings;
 use App\Jobs\SeriesMaps\SetSeriesMapRoundsPlayed;
 use App\Jobs\SeriesMaps\UpdateSeriesMapScore;
 use App\Models\Log;
@@ -141,7 +143,7 @@ class LogHandler extends Controller
                             // ], [
                             //     'kills' => DB::raw('kills + 1')
                             // ]);
-                            dispatch(new IncrementPlayerSeriesMapStatistic(
+                            dispatch(new ModifyPlayerSeriesMapStatistic(
                                 playerId: $killer->id,
                                 seriesMapId: $seriesMap->id,
                                 statistic: 'kills',
@@ -157,7 +159,7 @@ class LogHandler extends Controller
                             // ], [
                             //     'deaths' => DB::raw('deaths + 1')
                             // ]);
-                            dispatch(new IncrementPlayerSeriesMapStatistic(
+                            dispatch(new ModifyPlayerSeriesMapStatistic(
                                 playerId: $victim->id,
                                 seriesMapId: $seriesMap->id,
                                 statistic: 'deaths',
@@ -166,32 +168,52 @@ class LogHandler extends Controller
                             ))->delay($series->event->delay);
                         }
 
+                        dispatch(new RecordOpenings(
+                            seriesMapId: $series->current_series_map_id,
+                            logId: $logModel->id
+                        ));
+
                         unset($killer);
                         unset($victim);
                     }
                 }
 
-                if ($log instanceof Attack && $series && $series->current_series_map_id && ($log->attackerTeam !== $log->victimTeam)) {
-                    $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
-                    $attacker = app(GetCachedPlayerWithSteamId3::class)->execute($log->attackerSteamId);
+                if ($log instanceof Attack && $series && $series->current_series_map_id) {
+                    if ($log->attackerTeam !== $log->victimTeam) {
+                        $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+                        $attacker = app(GetCachedPlayerWithSteamId3::class)->execute($log->attackerSteamId);
 
-                    if ($attacker) {
-                        // $seriesMap->players()->newPivotQuery()->updateOrInsert([
-                        //     'player_id' => $attacker->id,
-                        //     'series_map_id' => $seriesMap->id,
-                        // ], [
-                        //     'damage' => DB::raw('damage + ' . min($log->attackerDamage, 100))
-                        // ]);
-                        dispatch(new IncrementPlayerSeriesMapStatistic(
-                            playerId: $attacker->id,
-                            seriesMapId: $seriesMap->id,
-                            statistic: 'damage',
-                            value: min($log->attackerDamage, 100),
-                            logReceivedAt: $logReceivedAt
-                        ))->delay($series->event->delay);
+                        if ($attacker) {
+                            // $seriesMap->players()->newPivotQuery()->updateOrInsert([
+                            //     'player_id' => $attacker->id,
+                            //     'series_map_id' => $seriesMap->id,
+                            // ], [
+                            //     'damage' => DB::raw('damage + ' . min($log->attackerDamage, 100))
+                            // ]);
+                            dispatch(new ModifyPlayerSeriesMapStatistic(
+                                playerId: $attacker->id,
+                                seriesMapId: $seriesMap->id,
+                                statistic: 'damage',
+                                value: min($log->attackerDamage, 100),
+                                logReceivedAt: $logReceivedAt
+                            ))->delay($series->event->delay);
+                        }
+
+                        unset($attacker);
                     }
 
-                    unset($attacker);
+                    $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
+
+                    if ($victim) {
+                        dispatch(new ModifyPlayerSeriesMapStatistic(
+                            playerId: $victim->id,
+                            seriesMapId: $seriesMap->id,
+                            statistic: 'health',
+                            value: $log->victimHealth,
+                            logReceivedAt: $logReceivedAt,
+                            operator: '-'
+                        ))->delay($series->event->delay);
+                    }
                 }
 
                 if ($log instanceof KillAssist && $series && $series->current_series_map_id && ($log->killedTeam !== $log->assisterTeam)) {
@@ -205,7 +227,7 @@ class LogHandler extends Controller
                         // ], [
                         //     'assists' => DB::raw('assists + 1')
                         // ]);
-                        dispatch(new IncrementPlayerSeriesMapStatistic(
+                        dispatch(new ModifyPlayerSeriesMapStatistic(
                             playerId: $assister->id,
                             seriesMapId: $seriesMap->id,
                             statistic: 'assists',
@@ -246,6 +268,8 @@ class LogHandler extends Controller
                             $series->start_date = $logReceivedAt;
                         }
                     }
+
+                    dispatch(new ResetPlayerSeriesMapHealth(seriesMapId: $seriesMap->id, logReceivedAt: $logReceivedAt))->delay($series->event->delay);
 
                     if ($seriesMap->status === SeriesMapStatus::ONGOING) {
                         $series->status = SeriesStatus::ONGOING;

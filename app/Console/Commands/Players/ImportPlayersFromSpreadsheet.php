@@ -25,6 +25,6 @@ class ImportPlayersFromSpreadsheet extends Command
      */
     public function handle()
     {
-        
+
     }
 }
