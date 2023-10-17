@@ -18,8 +18,8 @@ class SeriesSeriesMapController extends Controller
 
         $series->seriesMaps()->findOrFail($id)->delete();
 
-        Cache::forget('series-map-' . $id);
-        Cache::forget('series-' . $series->server_token);
+        Cache::forget('series-map-'.$id);
+        Cache::forget('series-'.$series->server_token);
 
         return redirect()->back();
     }
