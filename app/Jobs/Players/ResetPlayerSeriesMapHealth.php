@@ -3,22 +3,21 @@
 namespace App\Jobs\Players;
 
 use App\Actions\SeriesMap\GetCachedSeriesMap;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
-class IncrementPlayerSeriesMapStatistic implements ShouldQueue
+class ResetPlayerSeriesMapHealth implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $playerId, public int $seriesMapId, public string $statistic, public int $value, public Carbon $logReceivedAt)
+    public function __construct(public int $seriesMapId, public Carbon $logReceivedAt)
     {
         //
     }
@@ -44,11 +43,8 @@ class IncrementPlayerSeriesMapStatistic implements ShouldQueue
             return;
         }
 
-        $seriesMap->players()->newPivotQuery()->updateOrInsert([
-            'player_id' => $this->playerId,
-            'series_map_id' => $this->seriesMapId,
-        ], [
-            $this->statistic => DB::raw($this->statistic.' + '.$this->value),
+        $seriesMap->players()->newPivotQuery()->update([
+            'health' => 100,
         ]);
     }
 }

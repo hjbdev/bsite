@@ -28,20 +28,21 @@ class ImportPlayersFromFaceitTournament extends Command
      */
     public function handle()
     {
-        $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/' . $this->argument('tournamentId') . '/subscriptions?offset='.$this->option('offset').'&limit=10');
+        $response = Http::withHeader('Authorization', 'Bearer '.env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/'.$this->argument('tournamentId').'/subscriptions?offset='.$this->option('offset').'&limit=10');
 
-        if (!$response->ok()) {
+        if (! $response->ok()) {
             $this->error('Error while fetching players from faceit');
             dd($response->body());
+
             return;
         }
 
         $teams = $response->json('items');
 
         foreach ($teams as $team) {
-            $this->info('Importing team ' . $team['team']['name']);
+            $this->info('Importing team '.$team['team']['name']);
 
-            if (!$teamModel = Team::where('faceit_id', $team['team']['team_id'])->exists()) {
+            if (! $teamModel = Team::where('faceit_id', $team['team']['team_id'])->exists()) {
                 $teamModel = new Team;
                 $teamModel->faceit_id = $team['team']['team_id'];
                 $teamModel->name = $team['team']['name'];
@@ -51,20 +52,21 @@ class ImportPlayersFromFaceitTournament extends Command
             }
 
             foreach ($team['roster'] as $rosterId) {
-                $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/players/' . $rosterId);
+                $response = Http::withHeader('Authorization', 'Bearer '.env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/players/'.$rosterId);
 
-                if (!$response->ok()) {
-                    $this->error('Error while fetching player ' . $rosterId . '  from faceit');
+                if (! $response->ok()) {
+                    $this->error('Error while fetching player '.$rosterId.'  from faceit');
+
                     continue;
                 }
 
                 $player = $response->json();
 
-                $this->info('Importing player ' . $player['nickname']);
+                $this->info('Importing player '.$player['nickname']);
 
                 $playerModel = new Player;
 
-                if (!$playerModel->where('faceit_id', $player['player_id'])->exists()) {
+                if (! $playerModel->where('faceit_id', $player['player_id'])->exists()) {
                     $playerModel->faceit_id = $player['player_id'];
                     $playerModel->name = $player['nickname'];
                     $playerModel->nationality = str($player['country'])->upper();
@@ -81,20 +83,21 @@ class ImportPlayersFromFaceitTournament extends Command
 
             // Substitutes
             foreach ($team['substitutes'] as $rosterId) {
-                $response = Http::withHeader('Authorization', 'Bearer ' . env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/players/' . $rosterId);
+                $response = Http::withHeader('Authorization', 'Bearer '.env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/players/'.$rosterId);
 
-                if (!$response->ok()) {
-                    $this->error('Error while fetching player ' . $rosterId . '  from faceit');
+                if (! $response->ok()) {
+                    $this->error('Error while fetching player '.$rosterId.'  from faceit');
+
                     continue;
                 }
 
                 $player = $response->json();
 
-                $this->info('Importing player ' . $player['nickname']);
+                $this->info('Importing player '.$player['nickname']);
 
                 $playerModel = new Player;
 
-                if (!$playerModel->where('faceit_id', $player['player_id'])->exists()) {
+                if (! $playerModel->where('faceit_id', $player['player_id'])->exists()) {
                     $playerModel->faceit_id = $player['player_id'];
                     $playerModel->name = $player['nickname'];
                     $playerModel->nationality = str($player['country'])->upper();
@@ -113,7 +116,7 @@ class ImportPlayersFromFaceitTournament extends Command
         if (count($teams) === 10) {
             $this->call('app:import-players-from-faceit-tournament', [
                 'tournamentId' => $this->argument('tournamentId'),
-                '--offset' => $this->option('offset') + 10
+                '--offset' => $this->option('offset') + 10,
             ]);
         }
     }

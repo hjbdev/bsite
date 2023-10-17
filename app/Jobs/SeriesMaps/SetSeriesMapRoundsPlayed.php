@@ -35,7 +35,7 @@ class SetSeriesMapRoundsPlayed implements ShouldQueue
             return;
         }
 
-        if (!$seriesMap->start_date || $seriesMap->start_date->gte($this->logReceivedAt)) {
+        if (! $seriesMap->start_date || $seriesMap->start_date->gte($this->logReceivedAt)) {
             // If the log was before the series map started, we don't want to update the stats
             return;
         }

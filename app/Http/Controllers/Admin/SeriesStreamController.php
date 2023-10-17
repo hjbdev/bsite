@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Streams\CreateSeriesStreamRequest;
 use App\Models\Series;
-use Illuminate\Http\Request;
 
 class SeriesStreamController extends Controller
 {
@@ -15,7 +14,7 @@ class SeriesStreamController extends Controller
     public function create(int $id)
     {
         return inertia('Admin/Streams/Form', [
-            'seriesId' => $id
+            'seriesId' => $id,
         ]);
     }
 
