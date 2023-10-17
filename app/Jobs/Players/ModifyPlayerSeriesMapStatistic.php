@@ -18,7 +18,7 @@ class ModifyPlayerSeriesMapStatistic implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $playerId, public int $seriesMapId, public string $statistic, public int $value, public Carbon $logReceivedAt, public $operator = '+')
+    public function __construct(public int $playerId, public int $seriesMapId, public string $statistic, public int $value, public Carbon $logReceivedAt, public $operator = '+', public $victimId = null)
     {
         //
     }
@@ -42,6 +42,12 @@ class ModifyPlayerSeriesMapStatistic implements ShouldQueue
         if ($seriesMap->start_date->gte($this->logReceivedAt)) {
             // If the log was before the series map started, we don't want to update the stats
             return;
+        }
+
+        if ($this->statistic === 'damage' && $this->victimId) {
+            // ADR should not count damage done beyond the 100hp of the victim
+            $victimHealth = $seriesMap->players()->where('player_id', $this->victimId)->first()?->pivot?->health ?? 100;
+            $this->value = min($this->value, $victimHealth);
         }
 
         $seriesMap->players()->newPivotQuery()->updateOrInsert([
