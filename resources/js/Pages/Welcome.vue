@@ -1,58 +1,135 @@
 <script setup>
 import { Container, HH2 } from "@hjbdev/ui";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
+import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import { Head, Link } from "@inertiajs/vue3";
 
 defineOptions({ layout: PublicLayout });
 
 defineProps({
     upcomingEvents: Array,
+    pastEvents: Array,
+    news: Array,
 });
 </script>
 <template>
     <Head title="B-Site: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
-        <div class="relative mb-6 transition opacity-80 hover:opacity-100">
-            <Link class="absolute inset-0" :href="route('introducing-b-site')"></Link>
-            <img src="../../assets/introducing-b-site.jpg" class="object-cover object-center rounded-lg h-96 w-full shadow-lg">
-        </div>
-        <HH2 class="mb-6">Upcoming Events</HH2>
-        <section
-            class="flex flex-wrap lg:grid grid-cols-3 lg:grid-rows-2 lg:grid-cols-6 gap-3"
-        >
+        <div class="relative mb-6 transition gap-6 group">
             <div
-                v-for="(event, eventIndex) in upcomingEvents"
-                class="relative overflow-hidden rounded-lg h-48 sm:w-[calc(33.3%-1rem)] lg:w-auto lg:h-auto group"
-                :class="{
-                    'lg:row-span-2 lg:col-span-4 lg:min-h-64': eventIndex === 0,
-                    'lg:aspect-square': eventIndex !== 0,
-                    'hidden sm:block': eventIndex > 1,
-                }"
+                class="absolute inset-0 flex items-center p-6 text-3xl font-bold gap-6 z-10"
             >
-                <Link :href="route('events.show', event.id)" class="absolute inset-0 z-10"></Link>
-                <div
-                    class="absolute inset-0 bg-black/20 transition group-hover:bg-black/50 flex items-center justify-center"
-                >
-                    <img :src="event.logo" class="object-cover object-center" />
-                </div>
-                <div
-                    class="absolute inset-x-0 bottom-0 top-2/3 bg-gradient-to-t from-black to-transparent flex text-lg items-end p-3 justify-between"
-                    :class="{
-                        'lg:text-sm': eventIndex > 0,
-                    }"
-                >
-                    <div>
-                        {{ event.name }}
-                        <div class="text-sm">
-                            <!-- {{ seriesMap.team_a_score }} - -->
-                            <!-- {{ seriesMap.team_b_score }} -->
+                <img src="../../assets/bsite.svg" class="h-16" />
+                <span class="[text-shadow:_0px_2px_4px_rgba(0,_0,_0,_0.75)]">
+                    Introducing B-Site for the UK & Ireland
+                </span>
+            </div>
+            <Link
+                class="absolute inset-0 z-20"
+                :href="route('introducing-b-site')"
+            ></Link>
+            <img
+                src="../../assets/bsite-banner.jpg"
+                class="object-cover object-center rounded-lg h-32 w-full shadow-lg opacity-80 transition group-hover:opacity-100"
+            />
+        </div>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <HH2 class="mb-6">Events</HH2>
+                <FrostedGlassCard flush>
+                    <Link
+                        v-for="(event, eventIndex) in upcomingEvents"
+                        :href="route('events.show', event.id)"
+                        class="p-4 flex gap-3 items-center hover:bg-black/25 transition rounded-xl"
+                    >
+                        <img
+                            :src="event.logo"
+                            class="h-8 w-8 rounded-lg object-cover"
+                        />
+                        <div>
+                            <h4 class="text-lg">{{ event.name }}</h4>
+                            <div>
+                                📍
+                                <span class="opacity-50">{{
+                                    event.location
+                                }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="uppercase text-xs opacity-50">
-                        <!-- {{ seriesMap.status }} -->
+                        <div class="ml-auto">
+                            {{
+                                event.start_date.split("-").reverse().join("-")
+                            }}
+                        </div>
+                    </Link>
+                </FrostedGlassCard>
+            </div>
+            <div v-if="pastEvents.length">
+                <HH2 class="mb-6">Past Events</HH2>
+                <FrostedGlassCard flush>
+                    <Link
+                        v-for="(event, eventIndex) in pastEvents"
+                        :href="route('events.show', event.id)"
+                        class="p-4 flex gap-3 items-center hover:bg-black/25 transition rounded-xl"
+                    >
+                        <img
+                            :src="event.logo"
+                            class="h-8 w-8 rounded-lg object-cover"
+                        />
+                        <div>
+                            <h4 class="text-lg">{{ event.name }}</h4>
+                            <div>
+                                📍
+                                <span class="opacity-50">{{
+                                    event.location
+                                }}</span>
+                            </div>
+                        </div>
+                        <div class="ml-auto">
+                            {{
+                                event.start_date.split("-").reverse().join("-")
+                            }}
+                        </div>
+                    </Link>
+                </FrostedGlassCard>
+            </div>
+        </div>
+        <div>
+            <div class="flex gap-3 mb-6 items-center">
+                <HH2>News</HH2>
+                via
+                <a href="https://ukcsgo.com" target="_blank"
+                    ><img
+                        class="h-8 bg-white rounded"
+                        src="../../assets/ukcsgo-logo.png"
+                        alt="UKCSGO Logo"
+                /></a>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div
+                    v-for="post in news"
+                    class="relative aspect-video rounded-xl overflow-hidden"
+                >
+                    <a
+                        class="inset-0 absolute z-10"
+                        target="_blank"
+                        :href="post.url + '?utm_source=bsite'"
+                    ></a>
+                    <div
+                        class="absolute inset-0 ukcsgo-news"
+                        v-html="post.image"
+                    ></div>
+                    <div
+                        class="absolute inset-0 flex items-end p-6 bg-gradient-to-t from-black to-transparent"
+                    >
+                        {{ post.title }}
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </Container>
 </template>
+<style lang="postcss">
+.ukcsgo-news img {
+    @apply object-cover w-full h-full;
+}
+</style>
