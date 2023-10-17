@@ -33,8 +33,8 @@ defineProps({
                 class="object-cover object-center rounded-lg h-32 w-full shadow-lg opacity-80 transition group-hover:opacity-100"
             />
         </div>
-        <div class="grid md:grid-cols-2 gap-6 mb-6">
-            <div>
+        <div v-if="upcomingEvents.length || pastEvents.length" class="grid md:grid-cols-2 gap-6 mb-6">
+            <div v-if="upcomingEvents.length">
                 <HH2 class="mb-6">Events</HH2>
                 <FrostedGlassCard flush>
                     <Link
