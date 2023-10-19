@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SeriesVetos;
 
+use App\Models\Series;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSeriesVetoRequest extends FormRequest
@@ -11,7 +12,23 @@ class StoreSeriesVetoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('store:veto')) {
+            return true;
+        }
+
+        if ($user->can('store:(own)veto')) {
+            $series = Series::findOrFail($this->route('series'))->with('event.organiser');
+
+            return $series->event->organiser->users()->where('id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     /**

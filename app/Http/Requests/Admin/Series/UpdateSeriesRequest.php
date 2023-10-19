@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Series;
 
+use App\Models\Series;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSeriesRequest extends FormRequest
@@ -11,7 +12,23 @@ class UpdateSeriesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('update:series')) {
+            return true;
+        }
+
+        if ($user->can('update:(own)series')) {
+            $series = Series::findOrFail($this->route('series'))->with('event.organiser');
+
+            return $series->event->organiser->users()->where('id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     /**

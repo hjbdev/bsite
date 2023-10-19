@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Series;
 
+use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSeriesRequest extends FormRequest
@@ -11,7 +12,23 @@ class StoreSeriesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('store:series')) {
+            return true;
+        }
+
+        if ($user->can('store:(own)series')) {
+            $event = Event::findOrFail($this->input('event.id'))->with('organiser');
+
+            return $event->organiser->users()->where('id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     /**
