@@ -7,16 +7,27 @@ import {
     Modals,
     Dialogs,
 } from "@hjbdev/ui";
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import {
     HomeIcon,
     CalendarDaysIcon,
     PuzzlePieceIcon,
     UserGroupIcon,
     UserIcon,
+    BuildingOffice2Icon,
 } from "@heroicons/vue/20/solid";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
+
+function impersonate() {
+    const id = prompt("Enter the ID of the user you would like to impersonate:");
+
+    if (id) {
+        router.visit(route('impersonate', id));
+    } else {
+        router.visit(route('impersonate.leave'));
+    }
+}
 </script>
 
 <template>
@@ -50,7 +61,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                     <SidebarItem
                         :as="Link"
                         :href="route('admin.organisers.index')"
-                        :icon="PuzzlePieceIcon"
+                        :icon="BuildingOffice2Icon"
                         :active="route().current('admin.organisers.index')"
                         >Organisers</SidebarItem
                     >
@@ -67,6 +78,13 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                         :icon="UserGroupIcon"
                         :active="route().current('admin.teams.index')"
                         >Teams</SidebarItem
+                    >
+                    <SidebarItem
+                        :as="Link"
+                        :href="route('admin.users.index')"
+                        :icon="UserIcon"
+                        :active="route().current('admin.users.index')"
+                        >Users</SidebarItem
                     >
                 </SidebarItemGroup>
                 <SidebarItemGroup>
@@ -96,6 +114,9 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                         </template>
 
                         <template #content>
+                            <DropdownLink v-if="$page.props.auth['user.roles'].includes('super-admin')" :href="''" as="button" @click="impersonate">
+                                Impersonate
+                            </DropdownLink>
                             <DropdownLink :href="route('profile.edit')">
                                 Profile
                             </DropdownLink>

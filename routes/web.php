@@ -3,12 +3,14 @@
 use App\Actions\News\GetUKCSGONews;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\OrganiserController as AdminOrganiserController;
+use App\Http\Controllers\Admin\OrganiserUserController as AdminOrganiserUserController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
-use App\Http\Controllers\Admin\SeriesSeriesMapController;
-use App\Http\Controllers\Admin\SeriesStreamController;
-use App\Http\Controllers\Admin\SeriesVetoController;
+use App\Http\Controllers\Admin\SeriesSeriesMapController as AdminSeriesSeriesMapController;
+use App\Http\Controllers\Admin\SeriesStreamController as AdminSeriesStreamController;
+use App\Http\Controllers\Admin\SeriesVetoController as AdminSeriesVetoController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FinishedSeriesController;
 use App\Http\Controllers\ProfileController;
@@ -35,7 +37,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
         'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
-        'news' => app(GetUKCSGONews::class)->execute()->take(6)
+        'news' => app(GetUKCSGONews::class)->execute()->take(6),
     ]);
 });
 
@@ -74,18 +76,18 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('update', 'admin.series.update')
         ->name('destroy', 'admin.series.destroy');
 
-    Route::resource('matches/{match}/streams', SeriesStreamController::class)
+    Route::resource('matches/{match}/streams', AdminSeriesStreamController::class)
         ->only('create', 'store', 'destroy')
         ->name('create', 'admin.series.streams.create')
         ->name('store', 'admin.series.streams.store')
         ->name('destroy', 'admin.series.streams.destroy');
 
-    Route::resource('matches/{match}/vetos', SeriesVetoController::class)
+    Route::resource('matches/{match}/vetos', AdminSeriesVetoController::class)
         ->only('store', 'destroy')
         ->name('store', 'admin.series.vetos.store')
         ->name('destroy', 'admin.series.vetos.destroy');
 
-    Route::resource('matches/{match}/series-maps', SeriesSeriesMapController::class)
+    Route::resource('matches/{match}/series-maps', AdminSeriesSeriesMapController::class)
         ->only('destroy')
         ->name('destroy', 'admin.series.series-maps.destroy');
 
@@ -106,7 +108,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.events.edit')
         ->name('update', 'admin.events.update')
         ->name('destroy', 'admin.events.destroy');
-    
+
     Route::resource('organisers', AdminOrganiserController::class)
         ->name('index', 'admin.organisers.index')
         ->name('create', 'admin.organisers.create')
@@ -116,6 +118,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('update', 'admin.organisers.update')
         ->name('destroy', 'admin.organisers.destroy');
 
+    Route::resource('organisers/{organiser}/users', AdminOrganiserUserController::class)
+        ->only('store', 'destroy')
+        ->name('store', 'admin.organisers.users.store')
+        ->name('destroy', 'admin.organisers.users.destroy');
+
     Route::resource('players', AdminPlayerController::class)
         ->name('index', 'admin.players.index')
         ->name('create', 'admin.players.create')
@@ -124,6 +131,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->name('edit', 'admin.players.edit')
         ->name('update', 'admin.players.update')
         ->name('destroy', 'admin.players.destroy');
+
+    Route::resource('users', AdminUserController::class)
+        ->only('index')
+        ->name('index', 'admin.users.index');
+
+    Route::impersonate();
 });
 
 Route::middleware('auth')->group(function () {

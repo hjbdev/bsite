@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\SeriesStatus;
 use App\Models\Event;
-use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -35,18 +34,5 @@ class EventController extends Controller
             'series' => $event->series()->whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('matches'),
             'pastSeries' => $event->series()->where('status', SeriesStatus::FINISHED)->orderBy('start_date', 'desc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('results'),
         ]);
-    }
-
-    public function search(Request $request)
-    {
-        return Event::where('name', 'like', "%{$request->search}%")
-            ->limit(10)
-            ->get()
-            ->map(function ($event) {
-                return [
-                    'id' => $event->id,
-                    'name' => $event->name,
-                ];
-            });
     }
 }

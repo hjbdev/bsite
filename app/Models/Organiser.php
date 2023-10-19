@@ -2,9 +2,16 @@
 
 namespace App\Models;
 
+use Engine\Fields\File;
+use Engine\Fields\Text;
+use Engine\HasFields;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File as RulesFile;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -12,7 +19,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Organiser extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, HasFields, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -20,6 +27,17 @@ class Organiser extends Model implements HasMedia
     ];
 
     protected $appends = ['logo'];
+
+    public function fields()
+    {
+        return [
+            Text::create('Name')
+                ->creationRules(['required', 'string', 'unique:organisers,name'])
+                ->updateRules(['required', 'string', Rule::unique('organisers')->ignore(request()?->route('organiser') ?? 0)]),
+            File::create('Logo')
+                ->rules(['nullable', RulesFile::types(['png'])->max(5192)]),
+        ];
+    }
 
     public static function boot(): void
     {
@@ -32,6 +50,16 @@ class Organiser extends Model implements HasMedia
         static::updating(function (Organiser $organiser) {
             $organiser->slug = str($organiser->name)->slug();
         });
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
     }
 
     public function registerMediaConversions(Media $media = null): void

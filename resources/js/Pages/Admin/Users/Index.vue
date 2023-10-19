@@ -1,18 +1,15 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { Container, HH1, PrimaryButton, Input } from "@hjbdev/ui";
-import Pagination from "@/Components/Pagination.vue";
-import { nextTick } from "vue";
-import { onMounted } from "vue";
-import { watch } from "vue";
-import { ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 defineOptions({ layout: AuthenticatedLayout });
 
 const props = defineProps({
-    events: Object,
+    users: Object,
 });
 
 const hasMounted = ref(false);
@@ -46,16 +43,16 @@ watch(
 </script>
 
 <template>
-    <Head title="Events" />
+    <Head title="Users" />
 
     <Container class="py-6">
         <div class="flex items-center justify-between mb-6">
-            <HH1>Events</HH1>
-            <div>
-                <PrimaryButton :as="Link" :href="route('admin.events.create')"
+            <HH1>Users</HH1>
+            <!-- <div>
+                <PrimaryButton :as="Link" :href="route('admin.users.create')"
                     >Create</PrimaryButton
                 >
-            </div>
+            </div> -->
         </div>
 
         <div class="flex justify-end">
@@ -68,22 +65,16 @@ watch(
         </div>
 
         <div class="divide-y">
-            <Link
-                v-for="event in events.data"
-                :href="
-                    route('admin.events.show', {
-                        event: event.id,
-                    })
-                "
+            <div
+                v-for="user in users.data"  
                 class="dark:border-zinc-800 py-3 flex gap-3"
             >
-                <div class="w-16">{{ event.id }}</div>
-                <div class="md:w-80 truncate">{{ event.name }}</div>
-                <div>{{ event.organiser?.name }}</div>
-            </Link>
+                <div class="w-16">{{ user.id }}</div>
+                <div class="w-48 truncate">{{ user.name }}</div>
+            </div>
 
             <div class="flex justify-end dark:border-zinc-800 gap-1 pt-6">
-                <Pagination :links="events.links" />
+                <Pagination :links="users.links" />
             </div>
         </div>
     </Container>
