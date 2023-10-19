@@ -12,7 +12,13 @@ class StorePlayerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        return $user->can('store:player');
     }
 
     /**

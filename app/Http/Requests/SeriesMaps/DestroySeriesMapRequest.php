@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SeriesMaps;
 
+use App\Models\Series;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DestroySeriesMapRequest extends FormRequest
@@ -11,7 +12,23 @@ class DestroySeriesMapRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('destroy:series-map')) {
+            return true;
+        }
+
+        if ($user->can('destroy:(own)series-map')) {
+            $series = Series::findOrFail($this->route('series'))->with('event.organiser');
+
+            return $series->event->organiser->users()->where('id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     /**

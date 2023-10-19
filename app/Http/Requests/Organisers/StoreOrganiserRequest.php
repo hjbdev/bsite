@@ -12,7 +12,17 @@ class StoreOrganiserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('store:organiser')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

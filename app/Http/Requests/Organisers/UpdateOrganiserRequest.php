@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Organisers;
 
+use App\Models\Organiser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
@@ -13,7 +14,23 @@ class UpdateOrganiserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('update:organiser')) {
+            return true;
+        }
+
+        if ($user->can('update:(own)organiser')) {
+            $organiser = Organiser::findOrFail($this->route('organiser'));
+
+            return $organiser->users()->where('id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     /**
