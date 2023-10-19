@@ -22,10 +22,6 @@ class PermissionsSeeder extends Seeder
             'store:stream',
             'destroy:stream',
 
-            'store:organiser',
-            'update:organiser',
-            'destroy:organiser',
-
             'update:(own)organiser',
 
             'store:(own)event',
