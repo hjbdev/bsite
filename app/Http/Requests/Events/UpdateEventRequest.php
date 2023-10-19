@@ -25,6 +25,8 @@ class UpdateEventRequest extends FormRequest
 
             return $organiser->users()->where('id', $user->id)->exists();
         }
+
+        return false;
     }
 
     public function rules(): array
