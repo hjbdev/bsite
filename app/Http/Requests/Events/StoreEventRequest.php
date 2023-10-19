@@ -16,13 +16,17 @@ class StoreEventRequest extends FormRequest
 
         $user = auth()->user();
 
+        if ($user->can('store:event')) {
+            return true;
+        }
+
         if ($user->can('store:(own)event')) {
             $organiser = Organiser::findOrFail($this->input('organiser_id'));
 
             return $organiser->users()->where('id', $user->id)->exists();
         }
 
-        return $user->can('store:event');
+        return false;
     }
 
     public function rules(): array
