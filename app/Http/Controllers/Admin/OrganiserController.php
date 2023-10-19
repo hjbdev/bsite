@@ -31,7 +31,9 @@ class OrganiserController extends Controller
      */
     public function create()
     {
-        return inertia('Admin/Organisers/Form');
+        return inertia('Admin/Organisers/Form', [
+            'fields' => (new Organiser())->fields(),
+        ]);
     }
 
     /**
@@ -55,7 +57,7 @@ class OrganiserController extends Controller
     public function show(string $id)
     {
         return inertia('Admin/Organisers/Show', [
-            'organiser' => Organiser::findOrFail($id),
+            'organiser' => Organiser::with('users')->findOrFail($id),
         ]);
     }
 
@@ -94,5 +96,18 @@ class OrganiserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        return Organiser::where('name', 'like', "%{$request->search}%")
+            ->limit(10)
+            ->get()
+            ->map(function ($organiser) {
+                return [
+                    'id' => $organiser->id,
+                    'name' => $organiser->name,
+                ];
+            });
     }
 }

@@ -1,13 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import OrganiserAutocomplete from "@/Components/Organisers/OrganiserAutocomplete.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import {
-    Container,
-    HH1,
-    PrimaryButton,
-    Card,
-    Input,
-} from "@hjbdev/ui";
+import { Container, HH1, PrimaryButton, Card, Input } from "@hjbdev/ui";
 
 defineOptions({ layout: AuthenticatedLayout });
 
@@ -16,6 +11,8 @@ const props = defineProps({
 });
 
 const form = useForm({
+    organiser: null,
+    organiser_id: null,
     players: [],
     start_date: null,
     end_date: null,
@@ -27,20 +24,30 @@ const form = useForm({
     name: props.event?.name ?? "",
 });
 
-function submit() {
-    if (typeof form.logo === 'string') {
-        form.logo = null;
+function transformRequest(data) {
+    console.log(data);
+    if (typeof data.logo === "string") {
+        data.logo = null;
     }
+    if (data.organiser) {
+        data.organiser_id = data.organiser.id;
+        delete data.organiser;
+    }
+    return data;
+}
+
+function submit() {
     if (props.event) {
-        form.patch(route("admin.events.update", props.event.id));
+        form.transform(transformRequest).patch(
+            route("admin.events.update", props.event.id),
+        );
     } else {
-        form.post(route("admin.events.store"));
+        form.transform(transformRequest).post(route("admin.events.store"));
     }
 }
 </script>
 
 <template>
-
     <Container class="py-6 space-y-6">
         <Head :title="event ? `Edit ${event.name}` : 'Create Event'" />
 
@@ -50,6 +57,12 @@ function submit() {
         </div>
 
         <Card class="space-y-6">
+            <OrganiserAutocomplete
+                v-model="form.organiser"
+                label="Organiser"
+                :error="form.errors['organiser_id'] ?? null"
+                :display-value="(t) => t?.name"
+            />
             <Input
                 name="name"
                 label="Name"

@@ -15,7 +15,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Event::latest();
+        $query = Event::with('organiser')->latest();
 
         if ($request->has('search')) {
             $query = $query->where('name', 'like', "%{$request->search}%");
@@ -55,7 +55,7 @@ class EventController extends Controller
     public function show(string $id)
     {
         return inertia('Admin/Events/Show', [
-            'event' => Event::findOrFail($id),
+            'event' => Event::findOrFail($id)->load('organiser'),
         ]);
     }
 
@@ -65,7 +65,7 @@ class EventController extends Controller
     public function edit(string $id)
     {
         return inertia('Admin/Events/Form', [
-            'event' => Event::findOrFail($id),
+            'event' => Event::findOrFail($id)->load('organiser'),
         ]);
     }
 
@@ -94,5 +94,18 @@ class EventController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        return Event::where('name', 'like', "%{$request->search}%")
+            ->limit(10)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'name' => $event->name,
+                ];
+            });
     }
 }

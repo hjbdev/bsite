@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
@@ -15,7 +16,7 @@ class Event extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay'];
+    protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay', 'organiser_id'];
 
     protected $appends = ['logo'];
 
@@ -64,5 +65,10 @@ class Event extends Model implements HasMedia
     public function series(): HasMany
     {
         return $this->hasMany(Series::class);
+    }
+
+    public function organiser(): BelongsTo
+    {
+        return $this->belongsTo(Organiser::class);
     }
 }

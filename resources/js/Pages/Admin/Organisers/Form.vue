@@ -9,11 +9,13 @@ import {
     Card,
     Input,
 } from "@hjbdev/ui";
+import FormEngine from "@/Components/FormEngine.vue";
 
 defineOptions({ layout: AuthenticatedLayout });
 
 const props = defineProps({
     organiser: Object,
+    fields: Array
 });
 
 const form = useForm({
@@ -44,22 +46,11 @@ function submit() {
         </div>
 
         <Card class="space-y-6">
-            <Input
-                label="Name"
-                :value="form.name"
-                :error="form.errors['name'] ?? null"
-                @input="(v) => (form.name = v.target.value)"
-            />
 
-            <div>
-                <Input
-                    name="logo"
-                    label="Logo"
-                    :error="form.errors.logo"
-                    type="file"
-                    @input="(v) => (form.logo = v.target.files[0])"
-                />
-            </div>
+            <FormEngine
+                v-model:form="form"
+                :fields="fields"
+            />
 
             <div class="flex justify-end mt-6">
                 <PrimaryButton @click="submit">Save</PrimaryButton>

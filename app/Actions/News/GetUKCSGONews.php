@@ -19,7 +19,6 @@ class GetUKCSGONews
                 // Parse HTML
                 $img = str($item->description[0]->__toString())->match('/<img.*\/>/mU');
 
-
                 $img = $img->replaceMatches('/width="[0-9]*"/', '');
                 $img = $img->replaceMatches('/height="[0-9]*"/', '');
                 $img = $img->replaceMatches('/class="[a-zA-Z0-9\-\s]*"/', '');

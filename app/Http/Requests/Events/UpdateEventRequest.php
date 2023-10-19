@@ -2,27 +2,35 @@
 
 namespace App\Http\Requests\Events;
 
+use App\Models\Organiser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
 class UpdateEventRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        if ($user->can('update:event')) {
+            return true;
+        }
+
+        if ($user->can('update:(own)event')) {
+            $organiser = Organiser::findOrFail($this->input('organiser_id'));
+
+            return $organiser->users()->where('id', $user->id)->exists();
+        }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
+            'organiser_id' => ['required', 'exists:organisers,id'],
             'name' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date'],
