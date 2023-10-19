@@ -68,6 +68,7 @@ class OrganiserController extends Controller
     {
         return inertia('Admin/Organisers/Form', [
             'organiser' => Organiser::findOrFail($id),
+            'fields' => (new Organiser())->fields(),
         ]);
     }
 
