@@ -3,12 +3,14 @@
 namespace App\Jobs\Series;
 
 use App\Enums\SeriesMapStatus;
+use App\Enums\SeriesStatus;
 use App\Models\Series;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class RecalculateSeriesScore implements ShouldQueue
 {
@@ -47,5 +49,15 @@ class RecalculateSeriesScore implements ShouldQueue
             'team_a_score' => $series->team_a_score,
             'team_b_score' => $series->team_b_score,
         ]);
+
+        if (! $series->remainingMaps() || ($series->team_a_score > $series->mapCount() / 2) || ($series->team_b_score > $series->mapCount() / 2)) {
+            $series->update([
+                'status' => SeriesStatus::FINISHED,
+            ]);
+            Cache::forget('series-'.$series->server_token);
+        } else {
+            $series->refresh();
+            Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
+        }
     }
 }
