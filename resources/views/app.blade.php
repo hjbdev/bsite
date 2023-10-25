@@ -13,6 +13,8 @@
 
         <link rel="icon" href="/bsite.svg">
 
+        <script defer data-domain="bsite.uk" src="https://plausible.hjb.dev/js/script.js"></script>
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
