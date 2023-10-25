@@ -351,14 +351,7 @@ class LogHandler extends Controller
                         // This is just in case.
                         dispatch(new RecalculateSeriesScore($series->id))->delay($series->event->delay + 120);
 
-                        if (! $series->remainingMaps() || ($series->team_a_score > $series->mapCount() / 2) || ($series->team_b_score > $series->mapCount() / 2)) {
-                            $series->status = SeriesStatus::FINISHED;
-                            $series->save();
-                            Cache::forget('series-'.$series->server_token);
-                        } else {
-                            $series->save();
-                            Cache::put('series-'.$series->server_token, $series, Series::CACHE_TTL);
-                        }
+                        $series->save();
                     } else {
                         logger("We received a MatchEnd event, with series {$series->id}, but there is no current map.");
                     }
