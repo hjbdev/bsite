@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
         if (env('APP_ENV') === 'production') {
             return;
         }
-        app(TestDataSeeder::class)->run();
+        // app(TestDataSeeder::class)->run();
     }
 }
