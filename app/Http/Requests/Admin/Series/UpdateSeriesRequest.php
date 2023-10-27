@@ -46,6 +46,8 @@ class UpdateSeriesRequest extends FormRequest
             'team_b_score' => ['required', 'integer', 'min:0'],
             'type.id' => ['required', 'in:bo1,bo3,bo5,bo7,bo9'],
             'status' => ['required', 'in:upcoming,ongoing,completed'],
+            'round' => ['nullable', 'numeric'],
+            'stage' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

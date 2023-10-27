@@ -32,6 +32,8 @@ const form = useForm({
     team_b_score: 0,
     type: null,
     status: "upcoming",
+    stage: null,
+    round: null,
     start_date: null,
     ...props.series,
 
@@ -72,13 +74,6 @@ function submit() {
                 :error="form.errors['team_a.id'] ?? null"
                 :display-value="(t) => t?.name"
             />
-            <Input
-                label="Team A Score"
-                :value="form.team_a_score"
-                :error="form.errors['team_a_score'] ?? null"
-                type="number"
-                @input="(v) => (form.team_a_score = v.target.value)"
-            />
             <TeamAutocomplete
                 v-model="form.team_b"
                 label="Team B"
@@ -86,11 +81,17 @@ function submit() {
                 :display-value="(t) => t?.name"
             />
             <Input
-                label="Team B Score"
-                :value="form.team_b_score"
+                label="Round"
+                :value="form.round"
                 type="number"
-                :error="form.errors['team_b_score'] ?? null"
-                @input="(v) => (form.team_b_score = v.target.value)"
+                :error="form.errors['round'] ?? null"
+                @input="(v) => (form.round = v.target.value)"
+            />
+            <Input
+                label="Stage"
+                :value="form.stage"
+                :error="form.errors['stage'] ?? null"
+                @input="(v) => (form.stage = v.target.value)"
             />
             <SelectInput
                 label="Type"

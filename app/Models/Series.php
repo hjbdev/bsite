@@ -28,6 +28,8 @@ class Series extends Model
         'type',
         'status',
         'start_date',
+        'stage',
+        'round'
     ];
 
     protected $casts = [
