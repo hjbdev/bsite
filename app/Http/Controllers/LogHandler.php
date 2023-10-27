@@ -131,6 +131,11 @@ class LogHandler extends Controller
 
                     if ($series->current_series_map_id) {
                         $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+
+                        if ($seriesMap->status === SeriesMapStatus::FINISHED) {
+                            return;
+                        }
+
                         $killer = app(GetCachedPlayerWithSteamId3::class)->execute($log->killerSteamId);
                         $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->killedSteamId);
 
@@ -178,6 +183,11 @@ class LogHandler extends Controller
 
                 if ($log instanceof Attack && $series && $series->current_series_map_id) {
                     $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+
+                    if ($seriesMap->status === SeriesMapStatus::FINISHED) {
+                        return;
+                    }
+
                     $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
 
                     if ($log->attackerTeam !== $log->victimTeam) {
@@ -218,6 +228,11 @@ class LogHandler extends Controller
 
                 if ($log instanceof KillAssist && $series && $series->current_series_map_id && ($log->killedTeam !== $log->assisterTeam)) {
                     $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+
+                    if ($seriesMap->status === SeriesMapStatus::FINISHED) {
+                        return;
+                    }
+                    
                     $assister = app(GetCachedPlayerWithSteamId3::class)->execute($log->assisterSteamId);
 
                     if ($assister) {
@@ -244,11 +259,18 @@ class LogHandler extends Controller
 
                     $currentMap = $maps->firstWhere('name', $log->map);
 
-                    if ($series->seriesMaps()->where('map_id', $currentMap->id)->doesntExist()) {
-                        // If we've started a new map, and the other one hasn't finished, mark it as cancelled.
-                        $series->seriesMaps()->where('status', SeriesMapStatus::ONGOING)->update([
-                            'status' => SeriesMapStatus::CANCELLED,
-                        ]);
+                    $seriesMap = $series->seriesMaps()->where('map_id', $currentMap->id)->first();
+
+                    if ($seriesMap) {
+                        if ($seriesMap?->status === SeriesMapStatus::FINISHED) {
+                            // It's already finished, we don't need to do anything.
+                            return;
+                        } else {
+                            // If we've started a new map, and the other one hasn't finished, mark it as cancelled.
+                            $series->seriesMaps()->where('status', SeriesMapStatus::ONGOING)->update([
+                                'status' => SeriesMapStatus::CANCELLED,
+                            ]);
+                        }
                     }
 
                     $seriesMap = $series->seriesMaps()->updateOrCreate([
@@ -319,6 +341,11 @@ class LogHandler extends Controller
                 if ($log instanceof TeamScored) {
                     if ($series->current_series_map_id) {
                         $seriesMap = app(GetCachedSeriesMap::class)->execute($series->current_series_map_id);
+
+                        if ($seriesMap->status === SeriesMapStatus::FINISHED) {
+                            return;
+                        }
+                        
                         // $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
                         //     return SeriesMap::find($series->current_series_map_id);
                         // });
