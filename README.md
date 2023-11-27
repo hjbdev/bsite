@@ -1,6 +1,15 @@
 # Colosseum
 
-Making live scorebots more accessible for regional Counter-Strike scenes. This repository is pre-set as the UK Flavour, [bsite.uk](https://bsite.uk)
+Making live scorebots more accessible for regional Counter-Strike scenes. This repository is pre-set as the UK Flavour, [bsite.uk](https://bsite.uk)/
+
+## Tech Stack
+- Laravel 10
+- Vue 3
+- Tailwind CSS
+- My UI Library: @hjbdev/ui (wip)
+- Redis
+- MySQL
+- Laravel Octane (Swoole)
 
 ## FAQ
 
