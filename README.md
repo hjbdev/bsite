@@ -1,6 +1,6 @@
 # Colosseum
 
-Making live scorebots more accessible for regional Counter-Strike scenes.
+Making live scorebots more accessible for regional Counter-Strike scenes. This repository is pre-set as the UK Flavour, [bsite.uk](https://bsite.uk)
 
 ## FAQ
 
