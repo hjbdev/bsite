@@ -232,7 +232,7 @@ class LogHandler extends Controller
                     if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                         return;
                     }
-                    
+
                     $assister = app(GetCachedPlayerWithSteamId3::class)->execute($log->assisterSteamId);
 
                     if ($assister) {
@@ -345,7 +345,7 @@ class LogHandler extends Controller
                         if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                             return;
                         }
-                        
+
                         // $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
                         //     return SeriesMap::find($series->current_series_map_id);
                         // });
