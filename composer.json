@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.1",
         "filament/filament": "^3.0-stable",
+        "filament/spatie-laravel-media-library-plugin": "^3.0-stable",
         "guzzlehttp/guzzle": "^7.2",
         "hjbdev/cs-log-parser-php": "^1.0",
         "hjbdev/laravel-engine": "^0.0.2",
