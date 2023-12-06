@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Filament\Resources\TeamResource\RelationManagers;
+namespace App\Filament\Filament\Resources\PlayerResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -8,10 +8,12 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PlayersRelationManager extends RelationManager
+class TeamsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'players';
+    protected static string $relationship = 'teams';
 
     public function form(Form $form): Form
     {
@@ -19,11 +21,12 @@ class PlayersRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->disabled()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('start_date')
-                    ->required()
-                    ->default(now()),
-                Forms\Components\DatePicker::make('end_date'),
+                    ->required(),
+                Forms\Components\DatePicker::make('end_date')
+                    ->required(),
             ]);
     }
 
@@ -33,15 +36,16 @@ class PlayersRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('start_date'),
-                Tables\Columns\TextColumn::make('end_date'),
+                Tables\Columns\TextColumn::make('start_date')
+                    ->date(),
+                Tables\Columns\TextColumn::make('end_date')
             ])
+            ->defaultSort('start_date', 'desc')
             ->filters([
                 //
             ])
-            ->defaultSort('start_date', 'desc')
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
                 Tables\Actions\AttachAction::make()
                     ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
@@ -53,7 +57,7 @@ class PlayersRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

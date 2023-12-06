@@ -3,6 +3,7 @@
 namespace App\Filament\Filament\Resources;
 
 use App\Filament\Filament\Resources\PlayerResource\Pages;
+use App\Filament\Filament\Resources\PlayerResource\RelationManagers;
 use App\Models\Player;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -62,7 +63,7 @@ class PlayerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\TeamsRelationManager::class,
         ];
     }
 
