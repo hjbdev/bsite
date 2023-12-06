@@ -32,6 +32,7 @@ use CSLog\CS2\Patterns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class LogHandler extends Controller
 {
@@ -62,6 +63,12 @@ class LogHandler extends Controller
             }
 
             $rawLog = $request->getContent();
+
+            if (File::exists(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'))) {
+                File::append(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+            } else {
+                File::put(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+            }
 
             $logReceivedAt = now();
 
