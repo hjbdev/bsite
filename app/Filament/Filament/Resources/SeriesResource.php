@@ -149,6 +149,7 @@ class SeriesResource extends Resource
     {
         return [
             RelationManagers\VetosRelationManager::class,
+            RelationManagers\SeriesMapsRelationManager::class,
         ];
     }
 
