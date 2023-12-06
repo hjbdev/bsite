@@ -35,6 +35,7 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                Tables\Actions\AttachAction::make(),
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
