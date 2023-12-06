@@ -6,6 +6,7 @@ use App\Filament\Filament\Resources\EventResource\Pages;
 use App\Filament\Filament\Resources\EventResource\RelationManagers;
 use App\Models\Event;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,6 +30,11 @@ class EventResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->disabled()
                     ->maxLength(255),
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('logo')
+                    ->image()
+                    ->nullable()
+                    ->rules('image', 'max:5192'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('start_date'),
