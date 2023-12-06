@@ -34,6 +34,7 @@ class EventResource extends Resource
                     ->collection('logo')
                     ->image()
                     ->nullable()
+                    ->disk(env('MEDIA_DISK'))
                     ->rules('image', 'max:5192'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
