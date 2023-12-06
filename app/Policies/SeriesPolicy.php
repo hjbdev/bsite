@@ -54,7 +54,7 @@ class SeriesPolicy
         }
 
         if ($user->can('update:(own)series')) {
-            return $series->event->organiser->users()->where('id', $user->id)->exists();
+            return $series?->event?->organiser?->users()?->where('id', $user->id)?->exists() ?? false;
         }
 
         return false;
@@ -70,7 +70,7 @@ class SeriesPolicy
         }
 
         if ($user->can('delete:(own)series')) {
-            return $series->event->organiser->users()->where('id', $user->id)->exists();
+            return $series?->event?->organiser?->users()?->where('id', $user->id)?->exists() ?? false;
         }
 
         return false;
