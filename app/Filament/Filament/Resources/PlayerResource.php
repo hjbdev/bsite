@@ -28,9 +28,9 @@ class PlayerResource extends Resource
                 TextInput::make('full_name')
                     ->placeholder(__('Full Name')),
                 TextInput::make('steam_id3')
-                    ->required()
                     ->placeholder(__('Steam ID3')),
                 TextInput::make('steam_id64')
+                    ->required()
                     ->placeholder(__('Steam ID64')),
             ]);
     }
