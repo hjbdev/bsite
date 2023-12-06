@@ -40,7 +40,8 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('logo'),
+                SpatieMediaLibraryImageColumn::make('logo')
+                    ->disk(env('MEDIA_DISK')),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('updated_at')

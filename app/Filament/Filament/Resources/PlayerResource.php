@@ -47,7 +47,8 @@ class PlayerResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('picture'),
+                SpatieMediaLibraryImageColumn::make('picture')
+                    ->disk(env('MEDIA_DISK')),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('full_name'),
