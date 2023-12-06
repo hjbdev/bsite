@@ -1,15 +1,49 @@
 <script setup>
 import { Container, HH2 } from "@hjbdev/ui";
+import { UserIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 defineOptions({ layout: PublicLayout });
 
-defineProps({
+const props = defineProps({
+    recentRosterMoves: Array,
     upcomingEvents: Array,
     pastEvents: Array,
     news: Array,
+});
+
+function rosterMoveType(rosterMove) {
+    if (!rosterMove?.end_date) {
+        return "join";
+    }
+
+    const startDate = new Date(rosterMove.start_date);
+    const endDate = new Date(rosterMove?.end_date);
+
+    if (startDate.getTime() < endDate.getTime()) {
+        return "leave";
+    }
+
+    return "join";
+}
+
+const recentRosterMovesWithTypes = computed(() => {
+    return props.recentRosterMoves.map((rosterMove) => {
+        return {
+            ...rosterMove,
+            type: rosterMoveType(rosterMove),
+            human_date: new Date(rosterMove.start_date)
+                .toLocaleDateString("en-GB", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                })
+                .replace(",", ""),
+        };
+    });
 });
 </script>
 <template>
@@ -33,7 +67,10 @@ defineProps({
                 class="object-cover object-center rounded-lg h-32 w-full shadow-lg opacity-80 transition group-hover:opacity-100"
             />
         </div>
-        <div v-if="upcomingEvents.length || pastEvents.length" class="grid md:grid-cols-2 gap-6 mb-6">
+        <div
+            v-if="upcomingEvents.length || pastEvents.length"
+            class="grid md:grid-cols-2 gap-6 mb-6"
+        >
             <div v-if="upcomingEvents.length">
                 <HH2 class="mb-6">Events</HH2>
                 <FrostedGlassCard flush>
@@ -100,6 +137,41 @@ defineProps({
                             }}
                         </div>
                     </Link>
+                </FrostedGlassCard>
+            </div>
+        </div>
+        <div v-if="recentRosterMoves?.length">
+            <HH2 class="mb-6">Transfers</HH2>
+            <div class="grid lg:grid-cols-4 xl:grid-cols-5 mb-6 gap-1">
+                <FrostedGlassCard
+                    v-for="rosterMove in recentRosterMovesWithTypes"
+                    flush
+                    class="py-2 px-3 flex gap-3 items-center"
+                >
+                    <div>
+                        <UserIcon class="h-6 w-6" />
+                    </div>
+                    <div>
+                        <p class="block font-bold">
+                            {{ rosterMove.player_name }}
+                        </p>
+                        <p class="text-sm">
+                            <span
+                                :class="{
+                                    'text-green-500':
+                                        rosterMove.type === 'join',
+                                    'text-red-500': rosterMove.type === 'leave',
+                                }"
+                                >{{
+                                    rosterMove.type === "leave"
+                                        ? "left"
+                                        : "joined"
+                                }}</span
+                            >
+                            {{ rosterMove.team_name }} 
+                            <div class="text-xs">{{ rosterMove.human_date }}</div>
+                        </p>
+                    </div>
                 </FrostedGlassCard>
             </div>
         </div>

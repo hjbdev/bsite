@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeriesController;
 use App\Models\Event;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,6 +36,14 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'recentRosterMoves' => DB::table('player_team')
+            ->select('player_id', 'team_id', 'most_recent_move', 'start_date', 'end_date', 'players.name as player_name', 'players.full_name as player_full_name', 'players.nationality as player_nationality', 'teams.name as team_name')
+            ->join('players', 'player_team.player_id', '=', 'players.id', 'left')
+            ->join('teams', 'player_team.team_id', '=', 'teams.id', 'left')
+            ->whereNotNull('most_recent_move')
+            ->orderByDesc('most_recent_move')
+            ->limit(5)
+            ->get(),
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
         'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
         'news' => app(GetUKCSGONews::class)->execute()->take(6),
