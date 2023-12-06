@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -46,6 +47,7 @@ class PlayerResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('picture'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('full_name'),

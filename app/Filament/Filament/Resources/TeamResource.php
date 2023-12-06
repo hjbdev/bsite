@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -39,6 +40,7 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('logo'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('updated_at')
