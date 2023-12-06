@@ -41,6 +41,6 @@ class SeriesMap extends Model
 
     public function players(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->withPivot(['kills', 'assists', 'deaths', 'damage', 'traded', 'kast', 'rating']);
+        return $this->belongsToMany(Player::class)->withPivot(['kills', 'assists', 'deaths', 'damage', 'traded', 'kast', 'rating', 'opening_kills', 'opening_deaths', 'health']);
     }
 }
