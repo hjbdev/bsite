@@ -45,7 +45,7 @@ class PlayerResource extends Resource
                 TextColumn::make('updated_at')
                     ->date(),
             ])
-            ->defaultSort('updated_at', 'desc)
+            ->defaultSort('updated_at', 'desc')
             ->filters([
                 //
             ])
