@@ -64,10 +64,10 @@ class LogHandler extends Controller
 
             $rawLog = $request->getContent();
 
-            if (File::exists(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'))) {
-                File::append(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+            if (File::exists(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'))) {
+                File::append(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
             } else {
-                File::put(storage_path('logs/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+                File::put(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
             }
 
             $logReceivedAt = now();
