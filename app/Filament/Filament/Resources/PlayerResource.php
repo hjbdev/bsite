@@ -37,6 +37,7 @@ class PlayerResource extends Resource
                 SpatieMediaLibraryFileUpload::make('picture')
                     ->collection('picture')
                     ->image()
+                    ->disk(env('MEDIA_DISK'))
                     ->rules('image', 'max:5192'),
             ]);
     }

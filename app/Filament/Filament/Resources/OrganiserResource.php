@@ -34,6 +34,7 @@ class OrganiserResource extends Resource
                     ->collection('logo')
                     ->image()
                     ->nullable()
+                    ->disk(env('MEDIA_DISK'))
                     ->rules('image', 'max:5192'),
             ]);
     }
