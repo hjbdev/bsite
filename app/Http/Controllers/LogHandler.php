@@ -64,6 +64,8 @@ class LogHandler extends Controller
 
             $rawLog = $request->getContent();
 
+            File::ensureDirectoryExists(storage_path('logs/scorebot'));
+
             if (File::exists(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'))) {
                 File::append(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
             } else {
