@@ -41,9 +41,7 @@ Route::get('/', function () {
             ->join('players', 'player_team.player_id', '=', 'players.id', 'left')
             ->join('teams', 'player_team.team_id', '=', 'teams.id', 'left')
             ->whereNotNull('most_recent_move')
-            ->orderByDesc('end_date')
-            ->orderByDesc('start_date')
-            ->orderByDesc('most_recent_move')
+            ->orderByRaw('most_recent_move DESC, start_date DESC, end_date DESC')
             ->limit(8)
             ->get(),
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
