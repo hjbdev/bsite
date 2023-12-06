@@ -149,6 +149,11 @@ Route::prefix('old-admin')->middleware('auth')->group(function () {
     });
     */
     
+Route::get('/generators/upcoming-series/{series}', function (App\Models\Series $series) {
+    return view('generators.upcoming-series', [
+        'series' => $series,
+    ]);
+})->name('generators.upcoming-series');
 
 Route::middleware('auth')->group(function () {
     Route::impersonate();
