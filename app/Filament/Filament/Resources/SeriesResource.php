@@ -23,6 +23,7 @@ class SeriesResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('slug')
+                    ->disabled()
                     ->maxLength(255),
                 Forms\Components\Select::make('event_id')
                     ->searchable()
@@ -150,6 +151,7 @@ class SeriesResource extends Resource
         return [
             RelationManagers\VetosRelationManager::class,
             RelationManagers\SeriesMapsRelationManager::class,
+            RelationManagers\StreamsRelationManager::class,
         ];
     }
 
