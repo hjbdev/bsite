@@ -12,9 +12,11 @@ use App\Models\User;
 use App\Policies\EventPolicy;
 use App\Policies\OrganiserPolicy;
 use App\Policies\PlayerPolicy;
+use App\Policies\RolePolicy;
 use App\Policies\SeriesPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Silber\Bouncer\Database\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         Event::class => EventPolicy::class,
         Organiser::class => OrganiserPolicy::class,
         Player::class => PlayerPolicy::class,
+        Role::class => RolePolicy::class,
         Series::class => SeriesPolicy::class,
         User::class => UserPolicy::class
     ];
