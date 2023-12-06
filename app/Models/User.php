@@ -48,9 +48,9 @@ class User extends Authenticatable implements FilamentUser
         'password' => 'hashed',
     ];
 
-    public function organisations(): BelongsToMany
+    public function organisers(): BelongsToMany
     {
-        return $this->belongsToMany(Organisation::class);
+        return $this->belongsToMany(Organiser::class);
     }
 
     public function canImpersonate(): bool

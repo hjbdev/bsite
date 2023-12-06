@@ -79,6 +79,7 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\RolesRelationManager::class,
+            RelationManagers\OrganisersRelationManager::class
         ];
     }
 
