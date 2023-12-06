@@ -20,6 +20,12 @@ class PlayersRelationManager extends RelationManager
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('full_name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('steam_id64')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\DatePicker::make('start_date')
                     ->required()
                     ->default(now()),
@@ -34,7 +40,7 @@ class PlayersRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('full_name'),
-                Tables\Columns\TextColumn::make('steam_id64'),
+                // Tables\Columns\TextColumn::make('steam_id64'),
                 Tables\Columns\TextColumn::make('start_date'),
                 Tables\Columns\TextColumn::make('end_date'),
             ])
