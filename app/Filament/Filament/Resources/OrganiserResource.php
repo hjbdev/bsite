@@ -45,6 +45,8 @@ class OrganiserResource extends Resource
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo')
+                    ->conversion('mini_preview')
                     ->disk(env('MEDIA_DISK')),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
