@@ -6,6 +6,7 @@ use App\Filament\Filament\Resources\OrganiserResource\Pages;
 use App\Filament\Filament\Resources\OrganiserResource\RelationManagers;
 use App\Models\Organiser;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,6 +30,11 @@ class OrganiserResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->disabled()
                     ->maxLength(255),
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('logo')
+                    ->image()
+                    ->nullable()
+                    ->rules('image', 'max:5192'),
             ]);
     }
 
