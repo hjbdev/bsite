@@ -41,6 +41,8 @@ class TeamResource extends Resource
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo')
+                    ->conversion('mini_preview')
                     ->disk(env('MEDIA_DISK')),
                 TextColumn::make('name')
                     ->searchable(),

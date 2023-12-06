@@ -48,6 +48,8 @@ class PlayerResource extends Resource
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('picture')
+                    ->collection('logo')
+                    ->conversion('preview')
                     ->disk(env('MEDIA_DISK')),
                 TextColumn::make('name')
                     ->searchable(),
