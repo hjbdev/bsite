@@ -28,18 +28,19 @@ class ImportPlayersFromEpiclanMasterSheet extends Command
      */
     public function handle()
     {
-        if (!file_exists(storage_path($this->argument('filename') . '.csv'))) {
+        if (! file_exists(storage_path($this->argument('filename').'.csv'))) {
             $this->error('File does not exist');
+
             return;
         }
 
-        $file = fopen(storage_path($this->argument('filename') . '.csv'), 'r');
+        $file = fopen(storage_path($this->argument('filename').'.csv'), 'r');
 
         // $csv = fgetcsv($file, 500, ',');
 
         $contents = collect();
 
-        while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {
+        while (($data = fgetcsv($file, 1000, ',')) !== false) {
             $contents->push($data);
         }
 
@@ -49,8 +50,8 @@ class ImportPlayersFromEpiclanMasterSheet extends Command
         $createdPlayers = 0;
 
         foreach ($contents as $row) {
-            list($teamNumber, $name, $steamId64) = $row;
-          
+            [$teamNumber, $name, $steamId64] = $row;
+
             if ($teamNumber && $name) {
                 // this is a team
                 $lastTeam = Team::updateOrCreate([
@@ -59,9 +60,9 @@ class ImportPlayersFromEpiclanMasterSheet extends Command
                 $createdTeams++;
             }
 
-            if (!$teamNumber && $name && $steamId64) {
+            if (! $teamNumber && $name && $steamId64) {
                 // this could be a player
-                if (!$lastTeam) {
+                if (! $lastTeam) {
                     continue;
                 }
 
@@ -72,11 +73,11 @@ class ImportPlayersFromEpiclanMasterSheet extends Command
                 ]);
                 $createdPlayers++;
 
-                if (!$lastTeam->players()->where('id', $player->id)->exists()) {
+                if (! $lastTeam->players()->where('id', $player->id)->exists()) {
                     $lastTeam->players()->syncWithoutDetaching([$player->id => [
                         'start_date' => Carbon::createFromFormat('Y-m-d', '2023-10-26'),
                         'end_date' => Carbon::createFromFormat('Y-m-d', '2023-10-29'),
-                        'substitute' => false
+                        'substitute' => false,
                     ]]);
                     // $teamModel->players()->syncWithoutDetaching([$playerModel->id => ['start_date' => now(), 'substitute' => true]]);
                 }
@@ -90,7 +91,7 @@ class ImportPlayersFromEpiclanMasterSheet extends Command
 
         }
 
-        $this->info('Created ' . $createdTeams . ' teams');
-        $this->info('Created ' . $createdPlayers . ' players');
+        $this->info('Created '.$createdTeams.' teams');
+        $this->info('Created '.$createdPlayers.' players');
     }
 }

@@ -102,7 +102,8 @@ class LogHandler extends Controller
                     if (! ($series->terrorist_team_id || $series->ct_team_id)) {
                         $team = Team::whereHas('players', function ($query) use ($log) {
                             $query->where('players.steam_id3', $log->killerSteamId);
-                            $query->whereNull('player_team.end_date');
+                            $query->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                            // $query->whereNull('player_team.end_date');
                         })->first(['id']);
 
                         if ($team) {
@@ -232,7 +233,7 @@ class LogHandler extends Controller
                     if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                         return;
                     }
-                    
+
                     $assister = app(GetCachedPlayerWithSteamId3::class)->execute($log->assisterSteamId);
 
                     if ($assister) {
@@ -311,7 +312,8 @@ class LogHandler extends Controller
                     // $player = Player::where('steam_id3', $log->steamId)->first();
                     $team = Team::whereHas('players', function ($query) use ($log) {
                         $query->where('players.steam_id3', $log->steamId);
-                        $query->whereNull('player_team.end_date');
+                        $query->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                        // $query->whereNull('player_team.end_date');
                     })->first(['id']);
 
                     if ($team) {
@@ -345,7 +347,7 @@ class LogHandler extends Controller
                         if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                             return;
                         }
-                        
+
                         // $seriesMap = Cache::remember('series-map-' . $series->current_series_map_id, Series::CACHE_TTL, function () use ($series) {
                         //     return SeriesMap::find($series->current_series_map_id);
                         // });
