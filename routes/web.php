@@ -42,7 +42,7 @@ Route::get('/', function () {
             ->join('teams', 'player_team.team_id', '=', 'teams.id', 'left')
             ->whereNotNull('most_recent_move')
             ->orderByDesc('most_recent_move')
-            ->limit(5)
+            ->limit(8)
             ->get(),
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
         'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
