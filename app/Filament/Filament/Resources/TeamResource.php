@@ -5,6 +5,7 @@ namespace App\Filament\Filament\Resources;
 use App\Filament\Filament\Resources\TeamResource\Pages;
 use App\Filament\Filament\Resources\TeamResource\RelationManagers\PlayersRelationManager;
 use App\Models\Team;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,6 +26,12 @@ class TeamResource extends Resource
                 TextInput::make('name')
                     ->autofocus(),
                 TextInput::make('faceit_id'),
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('logo')
+                    ->image()
+                    ->nullable()
+                    ->disk(env('MEDIA_DISK'))
+                    ->rules('image', 'max:5192'),
             ]);
     }
 
