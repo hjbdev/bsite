@@ -35,7 +35,7 @@ const recentRosterMovesWithTypes = computed(() => {
         return {
             ...rosterMove,
             type: rosterMoveType(rosterMove),
-            human_date: new Date(rosterMove.start_date)
+            human_date: new Date(rosterMove.most_recent_move)
                 .toLocaleDateString("en-GB", {
                     year: "numeric",
                     month: "short",
