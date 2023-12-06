@@ -62,7 +62,8 @@ Route::resource('events', EventController::class)
 Route::get('events/{match}/{slug}', [EventController::class, 'show'])
     ->name('events.show.seo');
 
-Route::prefix('admin')->middleware('auth')->group(function () {
+/*
+Route::prefix('old-admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return inertia('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
@@ -138,6 +139,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::impersonate();
 });
+*/
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
