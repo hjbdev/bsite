@@ -169,7 +169,7 @@ const recentRosterMovesWithTypes = computed(() => {
                                 }}</span
                             >
                             {{ rosterMove.team_name }} 
-                            <div class="text-xs">{{ rosterMove.human_date }}</div>
+                            <div class="text-xs text-white/50">{{ rosterMove.human_date }}</div>
                         </p>
                     </div>
                 </FrostedGlassCard>
