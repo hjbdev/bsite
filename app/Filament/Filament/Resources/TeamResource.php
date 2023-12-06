@@ -35,9 +35,9 @@ class TeamResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('updated_at')
-                    ->date()
-                    ->defaultSort('desc'),
+                    ->date(),
             ])
+            ->defaultSort('updated_at')
             ->filters([
                 //
             ])
