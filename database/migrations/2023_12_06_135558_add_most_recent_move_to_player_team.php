@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('player_team', function (Blueprint $table) {
-            $table->date('most_recent_move')->virtualAs('GREATEST(start_date, end_date)')->nullable();
+            $table->date('most_recent_move')->virtualAs('COALESCE(GREATEST(start_date, end_date), IFNULL(start_date, end_date), IFNULL(end_date, start_date))')->nullable();
         });
     }
 
