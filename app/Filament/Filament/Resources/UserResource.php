@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class UserResource extends Resource
 {
@@ -62,6 +63,9 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Impersonate::make()
+                    ->guard(fn(User $user) => $user->canImpersonate())
+                    ->redirectTo('/admin'),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

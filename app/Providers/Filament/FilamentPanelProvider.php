@@ -23,6 +23,7 @@ class FilamentPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->default()
             ->id('filament')
             ->path('admin')
             ->colors([
