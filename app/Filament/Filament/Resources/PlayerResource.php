@@ -42,6 +42,9 @@ class PlayerResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('full_name'),
+                TextColumn::make('updated_at')
+                    ->date()
+                    ->defaultSort('desc'),
             ])
             ->filters([
                 //
