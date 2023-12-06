@@ -4,6 +4,7 @@ namespace App\Filament\Filament\Resources;
 
 use App\Enums\SeriesStatus;
 use App\Filament\Filament\Resources\SeriesResource\Pages;
+use App\Filament\Filament\Resources\SeriesResource\RelationManagers;
 use App\Models\Series;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -147,7 +148,7 @@ class SeriesResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\VetosRelationManager::class,
         ];
     }
 
