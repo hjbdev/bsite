@@ -66,10 +66,10 @@ class LogHandler extends Controller
 
             File::ensureDirectoryExists(storage_path('logs/scorebot'));
 
-            if (File::exists(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'))) {
-                File::append(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+            if (File::exists(storage_path('logs/scorebot/'.str()->slug($serverInstanceToken).'.log'))) {
+                File::append(storage_path('logs/scorebot/'.str()->slug($serverInstanceToken).'.log'), $rawLog);
             } else {
-                File::put(storage_path('logs/scorebot/' . str()->slug($serverInstanceToken) . '.log'), $rawLog);
+                File::put(storage_path('logs/scorebot/'.str()->slug($serverInstanceToken).'.log'), $rawLog);
             }
 
             $logReceivedAt = now();
@@ -111,7 +111,7 @@ class LogHandler extends Controller
                     if (! ($series->terrorist_team_id || $series->ct_team_id)) {
                         $team = Team::whereHas('players', function ($query) use ($log) {
                             $query->where('players.steam_id3', $log->killerSteamId);
-                            $query->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                            $query->where(fn ($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
                             // $query->whereNull('player_team.end_date');
                         })->first(['id']);
 
@@ -321,7 +321,7 @@ class LogHandler extends Controller
                     // $player = Player::where('steam_id3', $log->steamId)->first();
                     $team = Team::whereHas('players', function ($query) use ($log) {
                         $query->where('players.steam_id3', $log->steamId);
-                        $query->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                        $query->where(fn ($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
                         // $query->whereNull('player_team.end_date');
                     })->first(['id']);
 

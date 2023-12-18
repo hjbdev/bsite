@@ -30,8 +30,11 @@ class TestLogHandler extends Command
     protected $description = 'Tests the log handler from pre-established log files.';
 
     protected Team $teamA;
+
     protected Team $teamB;
+
     protected Event $event;
+
     protected Series $series;
 
     protected function selectTestMatch(): array
@@ -40,11 +43,11 @@ class TestLogHandler extends Command
         $testMatches = collect();
 
         foreach ($testMatchDirs as $testMatchDir) {
-            if (File::exists($testMatchDir . '/meta.json')) {
+            if (File::exists($testMatchDir.'/meta.json')) {
                 $testMatches->push([
-                    ...json_decode(File::get($testMatchDir . '/meta.json'), true),
+                    ...json_decode(File::get($testMatchDir.'/meta.json'), true),
                     'dir' => $testMatchDir,
-                    'log' => File::get($testMatchDir . '/log.txt'),
+                    'log' => File::get($testMatchDir.'/log.txt'),
                 ]);
             }
         }
@@ -91,14 +94,13 @@ class TestLogHandler extends Command
 
     protected function setupTestMatch(array $testMatch): void
     {
-        $this->info('Test match: ' . $testMatch['name']);
-        $this->info('Log file: ' . $testMatch['dir'] . '/log.txt');
+        $this->info('Test match: '.$testMatch['name']);
+        $this->info('Log file: '.$testMatch['dir'].'/log.txt');
 
         $this->info('Creating Teams');
         $this->teamA = $this->createTeam($testMatch['teamA']);
         $this->teamB = $this->createTeam($testMatch['teamB']);
         $this->info('Teams Created');
-
 
         $this->info('Creating Series');
         $this->series = $this->createSeries();
@@ -130,7 +132,7 @@ class TestLogHandler extends Command
 
             Http::withBody($logLine)->withHeaders([
                 'x-server-instance-token' => $instanceToken,
-            ])->post(env('APP_URL') . '/api/log-handler');
+            ])->post(env('APP_URL').'/api/log-handler');
         });
 
         $this->info('Log complete');
@@ -171,6 +173,7 @@ class TestLogHandler extends Command
         } catch (\Exception $e) {
             $this->error($e->getMessage());
             $this->tearDown();
+
             return;
         }
     }

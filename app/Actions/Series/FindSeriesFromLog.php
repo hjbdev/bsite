@@ -19,14 +19,14 @@ class FindSeriesFromLog
                     $query->whereHas('teamA', function ($teamAQuery) use ($logSteamId) {
                         $teamAQuery->whereHas('players', function ($teamAPlayerQuery) use ($logSteamId) {
                             // $teamAPlayerQuery->whereNull('player_team.end_date');
-                            $teamAPlayerQuery->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                            $teamAPlayerQuery->where(fn ($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
                             $teamAPlayerQuery->where('steam_id3', $logSteamId);
                         });
                     });
                     $query->orWhereHas('teamB', function ($teamBQuery) use ($logSteamId) {
                         $teamBQuery->whereHas('players', function ($teamBPlayerQuery) use ($logSteamId) {
                             // $teamBPlayerQuery->whereNull('player_team.end_date');
-                            $teamBPlayerQuery->where(fn($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
+                            $teamBPlayerQuery->where(fn ($q) => $q->whereNull('player_team.end_date')->orWhere('player_team.end_date', '>', now()));
                             $teamBPlayerQuery->where('steam_id3', $logSteamId);
                         });
                     });
