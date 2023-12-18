@@ -200,6 +200,8 @@ class LogHandler extends Controller
 
                     $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
 
+                    logger($rawLogLine);
+
                     if ($log->attackerTeam !== $log->victimTeam) {
                         $attacker = app(GetCachedPlayerWithSteamId3::class)->execute($log->attackerSteamId);
 
@@ -229,9 +231,9 @@ class LogHandler extends Controller
                             playerId: $victim->id,
                             seriesMapId: $seriesMap->id,
                             statistic: 'health',
-                            value: $log->attackerDamage,
+                            value: $log->victimHealth,
                             logReceivedAt: $logReceivedAt,
-                            operator: '-'
+                            operator: '='
                         ))->delay($series->event->delay);
                     }
                 }
