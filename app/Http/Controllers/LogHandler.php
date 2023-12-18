@@ -200,8 +200,6 @@ class LogHandler extends Controller
 
                     $victim = app(GetCachedPlayerWithSteamId3::class)->execute($log->victimSteamId);
 
-                    logger($rawLogLine);
-
                     if ($log->attackerTeam !== $log->victimTeam) {
                         $attacker = app(GetCachedPlayerWithSteamId3::class)->execute($log->attackerSteamId);
 

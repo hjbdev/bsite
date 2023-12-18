@@ -47,7 +47,6 @@ class ModifyPlayerSeriesMapStatistic implements ShouldQueue
         if ($this->statistic === 'damage' && $this->victimId) {
             // ADR should not count damage done beyond the 100hp of the victim
             $victimHealth = $seriesMap->players()->where('id', $this->victimId)->first()?->pivot?->health ?? 100;
-            logger('DAMAGE ' . $this->value . ' VICTIM HEALTH ' . $victimHealth);
             $this->value = min($this->value, $victimHealth);
         }
 
