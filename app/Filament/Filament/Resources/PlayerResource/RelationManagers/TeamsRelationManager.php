@@ -8,8 +8,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TeamsRelationManager extends RelationManager
 {
@@ -38,7 +36,7 @@ class TeamsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date(),
-                Tables\Columns\TextColumn::make('end_date')
+                Tables\Columns\TextColumn::make('end_date'),
             ])
             ->defaultSort('start_date', 'desc')
             ->filters([

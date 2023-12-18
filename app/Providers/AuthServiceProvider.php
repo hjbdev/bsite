@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         Player::class => PlayerPolicy::class,
         Role::class => RolePolicy::class,
         Series::class => SeriesPolicy::class,
-        User::class => UserPolicy::class
+        User::class => UserPolicy::class,
     ];
 
     /**

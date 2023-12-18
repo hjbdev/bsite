@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Silber\Bouncer\Database\Role;
 
 class RolePolicy

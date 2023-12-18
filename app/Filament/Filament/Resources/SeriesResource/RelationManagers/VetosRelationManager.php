@@ -9,8 +9,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Route;
 
 class VetosRelationManager extends RelationManager
 {
@@ -37,12 +35,12 @@ class VetosRelationManager extends RelationManager
                     ->options([
                         'ban' => 'Ban',
                         'pick' => 'Pick',
-                        'left-over' => 'Left Over'
+                        'left-over' => 'Left Over',
                     ])
                     ->required(),
                 Forms\Components\Select::make('map_id')
                     ->relationship(
-                        name: 'map', #
+                        name: 'map', //
                         titleAttribute: 'title',
                         modifyQueryUsing: fn (Builder $query) => $query->orderBy('title')
                     )

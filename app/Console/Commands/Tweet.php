@@ -42,11 +42,11 @@ class Tweet extends Command
 
         $return = $client->tweet()->create()->performRequest([
             'text' => 'Test Tweet... ',
-            "media" => [
-                "media_ids" => [
-                    (string) $media["media_id"]
-                ]
-            ]
+            'media' => [
+                'media_ids' => [
+                    (string) $media['media_id'],
+                ],
+            ],
         ]);
 
         dd($return);

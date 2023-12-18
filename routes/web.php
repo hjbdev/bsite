@@ -1,16 +1,6 @@
 <?php
 
 use App\Actions\News\GetUKCSGONews;
-use App\Http\Controllers\Admin\EventController as AdminEventController;
-use App\Http\Controllers\Admin\OrganiserController as AdminOrganiserController;
-use App\Http\Controllers\Admin\OrganiserUserController as AdminOrganiserUserController;
-use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
-use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
-use App\Http\Controllers\Admin\SeriesSeriesMapController as AdminSeriesSeriesMapController;
-use App\Http\Controllers\Admin\SeriesStreamController as AdminSeriesStreamController;
-use App\Http\Controllers\Admin\SeriesVetoController as AdminSeriesVetoController;
-use App\Http\Controllers\Admin\TeamController as AdminTeamController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FinishedSeriesController;
 use App\Http\Controllers\ProfileController;
@@ -70,7 +60,7 @@ Route::resource('events', EventController::class)
 
 Route::get('events/{match}/{slug}', [EventController::class, 'show'])
     ->name('events.show.seo');
-    
+
 Route::get('/generators/upcoming-series/{series}', function (App\Models\Series $series) {
     return view('generators.upcoming-series', [
         'series' => $series,

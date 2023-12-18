@@ -67,7 +67,7 @@ class SeriesResource extends Resource
                         'bo2' => 'BO2',
                         'bo3' => 'BO3',
                         'bo5' => 'BO5',
-                        'bo7' => 'BO7'
+                        'bo7' => 'BO7',
                     ])
                     ->required(),
                 Forms\Components\Select::make('status')
@@ -75,7 +75,7 @@ class SeriesResource extends Resource
                         SeriesStatus::CANCELLED->value => 'Cancelled',
                         SeriesStatus::FINISHED->value => 'Finished',
                         SeriesStatus::ONGOING->value => 'Ongoing',
-                        SeriesStatus::UPCOMING->value => 'Upcoming'
+                        SeriesStatus::UPCOMING->value => 'Upcoming',
                     ])
                     ->required()
                     ->default('upcoming'),
