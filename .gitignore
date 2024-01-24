@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 bunfig.toml
 storage/test-data
+database/*.sql
