@@ -1,5 +1,6 @@
 <script setup>
-import { Container, SecondaryButton, HH2 } from "@hjbdev/ui";
+import HH2 from "@/Components/HH2.vue";
+import Container from "@/Components/Container.vue";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
@@ -7,6 +8,8 @@ import useEcho from "@/Composables/useEcho";
 import { Head, router } from "@inertiajs/vue3";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import MatchFeed from "@/Components/Series/MatchFeed.vue";
+import CardSectionHeader from "@/Components/CardSectionHeader.vue";
+import { QueueListIcon, TableCellsIcon, TvIcon } from "@heroicons/vue/20/solid";
 
 defineOptions({ layout: PublicLayout });
 
@@ -146,7 +149,6 @@ const seriesMaps = computed(() => {
                 <QuestionMarkCircleIcon v-else class="h-10 w-10" />
             </div>
         </FrostedGlassCard>
-        <HH2>Maps</HH2>
         <div
             class="grid gap-6"
             :class="{
@@ -205,19 +207,20 @@ const seriesMaps = computed(() => {
         </div>
         <div class="grid lg:grid-cols-2 gap-6">
             <div>
-                <HH2 class="mb-6">Match Feed</HH2>
-                <FrostedGlassCard class="h-64 relative overflow-hidden">
-                    <!-- <img
-                        :src="`https://stratbox.app/images/maps/${series?.current_series_map?.map?.title?.toLowerCase()}.jpg`"
-                        alt=""
-                        class="absolute inset-0 backdrop-blur-2xl"
-                    /> -->
-                    <MatchFeed :logs="logs" />
+                <FrostedGlassCard flush>
+                    <CardSectionHeader :icon="QueueListIcon"
+                        >Match Feed</CardSectionHeader
+                    >
+                    <div class="h-64 relative overflow-hidden">
+                        <MatchFeed :logs="logs" />
+                    </div>
                 </FrostedGlassCard>
             </div>
             <div>
-                <HH2 class="mb-6">Streams</HH2>
                 <FrostedGlassCard flush class="overflow-hidden">
+                    <CardSectionHeader :icon="TvIcon"
+                        >Streams</CardSectionHeader
+                    >
                     <ul>
                         <li
                             v-for="stream in series.streams"
@@ -241,21 +244,24 @@ const seriesMaps = computed(() => {
             </div>
         </div>
 
-        <HH2>Scoreboard</HH2>
         <FrostedGlassCard flush class="overflow-hidden">
-            <div class="p-2">
-                <SecondaryButton
-                    v-for="seriesMap in series.series_maps"
-                    class="mr-1 last:mr-0"
-                    :class="{
-                        'bg-zinc-200 !dark:bg-zinc-600':
-                            selectedSnapshotMap === seriesMap.map.name,
-                    }"
-                    @click="selectedSnapshotMap = seriesMap.map.name"
-                >
-                    {{ seriesMap.map.name }}
-                </SecondaryButton>
-            </div>
+            <CardSectionHeader :icon="TableCellsIcon"
+                >Scoreboard
+
+                <template #extra>
+                    <button
+                        v-for="seriesMap in series.series_maps"
+                        class="inline-flex items-center border border-transparent rounded-md font-semibold transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 px-2.5 py-1.5 text-sm bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-500 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:ring-indigo-500 dark:focus:ring-offset-zinc-800 mr-1 last:mr-0"
+                        :class="{
+                            'bg-zinc-200 !dark:bg-zinc-600':
+                                selectedSnapshotMap === seriesMap.map.name,
+                        }"
+                        @click="selectedSnapshotMap = seriesMap.map.name"
+                    >
+                        {{ seriesMap.map.name }}
+                    </button>
+                </template></CardSectionHeader
+            >
             <table
                 v-if="series.series_maps.length"
                 class="dark:text-white w-full"
@@ -288,11 +294,15 @@ const seriesMaps = computed(() => {
                                         series.terrorist_team_id ===
                                             series.team_b_id),
                                 'bg-blue-600/20':
-                                    series.team_a.players.some(
+                                    (series.team_a.players.some(
                                         (p) => p.id === player.id,
-                                    ) && series.ct_team_id === series.team_a_id || series.team_b.players.some(
+                                    ) &&
+                                        series.ct_team_id ===
+                                            series.team_a_id) ||
+                                    (series.team_b.players.some(
                                         (p) => p.id === player.id,
-                                    ) && series.ct_team_id === series.team_b_id,
+                                    ) &&
+                                        series.ct_team_id === series.team_b_id),
                             }"
                         >
                             <td class="p-2">{{ player.name }}</td>

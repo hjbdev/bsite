@@ -1,5 +1,5 @@
 <script setup>
-import { HH1 } from "@hjbdev/ui";
+import HH1 from "@/Components/HH1.vue";
 import Container from "@/Components/Container.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";

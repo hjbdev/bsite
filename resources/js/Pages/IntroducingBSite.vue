@@ -1,6 +1,7 @@
 <script setup>
-import { Container, HH1 } from "@hjbdev/ui";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
+import Container from "@/Components/Container.vue";
+import HH1 from "@/Components/HH1.vue";
 import { Head, Link } from "@inertiajs/vue3";
 
 defineOptions({ layout: PublicLayout });

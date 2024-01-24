@@ -1,5 +1,5 @@
 <script setup>
-import { HH2 } from "@hjbdev/ui";
+import HH2 from "@/Components/HH2.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import Container from "@/Components/Container.vue";
 import EventList from "@/Components/Events/EventList.vue";

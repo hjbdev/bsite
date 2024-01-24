@@ -7,7 +7,6 @@ Making live scorebots more accessible for regional Counter-Strike scenes. This r
 - Vue 3
 - Tailwind CSS
 - Filament (for the admin panel)
-- My UI Library: @hjbdev/ui (wip)
 - Redis
 - MySQL
 - Laravel Octane (Swoole)

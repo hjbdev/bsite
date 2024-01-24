@@ -1,5 +1,6 @@
 <script setup>
-import { Container, HH1 } from "@hjbdev/ui";
+import Container from "@/Components/Container.vue";
+import HH1 from "@/Components/HH1.vue";
 import { Head } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
