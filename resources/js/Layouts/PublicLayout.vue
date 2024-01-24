@@ -1,5 +1,5 @@
 <script setup>
-import { SidebarLayout, Container, HH2 } from "@hjbdev/ui";
+import Container from "@/Components/Container.vue";
 import TopNavItem from "@/Components/TopNav/TopNavItem.vue";
 import { Link } from "@inertiajs/vue3";
 import { useScroll } from "@vueuse/core";
@@ -53,11 +53,9 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
                     </Container>
                 </div>
 
-                <!-- <FadeTransition mode="out-in"> -->
                 <div class="relative z-[5]">
                     <slot />
                 </div>
-                <!-- </FadeTransition> -->
             </section>
         </div>
     </div>

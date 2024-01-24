@@ -18,7 +18,7 @@ class Event extends Model implements HasMedia
 
     protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay', 'organiser_id'];
 
-    protected $appends = ['logo', 'start_date_short_friendly'];
+    protected $appends = ['logo', 'start_date_short_friendly', 'end_date_short_friendly', 'is_ongoing'];
 
     protected $casts = [
         'start_date' => 'date',
@@ -64,8 +64,17 @@ class Event extends Model implements HasMedia
 
     public function getStartDateShortFriendlyAttribute(): string
     {
-        // 2nd Jan
-        return $this->start_date->format('jS M');
+        return $this->start_date->format('j M');
+    }
+
+    public function getEndDateShortFriendlyAttribute(): string
+    {
+        return $this->end_date->format('j M');
+    }
+
+    public function getIsOngoingAttribute(): bool
+    {
+        return $this->start_date->isPast() && $this->end_date->isFuture();
     }
 
     public function registerMediaCollections(): void

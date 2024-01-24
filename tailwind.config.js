@@ -18,6 +18,9 @@ export default {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
                 display: ['Geo', ...defaultTheme.fontFamily.mono],
             },
+            maxWidth: {
+                '8xl': '90rem',
+            },
             minHeight: ({ theme }) => ({
                 ...theme('spacing')
             }),

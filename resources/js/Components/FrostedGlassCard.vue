@@ -8,7 +8,7 @@ defineProps({
 </script>
 <template>
     <div
-        class="z-10 dark:bg-zinc-800/80 relative backdrop-blur-2xl rounded-2xl overflow-hidden"
+        class="z-10 dark:bg-zinc-800/80 relative backdrop-blur-2xl rounded-lg overflow-hidden"
         :class="{
             'p-6': !flush
         }"
