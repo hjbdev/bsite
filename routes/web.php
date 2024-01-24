@@ -38,6 +38,7 @@ Route::get('/', function () {
 
     $rosterMoves = $rosterMoves->map(function ($rosterMove) use ($teams) {
         $rosterMove->team = $teams->firstWhere('id', $rosterMove->team_id);
+
         return $rosterMove;
     });
 
@@ -85,4 +86,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

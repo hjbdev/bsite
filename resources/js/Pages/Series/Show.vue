@@ -105,20 +105,24 @@ const seriesMaps = computed(() => {
     />
 
     <Container class="space-y-6">
-        <FrostedGlassCard class="flex flex-wrap sm:flex-nowrap">
-            <div class="flex items-center gap-3">
+        <FrostedGlassCard class="grid grid-cols-2 gap-4 md:grid-cols-5">
+            <div
+                class="order-1 flex items-center gap-3 md:order-1 md:col-span-2"
+            >
                 <img
                     v-if="series.team_a.logo"
                     :src="series.team_a.logo"
                     class="h-10 w-10"
                 />
                 <QuestionMarkCircleIcon v-else class="h-10 w-10" />
-                <h4 class="text-xl sm:text-3xl font-medium tracking-tighter">
+                <h4 class="text-xl font-medium tracking-tighter sm:text-3xl">
                     {{ series.team_a.name }}
                 </h4>
             </div>
-            <div class="ml-auto sm:mx-auto sm:text-center">
-                <div span class="dark:text-zinc-500 text-zinc-200">
+            <div
+                class="order-3 col-span-2 text-center md:order-2 md:col-span-1"
+            >
+                <div span class="text-zinc-200 dark:text-zinc-500">
                     Best of {{ series.type.replace("bo", "") }}
                 </div>
                 <div
@@ -126,19 +130,19 @@ const seriesMaps = computed(() => {
                     class="text-2xl font-bold"
                 >
                     {{ seriesMaps[0].team_a_score }}
-                    <span class="dark:text-zinc-500 text-zinc-200">-</span>
+                    <span class="text-zinc-200 dark:text-zinc-500">-</span>
                     {{ seriesMaps[0].team_b_score }}
                 </div>
                 <div v-else class="text-2xl font-bold">
                     {{ series.team_a_score }}
-                    <span class="dark:text-zinc-500 text-zinc-200">-</span>
+                    <span class="text-zinc-200 dark:text-zinc-500">-</span>
                     {{ series.team_b_score }}
                 </div>
             </div>
             <div
-                class="flex items-center gap-3 w-full justify-end sm:justify-start sm:w-auto flex-row-reverse sm:flex-row"
+                class="order-2 flex items-center justify-end gap-3 md:col-span-2"
             >
-                <h4 class="text-xl sm:text-3xl font-medium tracking-tighter">
+                <h4 class="text-xl font-medium tracking-tighter sm:text-3xl">
                     {{ series.team_b.name }}
                 </h4>
                 <img
@@ -161,7 +165,7 @@ const seriesMaps = computed(() => {
             <FrostedGlassCard
                 v-for="seriesMap in seriesMaps"
                 flush
-                class="relative overflow-hidden h-48 group"
+                class="group relative h-48 overflow-hidden"
             >
                 <img
                     v-if="seriesMap.map?.title !== 'TBD'"
@@ -170,14 +174,14 @@ const seriesMaps = computed(() => {
                             ? `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}.jpg`
                             : `https://stratbox.app/images/maps/${seriesMap.map?.title?.toLowerCase()}_thumb.jpg`
                     "
-                    class="w-full h-full object-cover transition-all group-hover:opacity-75"
+                    class="h-full w-full object-cover transition-all group-hover:opacity-75"
                     :class="{
                         'opacity-25': seriesMap.status !== 'ongoing',
                         'opacity-75': seriesMap.status === 'ongoing',
                     }"
                 />
                 <div
-                    class="absolute inset-0 bg-gradient-to-t flex items-end p-6 text-lg justify-between text-white"
+                    class="absolute inset-0 flex items-end justify-between bg-gradient-to-t p-6 text-lg text-white"
                     :class="{
                         'from-black/20 to-transparent':
                             seriesMap.map?.title !== 'TBD' &&
@@ -199,19 +203,19 @@ const seriesMaps = computed(() => {
                             {{ seriesMap.team_b_score }}
                         </div>
                     </div>
-                    <div class="uppercase text-xs opacity-50">
+                    <div class="text-xs uppercase opacity-50">
                         {{ seriesMap.status }}
                     </div>
                 </div>
             </FrostedGlassCard>
         </div>
-        <div class="grid lg:grid-cols-2 gap-6">
+        <div class="grid gap-6 lg:grid-cols-2">
             <div>
                 <FrostedGlassCard flush>
                     <CardSectionHeader :icon="QueueListIcon"
                         >Match Feed</CardSectionHeader
                     >
-                    <div class="h-64 relative overflow-hidden">
+                    <div class="relative h-64 overflow-hidden">
                         <MatchFeed :logs="logs" />
                     </div>
                 </FrostedGlassCard>
@@ -224,7 +228,7 @@ const seriesMaps = computed(() => {
                     <ul>
                         <li
                             v-for="stream in series.streams"
-                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition relative"
+                            class="relative p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
                         >
                             <a
                                 class="absolute inset-0"
@@ -235,7 +239,7 @@ const seriesMaps = computed(() => {
                         </li>
                         <li
                             v-if="!series.streams.length"
-                            class="p-3 hover:dark:bg-black/25 hover:bg-zinc-200 transition relative"
+                            class="relative p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
                         >
                             No Streams Available
                         </li>
@@ -251,9 +255,9 @@ const seriesMaps = computed(() => {
                 <template #extra>
                     <button
                         v-for="seriesMap in series.series_maps"
-                        class="inline-flex items-center border border-transparent rounded-md font-semibold transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 px-2.5 py-1.5 text-sm bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-500 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:ring-indigo-500 dark:focus:ring-offset-zinc-800 mr-1 last:mr-0"
+                        class="mr-1 inline-flex items-center rounded-md border border-transparent border-zinc-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-zinc-700 transition duration-150 ease-in-out last:mr-0 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:focus:ring-offset-zinc-800"
                         :class="{
-                            'bg-zinc-200 !dark:bg-zinc-600':
+                            '!dark:bg-zinc-600 bg-zinc-200':
                                 selectedSnapshotMap === seriesMap.map.name,
                         }"
                         @click="selectedSnapshotMap = seriesMap.map.name"
@@ -264,7 +268,7 @@ const seriesMaps = computed(() => {
             >
             <table
                 v-if="series.series_maps.length"
-                class="dark:text-white w-full"
+                class="w-full dark:text-white"
             >
                 <thead>
                     <tr>

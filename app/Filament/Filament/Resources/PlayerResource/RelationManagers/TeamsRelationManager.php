@@ -56,7 +56,7 @@ class TeamsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DetachAction::make()
-                ->modalDescription('Only detach if the player was linked by mistake. Otherwise, set the end date. Are you sure you would like to do this?'),
+                    ->modalDescription('Only detach if the player was linked by mistake. Otherwise, set the end date. Are you sure you would like to do this?'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
