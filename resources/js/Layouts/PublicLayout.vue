@@ -4,12 +4,9 @@ import TopNavItem from "@/Components/TopNav/TopNavItem.vue";
 import { Link } from "@inertiajs/vue3";
 import { useScroll } from "@vueuse/core";
 import { ref } from "vue";
-import { onMounted } from "vue";
 
 const container = ref(null);
 const { y } = useScroll(container);
-
-const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
 </script>
 <template>
     <div
@@ -19,7 +16,7 @@ const appName = import.meta.env.VITE_APP_NAME || "Colosseum";
             <section ref="container" class="flex-grow overflow-y-auto pb-12 z-[11]">
                 <div
                     id="bg-image"
-                    class="absolute inset-0 bg-cover z-0 blur-sm [mask-image:linear-gradient(to_bottom_left,transparent_25%,rgba(0,0,0,0.33)_75%)]"
+                    class="absolute inset-0 bg-cover z-0 blur-sm [mask-image:linear-gradient(to_bottom_left,rgba(0,0,0,0.0)_50%,rgba(0,0,0,0.15)_100%)]"
                     style="
                         background-image: url(&quot;https://stratbox.app/images/maps/ancient.jpg&quot;);
                     "
