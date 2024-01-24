@@ -62,13 +62,13 @@ const props = defineProps({
                                 :href="post.url + '?utm_source=bsite'"
                             ></a>
                             <div
-                                class="absolute inset-0 ukcsgo-news group-hover:scale-105 transition"
+                                class="absolute inset-0 ukcsgo-news"
                                 v-html="post.image"
                             ></div>
                             <div
                                 class="absolute inset-0 flex items-end p-6 bg-gradient-to-t from-black/75 to-transparent"
                             >
-                                <div class="w-3/4 group-hover:scale-110 transition-all origin-bottom-left">
+                                <div class="group-hover:text-orange-500 transition">
                                     {{ post.title }}
                                 </div>
                             </div>
