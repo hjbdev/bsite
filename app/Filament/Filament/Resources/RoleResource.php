@@ -16,7 +16,9 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-key';
+
+    protected static ?string $navigationGroup = 'Settings';
 
     public static function form(Form $form): Form
     {
@@ -25,7 +27,7 @@ class RoleResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->autofocus()
                     ->required()
-                    ->unique(Role::class, 'name'),
+                    ->unique(Role::class, 'name', ignoreRecord: true),
                 Forms\Components\TextInput::make('title')
                     ->required(),
             ]);

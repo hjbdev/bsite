@@ -69,7 +69,7 @@ const recentRosterMovesWithTypes = computed(() => {
         </div>
         <div
             v-if="upcomingEvents.length || pastEvents.length"
-            class="grid md:grid-cols-2 gap-6 mb-6"
+            class="grid lg:grid-cols-2 gap-6 mb-6"
         >
             <div v-if="upcomingEvents.length">
                 <HH2 class="mb-6">Events</HH2>
@@ -99,7 +99,7 @@ const recentRosterMovesWithTypes = computed(() => {
                         </div>
                         <div class="ml-auto">
                             {{
-                                event.start_date.split("-").reverse().join("-")
+                                event.start_date_short_friendly
                             }}
                         </div>
                     </Link>
@@ -133,7 +133,7 @@ const recentRosterMovesWithTypes = computed(() => {
                         </div>
                         <div class="ml-auto">
                             {{
-                                event.start_date.split("-").reverse().join("-")
+                                event.start_date_short_friendly
                             }}
                         </div>
                     </Link>

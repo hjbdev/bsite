@@ -18,7 +18,12 @@ class Event extends Model implements HasMedia
 
     protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay', 'organiser_id'];
 
-    protected $appends = ['logo'];
+    protected $appends = ['logo', 'start_date_short_friendly'];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
 
     public static function boot(): void
     {
@@ -55,6 +60,12 @@ class Event extends Model implements HasMedia
         $media = $this->getMedia('logo');
 
         return new Attribute(fn () => count($media) ? $media[0]?->getUrl('preview') : null);
+    }
+
+    public function getStartDateShortFriendlyAttribute(): string
+    {
+        // 2nd Jan
+        return $this->start_date->format('jS M');
     }
 
     public function registerMediaCollections(): void
