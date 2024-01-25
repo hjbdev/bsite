@@ -39,6 +39,7 @@ class Series extends Model
     protected $casts = [
         'status' => SeriesStatus::class,
         'team_b_data' => 'array',
+        'start_date' => 'datetime',
     ];
 
     public static function boot()
