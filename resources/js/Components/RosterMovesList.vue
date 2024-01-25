@@ -79,9 +79,6 @@ const recentRosterMovesWithTypes = computed(() => {
                             <CalendarIcon class="h-4 w-4" />
                         </div>
                         <div>{{ rosterMove.human_date }}</div>
-                        <div class="flex items-center gap-1">
-                            <MapPinIcon class="h-4 w-4" />
-                        </div>
                     </div>
                 </div>
             </div>
