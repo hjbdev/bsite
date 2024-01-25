@@ -16,7 +16,7 @@ class Event extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay', 'organiser_id'];
+    protected $fillable = ['name', 'slug', 'description', 'start_date', 'end_date', 'prize_pool', 'location', 'delay', 'organiser_id', 'faceit_division_id'];
 
     protected $appends = ['logo', 'start_date_short_friendly', 'end_date_short_friendly', 'is_ongoing'];
 

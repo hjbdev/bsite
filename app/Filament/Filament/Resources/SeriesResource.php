@@ -6,8 +6,10 @@ use App\Enums\SeriesStatus;
 use App\Filament\Filament\Resources\SeriesResource\Pages;
 use App\Filament\Filament\Resources\SeriesResource\RelationManagers;
 use App\Models\Series;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,6 +32,11 @@ class SeriesResource extends Resource
                 Forms\Components\Select::make('event_id')
                     ->searchable()
                     ->relationship('event', 'name'),
+                Forms\Components\Select::make('source')
+                    ->options([
+                        'scorebot' => 'Scorebot',
+                        'esea' => 'ESEA',
+                    ]),
                 Forms\Components\Select::make('team_a_id')
                     ->relationship('teamA', 'name')
                     ->searchable()
@@ -134,6 +141,7 @@ class SeriesResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

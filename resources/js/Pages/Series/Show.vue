@@ -101,7 +101,7 @@ const seriesMaps = computed(() => {
 </script>
 <template>
     <Head
-        :title="`${series.team_a.name} vs ${series.team_b.name} at ${series.event.name}`"
+        :title="`${series.team_a.name} vs ${series.team_b?.name ?? series.team_b_name} at ${series.event.name}`"
     />
 
     <Container class="space-y-6">
@@ -143,10 +143,10 @@ const seriesMaps = computed(() => {
                 class="order-2 flex items-center justify-end gap-3 md:col-span-2"
             >
                 <h4 class="text-xl font-medium tracking-tighter sm:text-3xl">
-                    {{ series.team_b.name }}
+                    {{ series.team_b?.name ?? series.team_b_name }}
                 </h4>
                 <img
-                    v-if="series.team_b.logo"
+                    v-if="series.team_b?.logo"
                     :src="series.team_b.logo"
                     class="h-10 w-10"
                 />
@@ -216,7 +216,10 @@ const seriesMaps = computed(() => {
                         >Match Feed</CardSectionHeader
                     >
                     <div class="relative h-64 overflow-hidden">
-                        <MatchFeed :logs="logs" />
+                        <MatchFeed v-if="series.source === 'scorebot'" :logs="logs" />
+                        <div v-else class="absolute inset-0 flex items-center opacity-50 p-6 justify-center">
+                            Scorebot is unavailable for ESEA matches
+                        </div>
                     </div>
                 </FrostedGlassCard>
             </div>
@@ -267,7 +270,7 @@ const seriesMaps = computed(() => {
                 </template></CardSectionHeader
             >
             <table
-                v-if="series.series_maps.length"
+                v-if="series.source === 'scorebot' && series.series_maps?.length"
                 class="w-full dark:text-white"
             >
                 <thead>
@@ -331,6 +334,9 @@ const seriesMaps = computed(() => {
                     </tbody>
                 </template>
             </table>
+            <div v-else-if="series.source === 'esea'" class="p-4 opacity-50">
+                No Scoreboard Available for ESEA Matches yet.
+            </div>
         </FrostedGlassCard>
     </Container>
 </template>

@@ -49,12 +49,12 @@ function getDate(date) {
             </h4>
             <h4 href="/" class="font-semibold flex gap-2 items-center">
                 <img
-                    v-if="series.team_b.logo"
+                    v-if="series.team_b?.logo"
                     :src="series.team_b.logo"
                     class="w-6 h-6"
                 />
                 <QuestionMarkCircleIcon v-else class="w-6 h-6" />
-                {{ series.team_b.name }}
+                {{ series.team_b?.name ?? series.team_b_name }}
             </h4>
         </div>
         <div class="flex flex-col gap-2 w-16">

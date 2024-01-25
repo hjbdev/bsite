@@ -25,15 +25,20 @@ class Series extends Model
         'team_b_id',
         'team_a_score',
         'team_b_score',
+        'team_b_data',
+        'team_b_name',
         'type',
         'status',
         'start_date',
         'stage',
         'round',
+        'source',
+        'source_id',
     ];
 
     protected $casts = [
         'status' => SeriesStatus::class,
+        'team_b_data' => 'array',
     ];
 
     public static function boot()
@@ -41,11 +46,11 @@ class Series extends Model
         parent::boot();
 
         static::creating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB->name)->slug().'-'.str($series->event?->name)->slug();
+            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name)->slug().'-'.str($series->event?->name)->slug();
         });
 
         static::updating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB->name)->slug().'-'.str($series->event?->name)->slug();
+            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name)->slug().'-'.str($series->event?->name)->slug();
         });
 
         static::updated(function ($series) {

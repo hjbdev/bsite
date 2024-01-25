@@ -16,7 +16,7 @@ class Team extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'faceit_id'];
 
     protected $appends = ['logo'];
 

@@ -29,6 +29,8 @@ class EventResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->disabled()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('faceit_division_id')
+                    ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logo')
                     ->image()
