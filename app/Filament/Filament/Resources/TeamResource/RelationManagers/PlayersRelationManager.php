@@ -21,7 +21,6 @@ class PlayersRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('full_name')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('steam_id64')
                     ->required()

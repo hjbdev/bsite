@@ -31,8 +31,8 @@ class EventController extends Controller
 
         return inertia('Events/Show', [
             'event' => $event,
-            'series' => $event->series()->whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('matches'),
-            'pastSeries' => $event->series()->where('status', SeriesStatus::FINISHED)->orderBy('start_date', 'desc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5)->setPageName('results'),
+            'series' => $event->series()->whereIn('status', [SeriesStatus::UPCOMING, SeriesStatus::ONGOING])->orderBy('start_date', 'asc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5, pageName: 'matches'),
+            'pastSeries' => $event->series()->where('status', SeriesStatus::FINISHED)->orderBy('start_date', 'desc')->with('teamA', 'teamB', 'seriesMaps')->paginate(5, pageName: 'results'),
         ]);
     }
 }
