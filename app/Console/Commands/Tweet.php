@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Series;
 use Illuminate\Console\Command;
 use Noweh\TwitterApi\Client;
 use Spatie\Browsershot\Browsershot;
@@ -13,7 +14,7 @@ class Tweet extends Command
      *
      * @var string
      */
-    protected $signature = 'app:tweet';
+    protected $signature = 'app:tweet {seriesId}';
 
     /**
      * The console command description.
@@ -27,31 +28,46 @@ class Tweet extends Command
      */
     public function handle()
     {
-        $base64Data = Browsershot::url('https://bsite.uk/generators/upcoming-series/10')
-            ->windowSize(1600, 900)
-            ->setChromePath('/usr/bin/chromium-browser')
-            ->base64Screenshot();
+        $series = Series::with('teamA', 'teamB', 'event')
+            ->findOrFail($this->argument('seriesId'));
 
-        $client = new Client([
-            'account_id' => env('TWITTER_ACCOUNT_ID'),
-            'consumer_key' => env('TWITTER_CONSUMER_KEY'),
-            'consumer_secret' => env('TWITTER_CONSUMER_SECRET'),
-            'access_token' => env('TWITTER_ACCESS_TOKEN'),
-            'access_token_secret' => env('TWITTER_ACCESS_TOKEN_SECRET'),
-            'bearer_token' => env('TWITTER_BEARER_TOKEN'),
+        $series->socialPosts()->create([
+            'content' => $this->generatePostContent($series),
+            'platform' => 'twitter',
+            'type' => 'upcoming_series_reminder_2h',
+            'link_to_post' => route('matches.show.seo', [
+                'match' => $series->id,
+                'slug' => $series->slug,
+            ]),
+            'generator_url' => 'https://bsite.uk/generators/upcoming-series/' . $series->id,
         ]);
+    }
 
-        $media = $client->uploadMedia()->upload($base64Data);
+    private function generatePostContent(Series $series): string
+    {
+        $post = "⚔️ Upcoming Match \n\n";
 
-        $return = $client->tweet()->create()->performRequest([
-            'text' => 'Test Tweet... ',
-            'media' => [
-                'media_ids' => [
-                    (string) $media['media_id'],
-                ],
-            ],
-        ]);
+        if ($series->event) {
+            $post .= "🏟️ " . $series->event->name . "\n";
+        }
 
-        dd($return);
+        $post .= "⌚ " . $series->start_date->format('g:i a') . "\n";
+        if ($series->teamA && $series->teamA->twitter_handle) {
+            $post .= "🔴 @" . $series->teamA->twitter_handle . "\n";
+        } else {
+            $post .= "🔴 " . $series->teamA->name . "\n";
+        }
+
+        $post .= "vs\n";
+
+        if ($series->teamB && $series->teamB->twitter_handle) {
+            $post .= "🔵 @" . $series->teamB->twitter_handle . "\n";
+        } else if ($series->teamB) {
+            $post .= "🔵 " . $series->teamB->name . "\n";
+        } else {
+            $post .= "🔵 " . $series->team_b_name . "\n";
+        }
+
+        return $post;
     }
 }
