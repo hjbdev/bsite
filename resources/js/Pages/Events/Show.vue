@@ -63,7 +63,7 @@ defineProps({
                             v-if="series?.links"
                             class="flex justify-end gap-1"
                         >
-                            <Pagination :links="series.links" v-if="pastSeries.links?.length > 3"></Pagination>
+                            <Pagination v-if="series.links?.length > 3" :links="series.links"></Pagination>
                         </div>
                     </template>
                 </CardSectionHeader>
