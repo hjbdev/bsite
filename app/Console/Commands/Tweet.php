@@ -52,7 +52,7 @@ class Tweet extends Command
         }
 
         $post .= "⌚ " . $series->start_date->format('g:i a') . "\n";
-        $post .= "⚔️";
+        $post .= "⚔️ ";
         if ($series->teamA && $series->teamA->twitter_handle) {
             $post .= "@" . $series->teamA->twitter_handle;
         } else {

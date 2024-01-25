@@ -43,8 +43,7 @@ class SeriesResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('team_b_id')
                     ->relationship('teamB', 'name')
-                    ->searchable()
-                    ->required(),
+                    ->searchable(),
                 Forms\Components\Select::make('current_series_map_id')
                     ->disabled()
                     ->searchable()

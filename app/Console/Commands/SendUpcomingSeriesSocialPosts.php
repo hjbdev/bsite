@@ -27,12 +27,11 @@ class SendUpcomingSeriesSocialPosts extends Command
      */
     public function handle()
     {
-        $series = \App\Models\Series::query()
-            ->with('teamA', 'teamB', 'event')
+        Series::with('teamA', 'teamB', 'event')
             ->where('status', \App\Enums\SeriesStatus::UPCOMING)
             ->where('start_date', '<=', now()->addHours(2))
             ->where('start_date', '>=', now())
-            ->whereDoesntHaveMorph('socialPosts', SocialPost::class, function ($query) {
+            ->whereDoesntHave('socialPosts', function ($query) {
                 $query->where('platform', 'twitter');
                 $query->where('type', 'upcoming_series_reminder_2h');
             })
@@ -61,7 +60,7 @@ class SendUpcomingSeriesSocialPosts extends Command
         }
 
         $post .= "⌚ " . $series->start_date->format('g:i a') . "\n";
-        $post .= "⚔️";
+        $post .= "⚔️ ";
         if ($series->teamA && $series->teamA->twitter_handle) {
             $post .= "@" . $series->teamA->twitter_handle;
         } else {
