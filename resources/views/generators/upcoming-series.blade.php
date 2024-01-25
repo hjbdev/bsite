@@ -2,9 +2,9 @@
 
 <div class="w-screen h-screen bg-gradient-to-tr from-zinc-800 to-zinc-950 text-white p-24">
     <div class="flex justify-between items-start">
-        <div class="flex gap-12">
+        <div class="flex items-center gap-12">
             @if ($series->event?->logo)
-                <img src="{{ $series->event?->logo }}" class="w-32 rounded-2xl overflow-hidden aspect-square object-contain mb-6">
+                <img src="{{ $series->event?->logo }}" class="w-32 rounded-2xl overflow-hidden aspect-square object-contain">
             @endif
             <div>
                 <div class="text-8xl font-bold tracking-tighter">Upcoming Match</div>
