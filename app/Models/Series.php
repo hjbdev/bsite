@@ -63,6 +63,11 @@ class Series extends Model
         return $this->morphMany(Stream::class, 'streamable');
     }
 
+    public function socialPosts(): MorphMany
+    {
+        return $this->morphMany(SocialPost::class, 'postable');
+    }
+
     public function vetos(): HasMany
     {
         return $this->hasMany(Veto::class);

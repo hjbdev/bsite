@@ -27,7 +27,10 @@ class Tweet extends Command
      */
     public function handle()
     {
-        $base64Data = Browsershot::url('https://bsite.uk/generators/upcoming-series/10')->setChromePath('/usr/bin/chromium-browser')->base64Screenshot();
+        $base64Data = Browsershot::url('https://bsite.uk/generators/upcoming-series/10')
+            ->windowSize(1600, 900)
+            ->setChromePath('/usr/bin/chromium-browser')
+            ->base64Screenshot();
 
         $client = new Client([
             'account_id' => env('TWITTER_ACCOUNT_ID'),

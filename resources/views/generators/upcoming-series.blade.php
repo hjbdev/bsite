@@ -2,10 +2,15 @@
 
 <div class="w-screen h-screen bg-gradient-to-tr from-zinc-800 to-zinc-950 text-white p-24">
     <div class="flex justify-between items-start">
-        <div>
-            <div class="text-8xl font-bold tracking-tighter">Upcoming Match</div>
-            <div class="text-5xl mt-4 opacity-50">
-                {{ $series->event?->name }}
+        <div class="flex gap-12">
+            @if ($series->event?->logo)
+                <img src="{{ $series->event?->logo }}" class="w-32 rounded-2xl overflow-hidden aspect-square object-contain mb-6">
+            @endif
+            <div>
+                <div class="text-8xl font-bold tracking-tighter">Upcoming Match</div>
+                <div class="text-5xl mt-4 opacity-50">
+                    {{ $series->event?->name }}
+                </div>
             </div>
         </div>
         <div class="text-4xl text-right tracking-wide uppercase opacity-50">
@@ -32,7 +37,7 @@
         </div>
         <div class="text-center">
             <div class="w-[350px] h-[350px] aspect-square">
-                @if ($series->teamB->logo)
+                @if ($series->teamB?->logo)
                 <img src="{{ $series->teamB->logo }}" class="w-full aspect-square object-contain mb-6">
                 @else
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full object-contain opacity-25">
@@ -41,7 +46,7 @@
                 </svg>
                 @endif
             </div>
-            <div class="text-6xl tracking-tighter font-medium mt-6">{{ $series->teamB?->name }}</div>
+            <div class="text-6xl tracking-tighter font-medium mt-6">{{ $series->teamB?->name ?? $series->team_b_name }}</div>
         </div>
     </div>
 </div>

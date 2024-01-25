@@ -28,6 +28,7 @@ class TeamResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->autofocus(),
+                TextInput::make('twitter_handle'),
                 TextInput::make('faceit_id'),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logo')
