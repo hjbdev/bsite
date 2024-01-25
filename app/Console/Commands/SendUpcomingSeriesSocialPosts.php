@@ -61,20 +61,21 @@ class SendUpcomingSeriesSocialPosts extends Command
         }
 
         $post .= "⌚ " . $series->start_date->format('g:i a') . "\n";
+        $post .= "⚔️";
         if ($series->teamA && $series->teamA->twitter_handle) {
-            $post .= "🔴 @" . $series->teamA->twitter_handle . "\n";
+            $post .= "@" . $series->teamA->twitter_handle;
         } else {
-            $post .= "🔴 " . $series->teamA->name . "\n";
+            $post .= $series->teamA->name;
         }
 
-        $post .= "vs\n";
+        $post .= " vs ";
 
         if ($series->teamB && $series->teamB->twitter_handle) {
-            $post .= "🔵 @" . $series->teamB->twitter_handle . "\n";
+            $post .= "@" . $series->teamB->twitter_handle;
         } else if($series->teamB) {
-            $post .= "🔵 " . $series->teamB->name . "\n";
+            $post .= $series->teamB->name;
         } else {
-            $post .= "🔵 " . $series->team_b_name . "\n";
+            $post .= $series->team_b_name;
         }
 
         return $post;
