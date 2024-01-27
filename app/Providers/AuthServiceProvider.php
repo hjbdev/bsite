@@ -16,6 +16,7 @@ use App\Policies\RolePolicy;
 use App\Policies\SeriesPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Silber\Bouncer\Database\Role;
 
 class AuthServiceProvider extends ServiceProvider
@@ -39,6 +40,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('viewPulse', function (User $user) {
+            return $user->isA('super-admin');
+        });
     }
 }
