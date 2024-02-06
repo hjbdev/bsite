@@ -1,5 +1,4 @@
 <script setup>
-import HH2 from "@/Components/HH2.vue";
 import Container from "@/Components/Container.vue";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
@@ -9,7 +8,8 @@ import { Head, router } from "@inertiajs/vue3";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import MatchFeed from "@/Components/Series/MatchFeed.vue";
 import CardSectionHeader from "@/Components/CardSectionHeader.vue";
-import { QueueListIcon, TableCellsIcon, TvIcon } from "@heroicons/vue/20/solid";
+import { QueueListIcon, TableCellsIcon, TvIcon, ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
+import FaceitLogo from "@/Components/Icons/FaceitLogo.vue";
 
 defineOptions({ layout: PublicLayout });
 
@@ -47,15 +47,13 @@ if (!props.series?.current_series_map) {
 }
 
 onMounted(() => {
-    document.getElementById(
-        "bg-image",
-    ).style.backgroundImage = `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
+    document.getElementById("bg-image").style.backgroundImage =
+        `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
 });
 
 watch(currentMap, () => {
-    document.getElementById(
-        "bg-image",
-    ).style.backgroundImage = `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
+    document.getElementById("bg-image").style.backgroundImage =
+        `url(https://stratbox.app/images/maps/${currentMap.value}.jpg)`;
 });
 
 if (props.series.series_maps.length) {
@@ -105,6 +103,13 @@ const seriesMaps = computed(() => {
     />
 
     <Container class="space-y-6">
+        <FrostedGlassCard v-if="series.source === 'esea'" flush>
+            <CardSectionHeader :icon="ExclamationTriangleIcon"
+                >Beta Feature</CardSectionHeader
+            >
+            <div class="p-4">This is a work in progress feature. More in-depth information will be available soon.</div>
+            </FrostedGlassCard
+        >
         <FrostedGlassCard class="grid grid-cols-2 gap-4 md:grid-cols-5">
             <div
                 class="order-1 flex items-center gap-3 md:order-1 md:col-span-2"
@@ -216,14 +221,35 @@ const seriesMaps = computed(() => {
                         >Match Feed</CardSectionHeader
                     >
                     <div class="relative h-64 overflow-hidden">
-                        <MatchFeed v-if="series.source === 'scorebot'" :logs="logs" />
-                        <div v-else class="absolute inset-0 flex items-center opacity-50 p-6 justify-center">
+                        <MatchFeed
+                            v-if="series.source === 'scorebot'"
+                            :logs="logs"
+                        />
+                        <div
+                            v-else
+                            class="absolute inset-0 flex items-center justify-center p-6 opacity-50"
+                        >
                             Scorebot is unavailable for ESEA matches
                         </div>
                     </div>
                 </FrostedGlassCard>
             </div>
             <div>
+                <FrostedGlassCard
+                    v-if="series.source === 'esea'"
+                    flush
+                    class="mb-6 overflow-hidden"
+                >
+                    <CardSectionHeader :icon="FaceitLogo"
+                        >FACEIT</CardSectionHeader
+                    >
+                    <a
+                        class="relative block p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
+                        :href="`https://www.faceit.com/en/cs2/room/${series.source_id}`"
+                        target="_blank"
+                        >View on FACEIT</a
+                    >
+                </FrostedGlassCard>
                 <FrostedGlassCard flush class="overflow-hidden">
                     <CardSectionHeader :icon="TvIcon"
                         >Streams</CardSectionHeader
@@ -270,7 +296,9 @@ const seriesMaps = computed(() => {
                 </template></CardSectionHeader
             >
             <table
-                v-if="series.source === 'scorebot' && series.series_maps?.length"
+                v-if="
+                    series.source === 'scorebot' && series.series_maps?.length
+                "
                 class="w-full dark:text-white"
             >
                 <thead>

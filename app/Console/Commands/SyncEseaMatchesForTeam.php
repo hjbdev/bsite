@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Series;
 use App\Models\Team;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class SyncEseaMatchesForTeam extends Command
@@ -66,15 +67,29 @@ class SyncEseaMatchesForTeam extends Command
             $shouldBeTeamA = $otherTeam ? $isTeamA : true;
 
             if (!$series) {
+                $bestOf = Arr::get($match, 'best_of', 1);
+                $type = $bestOf === 1 ? 'bo1' : ($bestOf === 3 ? 'bo3' : 'bo5');
+
                 $series = new Series([
                     'source' => 'esea',
                     'source_id' => $match['faceit_id'],
                     'team_a_id' => $shouldBeTeamA ? $team->id : $otherTeam?->id,
                     'team_b_id' => $shouldBeTeamA ? $otherTeam?->id : $team->id,
-                    'type' => 'bo1',
+                    'type' => $type,
                     'event_id' => Event::where('faceit_division_id', $match['division_id'])->firstOrFail()->id
                 ]);
             }
+
+            // if ($matchMaps = Arr::get($match, 'maps')) {
+            //     foreach ($matchMaps as $matchMap) {
+            //         $series->seriesMaps()->updateOrCreate([
+            //             'map' => $matchMap['map']
+            //         ], [
+            //             // 'team_a_score' => $matchMap['score']['faction1'],
+            //             // 'team_b_score' => $matchMap['score']['faction2']
+            //         ]);
+            //     }
+            // }
 
             if (! $otherTeam) {
                 $series->team_b_data = $isTeamA ? $match['team_b'] : $match['team_a'];
@@ -84,6 +99,9 @@ class SyncEseaMatchesForTeam extends Command
             if (isset($match['results']['score']['faction1']) && isset($match['results']['score']['faction2'])) {
                 $series->team_a_score = ($shouldBeTeamA ? $match['results']['score']['faction1'] : $match['results']['score']['faction2']) ?? 0;
                 $series->team_b_score = ($shouldBeTeamA ? $match['results']['score']['faction2'] : $match['results']['score']['faction1']) ?? 0;
+
+                // Get map
+                $series->map = $match['results']['map'] ?? null;
             }
 
             $series->start_date = now()->parse($match['scheduled_at']);
