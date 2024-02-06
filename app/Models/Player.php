@@ -18,7 +18,7 @@ class Player extends Model implements HasMedia
 
     public const CACHE_TTL = 60 * 60 * 24;
 
-    protected $fillable = ['name', 'nationality', 'steam_id3', 'steam_id64', 'birthday', 'full_name'];
+    protected $fillable = ['name', 'nationality', 'steam_id3', 'steam_id64', 'birthday', 'full_name', 'faceit_id'];
 
     public static function boot(): void
     {

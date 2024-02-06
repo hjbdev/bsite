@@ -33,5 +33,10 @@ return [
 
     'stratbox_esea' => [
         'token' => env('STRATBOX_ESEA_TOKEN'),
+    ],
+
+    'faceit' => [
+        'token' => env('FACEIT_TOKEN'),
+        'webhook_secret' => env('FACEIT_WEBHOOK_SECRET'),
     ]
 ];

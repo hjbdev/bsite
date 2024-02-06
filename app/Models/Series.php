@@ -47,11 +47,11 @@ class Series extends Model
         parent::boot();
 
         static::creating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name)->slug().'-'.str($series->event?->name)->slug();
+            $series->slug = str($series->teamA->name ?? '')->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name ?? '')->slug().'-'.str($series->event?->name ?? '')->slug();
         });
 
         static::updating(function ($series) {
-            $series->slug = str($series->teamA->name)->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name)->slug().'-'.str($series->event?->name)->slug();
+            $series->slug = str($series->teamA->name ?? '')->slug().'-vs-'.str($series->teamB?->name ?? $series->team_b_name ?? '')->slug().'-'.str($series->event?->name ?? '')->slug();
         });
 
         static::updated(function ($series) {

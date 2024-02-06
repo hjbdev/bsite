@@ -8,7 +8,12 @@ import { Head, router } from "@inertiajs/vue3";
 import FrostedGlassCard from "@/Components/FrostedGlassCard.vue";
 import MatchFeed from "@/Components/Series/MatchFeed.vue";
 import CardSectionHeader from "@/Components/CardSectionHeader.vue";
-import { QueueListIcon, TableCellsIcon, TvIcon, ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
+import {
+    QueueListIcon,
+    TableCellsIcon,
+    TvIcon,
+    ExclamationTriangleIcon,
+} from "@heroicons/vue/20/solid";
 import FaceitLogo from "@/Components/Icons/FaceitLogo.vue";
 
 defineOptions({ layout: PublicLayout });
@@ -103,13 +108,18 @@ const seriesMaps = computed(() => {
     />
 
     <Container class="space-y-6">
-        <FrostedGlassCard v-if="series.source === 'esea'" flush>
+        <FrostedGlassCard
+            v-if="series.source === 'esea' || series.source === 'faceit'"
+            flush
+        >
             <CardSectionHeader :icon="ExclamationTriangleIcon"
                 >Beta Feature</CardSectionHeader
             >
-            <div class="p-4">This is a work in progress feature. More in-depth information will be available soon.</div>
-            </FrostedGlassCard
-        >
+            <div class="p-4">
+                This is a work in progress feature. More in-depth information
+                will be available soon.
+            </div>
+        </FrostedGlassCard>
         <FrostedGlassCard class="grid grid-cols-2 gap-4 md:grid-cols-5">
             <div
                 class="order-1 flex items-center gap-3 md:order-1 md:col-span-2"
@@ -229,14 +239,18 @@ const seriesMaps = computed(() => {
                             v-else
                             class="absolute inset-0 flex items-center justify-center p-6 opacity-50"
                         >
-                            Scorebot is unavailable for ESEA matches
+                            Scorebot is unavailable for
+                            {{
+                                series.source === "esea" ? "ESEA" : "FACEIT"
+                            }}
+                            matches
                         </div>
                     </div>
                 </FrostedGlassCard>
             </div>
             <div>
                 <FrostedGlassCard
-                    v-if="series.source === 'esea'"
+                    v-if="series.source === 'esea' || series.source === 'faceit'"
                     flush
                     class="mb-6 overflow-hidden"
                 >
@@ -297,7 +311,7 @@ const seriesMaps = computed(() => {
             >
             <table
                 v-if="
-                    series.source === 'scorebot' && series.series_maps?.length
+                    (series.source === 'scorebot' || series.source === 'faceit') && series.series_maps?.length
                 "
                 class="w-full dark:text-white"
             >
@@ -307,7 +321,7 @@ const seriesMaps = computed(() => {
                         <th class="p-2 text-right">Kills</th>
                         <th class="p-2 text-right">Assists</th>
                         <th class="p-2 text-right">Deaths</th>
-                        <th class="p-2 text-right">ADR</th>
+                        <th v-if="series.source !== 'faceit'" class="p-2 text-right">ADR</th>
                     </tr>
                 </thead>
                 <template v-for="seriesMap in series.series_maps">
@@ -350,7 +364,7 @@ const seriesMaps = computed(() => {
                             <td class="p-2 text-right">
                                 {{ player.pivot.deaths }}
                             </td>
-                            <td class="p-2 text-right">
+                            <td v-if="series.source !== 'faceit'" class="p-2 text-right">
                                 {{
                                     (
                                         player.pivot.damage /

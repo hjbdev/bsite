@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\OrganiserController;
 use App\Http\Controllers\Admin\PlayerController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\FaceitWebhook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +31,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/search', [EventController::class, 'search'])->name('admin.events.search');
     Route::get('/organisers/search', [OrganiserController::class, 'search'])->name('admin.organisers.search');
 });
+
+Route::post('faceit-webhook', FaceitWebhook::class);
