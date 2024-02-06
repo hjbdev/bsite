@@ -126,22 +126,26 @@ class UpdateFromFaceit implements ShouldQueue
                                 $playerData = $playerResponse->json();
                                 $playerModel = Player::firstWhere('steam_id64', Arr::get($playerData, 'games.cs2.game_player_id'));
 
-                                if (! $playerModel) {
+                                $playerModel->update([
+                                    'faceit_id' => $player['player_id'],
+                                ]);
+
+                                if (!$playerModel) {
                                     logger('Could not find profile for player ' . Arr::get($playerData, 'nickname'));
                                     continue;
                                 }
+                            }
 
-                                $pivotData = [
-                                    'kills' => Arr::get($player, 'player_stats.Kills'),
-                                    'assists' => Arr::get($player, 'player_stats.Assists'),
-                                    'deaths' => Arr::get($player, 'player_stats.Deaths'),
-                                ];
+                            $pivotData = [
+                                'kills' => Arr::get($player, 'player_stats.Kills'),
+                                'assists' => Arr::get($player, 'player_stats.Assists'),
+                                'deaths' => Arr::get($player, 'player_stats.Deaths'),
+                            ];
 
-                                if (! $seriesMap->players()->where('id', $playerModel->id)->exists()) {
-                                    $seriesMap->players()->attach($playerModel->id, $pivotData);
-                                } else {
-                                    $seriesMap->players()->updateExistingPivot($playerModel->id, $pivotData);
-                                }
+                            if (!$seriesMap->players()->where('id', $playerModel->id)->exists()) {
+                                $seriesMap->players()->attach($playerModel->id, $pivotData);
+                            } else {
+                                $seriesMap->players()->updateExistingPivot($playerModel->id, $pivotData);
                             }
                         }
                     }
