@@ -30,6 +30,10 @@ class EventResource extends Resource
                     ->disabled()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('faceit_division_id')
+                    ->label('Faceit Division ID')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('faceit_championship_id')
+                    ->label('Faceit Championship ID')
                     ->maxLength(255),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logo')
