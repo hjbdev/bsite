@@ -91,7 +91,7 @@ class UpdateFromFaceit implements ShouldQueue
             }
         }
 
-        if (true || $series->isDirty('status') && $series->status === SeriesStatus::FINISHED) {
+        if ($series->isDirty('status') && $series->status === SeriesStatus::FINISHED) {
             $statsResponse = Http::withHeader('Authorization', 'Bearer ' . config('services.faceit.token'))
                 ->get('https://open.faceit.com/data/v4/matches/' . $this->faceitId . '/stats');
 
