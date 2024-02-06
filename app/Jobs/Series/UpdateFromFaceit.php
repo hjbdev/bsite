@@ -99,6 +99,7 @@ class UpdateFromFaceit implements ShouldQueue
 
             if (!$statsResponse->ok()) {
                 logger('Failed to fetch match stats from faceit');
+                logger($statsResponse->body());
             } else {
                 foreach (Arr::get($statsResponse->json(), 'rounds', []) as $round) {
                     $seriesMap = $series->seriesMaps()->firstOrNew([
