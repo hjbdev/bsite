@@ -27,6 +27,7 @@ class FaceitWebhook extends Controller
             || $request->event === 'match_status_finished'
             || $request->event === 'match_status_cancelled'
             || $request->event === 'match_object_created'
+            || $request->event === 'match_demo_ready'
         ) {
             dispatch(new UpdateFromFaceit($request->payload['id'], $request->event));
         }
