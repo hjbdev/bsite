@@ -54,7 +54,9 @@ class UpdateFromFaceit implements ShouldQueue
 
         foreach (['A', 'B'] as $uppercase) {
             $number = $uppercase === 'A' ? 1 : 2;
-            $team = Team::firstWhere('faceit_id', $match['teams']['faction' . $number]['faction_id']);
+            $team = Team::where('faceit_id', $match['teams']['faction' . $number]['faction_id'])
+                ->orWhere('secondary_faceit_id', $match['teams']['faction' . $number]['faction_id'])
+                ->first();
 
             if ($team) {
                 $series->{'team' . $uppercase}()->associate($team);

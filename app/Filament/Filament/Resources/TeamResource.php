@@ -30,6 +30,7 @@ class TeamResource extends Resource
                     ->autofocus(),
                 TextInput::make('twitter_handle'),
                 TextInput::make('faceit_id'),
+                TextInput::make('secondary_faceit_id'),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logo')
                     ->image()
