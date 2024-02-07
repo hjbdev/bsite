@@ -18,9 +18,11 @@ const props = defineProps({
     news: Array,
 });
 
-router.reload({
-    only: ["news"],
-});
+if (typeof window !== "undefined") {
+    router.reload({
+        only: ["news"],
+    });
+}
 </script>
 <template>
     <Container>
@@ -30,7 +32,10 @@ router.reload({
 
         <div v-if="upcomingSeries?.length">
             <div class="mb-4 flex w-full gap-3 overflow-x-scroll">
-                <SeriesCarouselItem v-for="series in upcomingSeries" :series="series" />
+                <SeriesCarouselItem
+                    v-for="series in upcomingSeries"
+                    :series="series"
+                />
             </div>
         </div>
 
