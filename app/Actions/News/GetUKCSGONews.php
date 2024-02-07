@@ -3,6 +3,7 @@
 namespace App\Actions\News;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Image;
@@ -59,6 +60,10 @@ class GetUKCSGONews
 
                     // cache the image locally
                     $imageName = pathinfo($src, PATHINFO_BASENAME);
+
+                    if (File::isDirectory(storage_path('app/temp')) === false) {
+                        File::makeDirectory(storage_path('app/temp'));
+                    }
 
                     $tmpImage = storage_path('app/temp/' . $imageName);
                     file_put_contents($tmpImage, file_get_contents($src));
