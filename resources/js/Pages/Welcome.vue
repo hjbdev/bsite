@@ -1,11 +1,10 @@
 <script setup>
+import { Head, Link, router } from "@inertiajs/vue3";
 import HH2 from "@/Components/HH2.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import Container from "@/Components/Container.vue";
 import EventList from "@/Components/Events/EventList.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
 import RosterMovesList from "@/Components/RosterMovesList.vue";
-import { nextTick } from "vue";
 
 defineOptions({ layout: PublicLayout });
 
@@ -21,8 +20,8 @@ router.reload({
 })
 </script>
 <template>
-    <Head title="B-Site: Counter-Strike Coverage for the UK & Ireland"></Head>
     <Container>
+        <Head title="B-Site: Counter-Strike Coverage for the UK & Ireland"></Head>
         <div class="grid md:grid-cols-3 gap-6">
             <section class="md:col-span-2">
                 <div class="relative mb-6 transition gap-6 group">
