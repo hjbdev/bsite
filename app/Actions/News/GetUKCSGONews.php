@@ -71,7 +71,7 @@ class GetUKCSGONews
 
                     Image::load($tmpImage)
                         ->optimize()
-                        ->save();
+                        ->save($newImage);
 
                     $storage->put('ukcsgo-images/' . $imageName, file_get_contents($newImage), 'public');
                     $src = str($storage->url('ukcsgo-images/' . $imageName))->replace('ams3', 'ams3.cdn');
