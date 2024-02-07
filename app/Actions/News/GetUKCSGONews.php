@@ -18,11 +18,11 @@ class GetUKCSGONews
 
             $storage = Storage::disk('spaces-public');
 
-            if (! $storage->exists('ukcsgo-images')) {
-                $storage->makeDirectory('ukcsgo-images');
+            if ($storage->exists('ukcsgo-images')) {
+                $storage->deleteDirectory('ukcsgo-images');
             }
-
-            $storage->cleanDirectory('ukcsgo-images');
+            
+            $storage->makeDirectory('ukcsgo-images');
 
             foreach ($xml->channel->item as $item) {
                 // Parse HTML
