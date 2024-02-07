@@ -66,7 +66,7 @@ function getDate(date) {
             <div
                 class="col-span-2 flex items-center justify-end gap-2 truncate"
             >
-                {{ series.team_b?.name }}
+                {{ series.team_b?.name ?? series.team_b_name }}
                 <img
                     v-if="series.team_b?.logo"
                     :src="series.team_b?.logo"
