@@ -47,13 +47,13 @@ class Player extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('medium')
-            ->fit(Fit::Contain, 1000, 1000)
+            ->fit(Fit::Crop, 1000, 1000)
             ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('preview')
-            ->fit(Fit::Contain, 300, 300)
+            ->fit(Fit::Crop, 300, 300)
             ->keepOriginalImageFormat()
             ->nonQueued();
     }

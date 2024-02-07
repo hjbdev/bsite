@@ -43,14 +43,14 @@ class Event extends Model implements HasMedia
         $this
             ->addMediaConversion('preview')
             ->performOnCollections('logo')
-            ->fit(Fit::Contain, 300, 300)
+            ->fit(Fit::Crop, 300, 300)
             ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('mini_preview')
             ->performOnCollections('logo')
-            ->fit(Fit::Contain, 50, 50)
+            ->fit(Fit::Crop, 50, 50)
             ->keepOriginalImageFormat()
             ->nonQueued();
     }

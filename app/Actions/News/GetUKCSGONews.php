@@ -72,7 +72,7 @@ class GetUKCSGONews
                     $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME).'/'.pathinfo($tmpImage, PATHINFO_FILENAME).'.webp';
 
                     Image::load($tmpImage)
-                        ->fit(Fit::Contain, 480, 270)
+                        ->fit(Fit::Crop, 480, 270)
                         ->optimize()
                         ->save($newImage);
 
