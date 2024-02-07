@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 class ImportPlayersFromFaceitTournament extends Command
 {
     protected $signature = 'app:import-players-from-faceit-tournament {tournamentId} {--offset=0}';
+
     protected $description = 'Syncs players from faceit tournament';
 
     public function handle()

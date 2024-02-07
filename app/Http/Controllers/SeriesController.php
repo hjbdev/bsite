@@ -17,7 +17,7 @@ class SeriesController extends Controller
         ]);
     }
 
-    public function show(string $id, string $slug = null)
+    public function show(string $id, ?string $slug = null)
     {
         if (! $slug) {
             $series = Series::with('teamA', 'teamB', 'event')->findOrFail($id);

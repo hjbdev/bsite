@@ -20,7 +20,7 @@ class Team extends Model implements HasMedia
 
     protected $appends = ['logo'];
 
-    public function registerMediaConversions(Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this
             ->addMediaConversion('preview')

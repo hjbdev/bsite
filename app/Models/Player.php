@@ -43,7 +43,7 @@ class Player extends Model implements HasMedia
         static::updating($convertSteamId);
     }
 
-    public function registerMediaConversions(Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this
             ->addMediaConversion('medium')
