@@ -21,7 +21,7 @@ class GetUKCSGONews
             if ($storage->exists('ukcsgo-images')) {
                 $storage->deleteDirectory('ukcsgo-images');
             }
-            
+
             $storage->makeDirectory('ukcsgo-images');
 
             foreach ($xml->channel->item as $item) {
@@ -57,7 +57,7 @@ class GetUKCSGONews
                     $img = $img->replaceMatches('/srcset=".*?"/', '');
 
                     // cache the image locally
-                    $imageName = str()->slug(pathinfo($src, PATHINFO_BASENAME));
+                    $imageName = pathinfo($src, PATHINFO_BASENAME);
                     $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src));
                     $src = $storage->url('ukcsgo-images/' . $imageName);
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
