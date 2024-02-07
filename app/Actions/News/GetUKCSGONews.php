@@ -42,8 +42,9 @@ class GetUKCSGONews
                         ];
                     });
 
-                    $src = $srcset->sortBy('width')->first()['url'];
+                    $src = $srcset->where('width', '<', 401)->sortByDesc('width')->first()['url'];
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
+                    $img = $img->replaceMatches('/srcset=".*?"/', '');
                 }
 
                 $articles->push([
