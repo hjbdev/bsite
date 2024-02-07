@@ -5,6 +5,7 @@ namespace App\Actions\News;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Image\Image;
 
 class GetUKCSGONews
 {
@@ -58,9 +59,21 @@ class GetUKCSGONews
 
                     // cache the image locally
                     $imageName = pathinfo($src, PATHINFO_BASENAME);
-                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src), 'public');
+
+                    $tmpImage = storage_path('app/temp/' . $imageName);
+                    file_put_contents($tmpImage, file_get_contents($src));
+                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME) . '/' . pathinfo($tmpImage, PATHINFO_FILENAME) . '.webp';
+
+                    Image::load($tmpImage)
+                        ->optimize()
+                        ->save();
+
+                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($newImage), 'public');
                     $src = str($storage->url('ukcsgo-images/' . $imageName))->replace('ams3', 'ams3.cdn');
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
+
+                    unlink($tmpImage);
+                    unlink($newImage);
                 }
 
                 $articles->push([
