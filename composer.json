@@ -29,6 +29,7 @@
         "pusher/pusher-php-server": "^7.2",
         "silber/bouncer": "^1.0",
         "spatie/browsershot": "^3.60",
+        "spatie/image": "^2.2",
         "spatie/laravel-backup": "^8.4",
         "spatie/laravel-medialibrary": "^10.0.0",
         "spatie/laravel-query-builder": "^5.6",

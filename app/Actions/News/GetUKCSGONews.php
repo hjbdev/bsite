@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Image;
+use Spatie\Image\Manipulations;
 
 class GetUKCSGONews
 {
@@ -53,7 +54,7 @@ class GetUKCSGONews
                         ];
                     });
 
-                    $src = $srcset->where('width', '<', 600)->sortByDesc('width')->first()['url'];
+                    $src = $srcset->sortByDesc('width')->first()['url'];
                     $img = $img->replaceMatches('/sizes=".*?"/', '');
                     $img = $img->replaceMatches('/decoding=".*?"/', '');
                     $img = $img->replaceMatches('/srcset=".*?"/', '');
@@ -71,6 +72,7 @@ class GetUKCSGONews
 
                     Image::load($tmpImage)
                         ->optimize()
+                        ->fit(Manipulations::FIT_CONTAIN, 480, 270)
                         ->save($newImage);
 
                     $newImageName = pathinfo($newImage, PATHINFO_BASENAME);
