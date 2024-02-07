@@ -58,7 +58,7 @@ class GetUKCSGONews
 
                     // cache the image locally
                     $imageName = pathinfo($src, PATHINFO_BASENAME);
-                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src));
+                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src), 'public');
                     $src = $storage->url('ukcsgo-images/' . $imageName);
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
                 }
