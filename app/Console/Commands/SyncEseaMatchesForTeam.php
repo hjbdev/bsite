@@ -33,16 +33,16 @@ class SyncEseaMatchesForTeam extends Command
     {
         $team = Team::findOrFail($this->argument('teamId'));
 
-        $this->info('Syncing ESEA matches for ' . $team->name);
+        $this->info('Syncing ESEA matches for '.$team->name);
 
-        if (!$team->faceit_id) {
+        if (! $team->faceit_id) {
             $this->error('Team does not have a Faceit ID');
 
             return;
         }
 
         $response = Http::withHeader('Authorization', config('services.stratbox_esea.token'))
-            ->get('https://esea.stratbox.app/api/teams/' . $team->faceit_id . '/fixtures');
+            ->get('https://esea.stratbox.app/api/teams/'.$team->faceit_id.'/fixtures');
 
         if ($response->failed()) {
             $this->error('Failed to fetch ESEA matches');
@@ -55,7 +55,7 @@ class SyncEseaMatchesForTeam extends Command
         foreach ($matches as $match) {
             // First, figure out if our team is team_a or team_b
             $isTeamA = $match['team_a']['faceit_id'] === $team->faceit_id;
-            
+
             // Next, figure out if the _other team_ is part of the database
             $otherTeam = Team::where('faceit_id', $isTeamA ? $match['team_b']['faceit_id'] : $match['team_a']['faceit_id'])->first();
 
@@ -66,7 +66,7 @@ class SyncEseaMatchesForTeam extends Command
 
             $shouldBeTeamA = $otherTeam ? $isTeamA : true;
 
-            if (!$series) {
+            if (! $series) {
                 $bestOf = Arr::get($match, 'best_of', 1);
                 $type = $bestOf === 1 ? 'bo1' : ($bestOf === 3 ? 'bo3' : 'bo5');
 
@@ -76,7 +76,7 @@ class SyncEseaMatchesForTeam extends Command
                     'team_a_id' => $shouldBeTeamA ? $team->id : $otherTeam?->id,
                     'team_b_id' => $shouldBeTeamA ? $otherTeam?->id : $team->id,
                     'type' => $type,
-                    'event_id' => Event::where('faceit_division_id', $match['division_id'])->firstOrFail()->id
+                    'event_id' => Event::where('faceit_division_id', $match['division_id'])->firstOrFail()->id,
                 ]);
             }
 
@@ -106,10 +106,9 @@ class SyncEseaMatchesForTeam extends Command
 
             $series->save();
 
-            $this->info('Saved series ' . $series->teamA->name . ' vs ' . ($series->teamB?->name ?? $series->team_b_name));
+            $this->info('Saved series '.$series->teamA->name.' vs '.($series->teamB?->name ?? $series->team_b_name));
         }
 
-
-        $this->info('Found ' . count($matches) . ' matches');
+        $this->info('Found '.count($matches).' matches');
     }
 }

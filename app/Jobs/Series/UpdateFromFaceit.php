@@ -10,7 +10,6 @@ use App\Models\Player;
 use App\Models\Series;
 use App\Models\Team;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,10 +30,10 @@ class UpdateFromFaceit implements ShouldQueue
 
     public function handle(): void
     {
-        $response = Http::withHeader('Authorization', 'Bearer ' . config('services.faceit.token'))
-            ->get('https://open.faceit.com/data/v4/matches/' . $this->faceitId);
+        $response = Http::withHeader('Authorization', 'Bearer '.config('services.faceit.token'))
+            ->get('https://open.faceit.com/data/v4/matches/'.$this->faceitId);
 
-        if (!$response->ok()) {
+        if (! $response->ok()) {
             logger('Failed to fetch match from faceit');
             dd($response->body());
         }
@@ -42,8 +41,9 @@ class UpdateFromFaceit implements ShouldQueue
         $match = $response->json();
         $event = Event::firstWhere('faceit_championship_id', $match['competition_id']);
 
-        if (!$event) {
+        if (! $event) {
             logger('Event not found');
+
             return;
         }
 
@@ -54,26 +54,26 @@ class UpdateFromFaceit implements ShouldQueue
 
         foreach (['A', 'B'] as $uppercase) {
             $number = $uppercase === 'A' ? 1 : 2;
-            $team = Team::where('faceit_id', $match['teams']['faction' . $number]['faction_id'])
-                ->orWhere('secondary_faceit_id', $match['teams']['faction' . $number]['faction_id'])
+            $team = Team::where('faceit_id', $match['teams']['faction'.$number]['faction_id'])
+                ->orWhere('secondary_faceit_id', $match['teams']['faction'.$number]['faction_id'])
                 ->first();
 
             if ($team) {
-                $series->{'team' . $uppercase}()->associate($team);
+                $series->{'team'.$uppercase}()->associate($team);
             }
 
-            info("Team {$uppercase} is " . $team?->name ?? 'Unknown');
+            info("Team {$uppercase} is ".$team?->name ?? 'Unknown');
         }
 
-        $series->type = 'bo' . Arr::get($match, 'best_of', 1);
+        $series->type = 'bo'.Arr::get($match, 'best_of', 1);
         $series->start_date = now()->parse(Arr::get($match, 'scheduled_at'));
         $series->source = 'faceit';
 
         if (Arr::get($match, 'status') === 'FINISHED') {
             $series->status = SeriesStatus::FINISHED;
-        } else if (Arr::get($match, 'status') === 'CANCELLED') {
+        } elseif (Arr::get($match, 'status') === 'CANCELLED') {
             $series->status = SeriesStatus::CANCELLED;
-        } else if (in_array(Arr::get($match, 'status'), ['ONGOING', 'READY', 'CONFIGURING', 'VOTING', 'SUBSTITUTION', 'CAPTAIN_PICK'])) {
+        } elseif (in_array(Arr::get($match, 'status'), ['ONGOING', 'READY', 'CONFIGURING', 'VOTING', 'SUBSTITUTION', 'CAPTAIN_PICK'])) {
             $series->status = SeriesStatus::ONGOING;
         } else {
             $series->status = SeriesStatus::UPCOMING;
@@ -94,10 +94,10 @@ class UpdateFromFaceit implements ShouldQueue
         }
 
         if (($series->isDirty('status') && $series->status === SeriesStatus::FINISHED) || $this->hookEvent === 'match_status_finished' || $this->hookEvent === 'match_demo_ready') {
-            $statsResponse = Http::withHeader('Authorization', 'Bearer ' . config('services.faceit.token'))
-                ->get('https://open.faceit.com/data/v4/matches/' . $this->faceitId . '/stats');
+            $statsResponse = Http::withHeader('Authorization', 'Bearer '.config('services.faceit.token'))
+                ->get('https://open.faceit.com/data/v4/matches/'.$this->faceitId.'/stats');
 
-            if (!$statsResponse->ok()) {
+            if (! $statsResponse->ok()) {
                 logger('Failed to fetch match stats from faceit');
                 logger($statsResponse->body());
             } else {
@@ -106,7 +106,7 @@ class UpdateFromFaceit implements ShouldQueue
                         'map_id' => Map::firstWhere('name', $round['round_stats']['Map'])->id,
                     ]);
 
-                    list($teamAScore, $teamBScore) = explode(' / ', $round['round_stats']['Score']);
+                    [$teamAScore, $teamBScore] = explode(' / ', $round['round_stats']['Score']);
 
                     $seriesMap->team_a_score = intval($teamAScore);
                     $seriesMap->team_b_score = intval($teamBScore);
@@ -119,10 +119,10 @@ class UpdateFromFaceit implements ShouldQueue
                             // First try to find the player by faceit ID, if not, look up their steam id and try that
                             $playerModel = Player::firstWhere('faceit_id', $player['player_id']);
 
-                            if (!$playerModel) {
-                                $playerResponse = Http::withHeader('Authorization', 'Bearer ' . config('services.faceit.token'))
-                                    ->get('https://open.faceit.com/data/v4/players/' . $player['player_id']);
-                                if (!$playerResponse->ok()) {
+                            if (! $playerModel) {
+                                $playerResponse = Http::withHeader('Authorization', 'Bearer '.config('services.faceit.token'))
+                                    ->get('https://open.faceit.com/data/v4/players/'.$player['player_id']);
+                                if (! $playerResponse->ok()) {
                                     continue;
                                 }
 
@@ -133,8 +133,9 @@ class UpdateFromFaceit implements ShouldQueue
                                     'faceit_id' => $player['player_id'],
                                 ]);
 
-                                if (!$playerModel) {
-                                    logger('Could not find profile for player ' . Arr::get($playerData, 'nickname'));
+                                if (! $playerModel) {
+                                    logger('Could not find profile for player '.Arr::get($playerData, 'nickname'));
+
                                     continue;
                                 }
                             }
@@ -145,7 +146,7 @@ class UpdateFromFaceit implements ShouldQueue
                                 'deaths' => Arr::get($player, 'player_stats.Deaths'),
                             ];
 
-                            if (!$seriesMap->players()->where('id', $playerModel->id)->exists()) {
+                            if (! $seriesMap->players()->where('id', $playerModel->id)->exists()) {
                                 $seriesMap->players()->attach($playerModel->id, $pivotData);
                             } else {
                                 $seriesMap->players()->updateExistingPivot($playerModel->id, $pivotData);
@@ -166,6 +167,7 @@ class UpdateFromFaceit implements ShouldQueue
         } catch (\Exception $e) {
             logger('Failed to save series');
             logger($e->getMessage());
+
             return;
         }
     }

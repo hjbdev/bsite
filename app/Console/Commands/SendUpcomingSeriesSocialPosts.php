@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Series;
-use App\Models\SocialPost;
 use Illuminate\Console\Command;
 
 class SendUpcomingSeriesSocialPosts extends Command
@@ -45,7 +44,7 @@ class SendUpcomingSeriesSocialPosts extends Command
                             'match' => $series->id,
                             'slug' => $series->slug,
                         ]),
-                        'generator_url' => 'https://bsite.uk/generators/upcoming-series/' . $series->id,
+                        'generator_url' => 'https://bsite.uk/generators/upcoming-series/'.$series->id,
                     ]);
                 });
             });
@@ -56,22 +55,22 @@ class SendUpcomingSeriesSocialPosts extends Command
         $post = "⚔️ Upcoming Match \n\n";
 
         if ($series->event) {
-            $post .= "🏟️ " . $series->event->name . "\n";
+            $post .= '🏟️ '.$series->event->name."\n";
         }
 
-        $post .= "⌚ " . $series->start_date->format('g:i a') . "\n";
-        $post .= "⚔️ ";
+        $post .= '⌚ '.$series->start_date->format('g:i a')."\n";
+        $post .= '⚔️ ';
         if ($series->teamA && $series->teamA->twitter_handle) {
-            $post .= "@" . $series->teamA->twitter_handle;
+            $post .= '@'.$series->teamA->twitter_handle;
         } else {
             $post .= $series->teamA->name;
         }
 
-        $post .= " vs ";
+        $post .= ' vs ';
 
         if ($series->teamB && $series->teamB->twitter_handle) {
-            $post .= "@" . $series->teamB->twitter_handle;
-        } else if($series->teamB) {
+            $post .= '@'.$series->teamB->twitter_handle;
+        } elseif ($series->teamB) {
             $post .= $series->teamB->name;
         } else {
             $post .= $series->team_b_name;

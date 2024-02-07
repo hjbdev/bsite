@@ -19,6 +19,7 @@ use function Laravel\Prompts\info;
 class SyncFaceitMatchesForEvent extends Command
 {
     protected $signature = 'app:sync-faceit-matches-for-event {eventId}';
+
     protected $description = 'Synchronise with faceit for the given event.';
 
     public function handle()
@@ -32,7 +33,7 @@ class SyncFaceitMatchesForEvent extends Command
         while ($offset % $limit === 0 && $lastCount !== 0) {
             $response = $this->performFaceitCall($event->faceit_championship_id, $offset, $limit);
 
-            if (!$response->ok()) {
+            if (! $response->ok()) {
                 error('Failed');
                 dd($response->body());
             }
@@ -47,26 +48,26 @@ class SyncFaceitMatchesForEvent extends Command
 
                 foreach (['A', 'B'] as $uppercase) {
                     $number = $uppercase === 'A' ? 1 : 2;
-                    $team = Team::where('faceit_id', $match['teams']['faction' . $number]['faction_id'])
-                        ->orWhere('secondary_faceit_id', $match['teams']['faction' . $number]['faction_id'])
+                    $team = Team::where('faceit_id', $match['teams']['faction'.$number]['faction_id'])
+                        ->orWhere('secondary_faceit_id', $match['teams']['faction'.$number]['faction_id'])
                         ->first();
 
                     if ($team) {
-                        $series->{'team' . $uppercase}()->associate($team);
+                        $series->{'team'.$uppercase}()->associate($team);
                     }
 
-                    info("Team {$uppercase} is " . $team?->name ?? 'Unknown');
+                    info("Team {$uppercase} is ".$team?->name ?? 'Unknown');
                 }
 
-                $series->type = 'bo' . Arr::get($match, 'best_of', 1);
+                $series->type = 'bo'.Arr::get($match, 'best_of', 1);
                 $series->start_date = now()->parse(Arr::get($match, 'scheduled_at'));
                 $series->source = 'faceit';
 
                 if (Arr::get($match, 'status') === 'FINISHED') {
                     $series->status = SeriesStatus::FINISHED;
-                } else if (Arr::get($match, 'status') === 'CANCELLED') {
+                } elseif (Arr::get($match, 'status') === 'CANCELLED') {
                     $series->status = SeriesStatus::CANCELLED;
-                } else if (in_array(Arr::get($match, 'status'), ['ONGOING', 'READY', 'CONFIGURING', 'VOTING', 'SUBSTITUTION', 'CAPTAIN_PICK'])) {
+                } elseif (in_array(Arr::get($match, 'status'), ['ONGOING', 'READY', 'CONFIGURING', 'VOTING', 'SUBSTITUTION', 'CAPTAIN_PICK'])) {
                     $series->status = SeriesStatus::ONGOING;
                 } else {
                     $series->status = SeriesStatus::UPCOMING;
@@ -82,6 +83,7 @@ class SyncFaceitMatchesForEvent extends Command
                 } catch (\Exception $e) {
                     error('Failed to save series');
                     error($e->getMessage());
+
                     continue;
                 }
 
@@ -101,7 +103,7 @@ class SyncFaceitMatchesForEvent extends Command
 
             sleep(0.1);
 
-            info('Fetched page ' . (($offset / $limit)) . ' for ' . $event->name);
+            info('Fetched page '.(($offset / $limit)).' for '.$event->name);
         }
 
         // reset offset
@@ -111,7 +113,7 @@ class SyncFaceitMatchesForEvent extends Command
 
     protected function performFaceitCall(string $championshipId, int $offset, int $limit): Response
     {
-        return Http::withHeader('Authorization', 'Bearer ' . config('services.faceit.token'))
-            ->get('https://open.faceit.com/data/v4/championships/' . $championshipId . '/matches?offset=' . $offset . '&limit=' . $limit);
+        return Http::withHeader('Authorization', 'Bearer '.config('services.faceit.token'))
+            ->get('https://open.faceit.com/data/v4/championships/'.$championshipId.'/matches?offset='.$offset.'&limit='.$limit);
     }
 }

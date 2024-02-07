@@ -4,7 +4,6 @@ namespace App\Jobs\SocialPosts;
 
 use App\Models\SocialPost;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -58,14 +57,14 @@ class Post implements ShouldQueue
 
             if ($this->socialPost->link_to_post && $tweet->data->id) {
                 $client->tweet()->create()->performRequest([
-                    'reply' => ['in_reply_to_tweet_id' =>  $tweet->data->id],
-                    'text' => '🔗 ' . $this->socialPost->link_to_post,
+                    'reply' => ['in_reply_to_tweet_id' => $tweet->data->id],
+                    'text' => '🔗 '.$this->socialPost->link_to_post,
                 ]);
             }
 
             $this->socialPost->update([
                 'platform_post_id' => $tweet->data->id,
-                'platform_post_url' => 'https://twitter.com/bsiteuk/status/' . $tweet->data->id,
+                'platform_post_url' => 'https://twitter.com/bsiteuk/status/'.$tweet->data->id,
             ]);
         }
     }

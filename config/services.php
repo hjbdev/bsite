@@ -38,5 +38,5 @@ return [
     'faceit' => [
         'token' => env('FACEIT_TOKEN'),
         'webhook_secret' => env('FACEIT_WEBHOOK_SECRET'),
-    ]
+    ],
 ];

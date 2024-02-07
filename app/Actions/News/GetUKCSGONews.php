@@ -48,6 +48,7 @@ class GetUKCSGONews
                     $srcset = $srcset->map(function ($src) {
                         $src = str($src);
                         $src = $src->explode(' ');
+
                         return [
                             'url' => $src[0],
                             'width' => str($src[1])->replace('w', '')->toInteger(),
@@ -66,19 +67,19 @@ class GetUKCSGONews
                         File::makeDirectory(storage_path('app/temp'));
                     }
 
-                    $tmpImage = storage_path('app/temp/' . $imageName);
+                    $tmpImage = storage_path('app/temp/'.$imageName);
                     file_put_contents($tmpImage, file_get_contents($src));
-                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME) . '/' . pathinfo($tmpImage, PATHINFO_FILENAME) . '.webp';
+                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME).'/'.pathinfo($tmpImage, PATHINFO_FILENAME).'.webp';
 
                     Image::load($tmpImage)
-                        ->optimize()
                         ->fit(Manipulations::FIT_CONTAIN, 480, 270)
+                        ->optimize()
                         ->save($newImage);
 
                     $newImageName = pathinfo($newImage, PATHINFO_BASENAME);
 
-                    $storage->put('ukcsgo-images/' . $newImageName, file_get_contents($newImage), 'public');
-                    $src = str($storage->url('ukcsgo-images/' . $newImageName))->replace('ams3', 'ams3.cdn');
+                    $storage->put('ukcsgo-images/'.$newImageName, file_get_contents($newImage), 'public');
+                    $src = str($storage->url('ukcsgo-images/'.$newImageName))->replace('ams3', 'ams3.cdn');
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
 
                     unlink($tmpImage);
