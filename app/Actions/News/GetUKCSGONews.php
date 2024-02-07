@@ -69,7 +69,7 @@ class GetUKCSGONews
 
                     $tmpImage = storage_path('app/temp/'.$imageName);
                     file_put_contents($tmpImage, file_get_contents($src));
-                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME).'/'.pathinfo($tmpImage, PATHINFO_FILENAME).'.webp';
+                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME).'/'.pathinfo($tmpImage, PATHINFO_FILENAME).'.jpg';
 
                     Image::load($tmpImage)
                         ->fit(Manipulations::FIT_CONTAIN, 480, 270)
