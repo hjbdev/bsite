@@ -3,11 +3,8 @@
 namespace App\Actions\News;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Image\Image;
-use Spatie\Image\Manipulations;
 
 class GetUKCSGONews
 {
@@ -48,42 +45,23 @@ class GetUKCSGONews
                     $srcset = $srcset->map(function ($src) {
                         $src = str($src);
                         $src = $src->explode(' ');
-
                         return [
                             'url' => $src[0],
                             'width' => str($src[1])->replace('w', '')->toInteger(),
                         ];
                     });
 
-                    $src = $srcset->sortByDesc('width')->first()['url'];
+                    $src = $srcset->where('width', '<', 600)->sortByDesc('width')->first()['url'];
                     $img = $img->replaceMatches('/sizes=".*?"/', '');
                     $img = $img->replaceMatches('/decoding=".*?"/', '');
                     $img = $img->replaceMatches('/srcset=".*?"/', '');
 
                     // cache the image locally
                     $imageName = pathinfo($src, PATHINFO_BASENAME);
-
-                    if (File::isDirectory(storage_path('app/temp')) === false) {
-                        File::makeDirectory(storage_path('app/temp'));
-                    }
-
-                    $tmpImage = storage_path('app/temp/'.$imageName);
-                    file_put_contents($tmpImage, file_get_contents($src));
-                    $newImage = pathinfo($tmpImage, PATHINFO_DIRNAME).'/'.pathinfo($tmpImage, PATHINFO_FILENAME).'.jpg';
-
-                    Image::load($tmpImage)
-                        ->fit(Manipulations::FIT_CONTAIN, 480, 270)
-                        ->optimize()
-                        ->save($newImage);
-
-                    $newImageName = pathinfo($newImage, PATHINFO_BASENAME);
-
-                    $storage->put('ukcsgo-images/'.$newImageName, file_get_contents($newImage), 'public');
-                    $src = str($storage->url('ukcsgo-images/'.$newImageName))->replace('ams3', 'ams3.cdn');
+                    
+                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src), 'public');
+                    $src = str($storage->url('ukcsgo-images/' . $imageName))->replace('ams3', 'ams3.cdn');
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
-
-                    unlink($tmpImage);
-                    unlink($newImage);
                 }
 
                 $articles->push([
