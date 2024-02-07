@@ -1,11 +1,13 @@
 <?php
 
 use App\Actions\News\GetUKCSGONews;
+use App\Enums\SeriesStatus;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FinishedSeriesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeriesController;
 use App\Models\Event;
+use App\Models\Series;
 use App\Models\Team;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +26,6 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-
     $rosterMoves = DB::table('player_team')
         ->select('player_id', 'team_id', 'most_recent_move', 'start_date', 'end_date', 'players.name as player_name', 'players.full_name as player_full_name', 'players.nationality as player_nationality', 'teams.name as team_name')
         ->join('players', 'player_team.player_id', '=', 'players.id', 'left')
@@ -38,9 +39,16 @@ Route::get('/', function () {
 
     $rosterMoves = $rosterMoves->map(function ($rosterMove) use ($teams) {
         $rosterMove->team = $teams->firstWhere('id', $rosterMove->team_id);
-
         return $rosterMove;
     });
+
+    $upcomingSeries = Series::with('teamA', 'teamB', 'event', 'seriesMaps')
+        ->where(function ($query) {
+            $query->where('start_date', '>', now()->startOfDay());
+            $query->where('start_date', '<', now()->addDays(7)->startOfDay());
+        })
+        ->orderBy('start_date')
+        ->limit(10);
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -49,6 +57,7 @@ Route::get('/', function () {
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
         'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
         'news' => inertia()->lazy(fn () => app(GetUKCSGONews::class)->execute()->take(6)),
+        'upcomingSeries' => $upcomingSeries->get(),
     ]);
 });
 

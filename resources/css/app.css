@@ -13,6 +13,7 @@
 
 ::-webkit-scrollbar {
     width: 12px; /* width of the entire scrollbar */
+    height: 6px;
     z-index: 500;
 }
 

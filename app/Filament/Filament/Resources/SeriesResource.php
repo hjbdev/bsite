@@ -34,6 +34,7 @@ class SeriesResource extends Resource
                     ->options([
                         'scorebot' => 'Scorebot',
                         'esea' => 'ESEA',
+                        'faceit' => 'FACEIT'
                     ]),
                 Forms\Components\Select::make('team_a_id')
                     ->relationship('teamA', 'name')
