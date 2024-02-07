@@ -4,6 +4,7 @@ namespace App\Actions\News;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class GetUKCSGONews
 {
@@ -14,6 +15,14 @@ class GetUKCSGONews
             $response = Http::get('https://ukcsgo.com/feed/');
 
             $xml = simplexml_load_string($response->body());
+
+            $storage = Storage::disk('spaces-public');
+
+            if (! $storage->exists('ukcsgo-images')) {
+                $storage->makeDirectory('ukcsgo-images');
+            }
+
+            $storage->cleanDirectory('ukcsgo-images');
 
             foreach ($xml->channel->item as $item) {
                 // Parse HTML
@@ -43,10 +52,15 @@ class GetUKCSGONews
                     });
 
                     $src = $srcset->where('width', '<', 600)->sortByDesc('width')->first()['url'];
-                    $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
                     $img = $img->replaceMatches('/sizes=".*?"/', '');
                     $img = $img->replaceMatches('/decoding=".*?"/', '');
                     $img = $img->replaceMatches('/srcset=".*?"/', '');
+
+                    // cache the image locally
+                    $imageName = str()->slug(pathinfo($src, PATHINFO_BASENAME));
+                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($src));
+                    $src = $storage->url('ukcsgo-images/' . $imageName);
+                    $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
                 }
 
                 $articles->push([
@@ -60,4 +74,3 @@ class GetUKCSGONews
         });
     }
 }
-
