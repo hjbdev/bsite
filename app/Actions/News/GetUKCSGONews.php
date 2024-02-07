@@ -73,8 +73,10 @@ class GetUKCSGONews
                         ->optimize()
                         ->save($newImage);
 
-                    $storage->put('ukcsgo-images/' . $imageName, file_get_contents($newImage), 'public');
-                    $src = str($storage->url('ukcsgo-images/' . $imageName))->replace('ams3', 'ams3.cdn');
+                    $newImageName = pathinfo($newImage, PATHINFO_BASENAME);
+
+                    $storage->put('ukcsgo-images/' . $newImageName, file_get_contents($newImage), 'public');
+                    $src = str($storage->url('ukcsgo-images/' . $newImageName))->replace('ams3', 'ams3.cdn');
                     $img = $img->replaceMatches('/src=".*?"/', "src=\"{$src}\"");
 
                     unlink($tmpImage);
