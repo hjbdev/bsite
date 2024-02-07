@@ -56,7 +56,7 @@ class SyncFaceitMatchesForEvent extends Command
                         $series->{'team'.$uppercase}()->associate($team);
                     }
 
-                    info("Team {$uppercase} is ".$team?->name ?? 'Unknown');
+                    info("Team {$uppercase} is ".$team?->name);
                 }
 
                 $series->type = 'bo'.Arr::get($match, 'best_of', 1);
@@ -101,7 +101,7 @@ class SyncFaceitMatchesForEvent extends Command
             $lastCount = count($response->json('items'));
             $offset = $response->json('end');
 
-            sleep(0.1);
+            usleep(300);
 
             info('Fetched page '.(($offset / $limit)).' for '.$event->name);
         }

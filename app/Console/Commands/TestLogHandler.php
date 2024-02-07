@@ -147,10 +147,10 @@ class TestLogHandler extends Command
             ['Player', 'Kills', 'Deaths', 'ADR'],
             $seriesMap->players->map(function ($player) use ($seriesMap) {
                 return [
-                    $player->name,
-                    $player->pivot->kills,
-                    $player->pivot->deaths,
-                    $player->pivot->damage / $seriesMap->rounds_played,
+                    'player' => $player->name,
+                    'kills' => $player->pivot->kills,
+                    'deaths' => $player->pivot->deaths,
+                    'adr' => $player->pivot->damage / $seriesMap->rounds_played,
                 ];
             })
         );

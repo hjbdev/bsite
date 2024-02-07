@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Image\Manipulations;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,14 +24,14 @@ class Team extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('preview')
-            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->fit(Fit::Contain, 300, 300)
             ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('mini_preview')
             ->performOnCollections('logo')
-            ->fit(Manipulations::FIT_CROP, 50, 50)
+            ->fit(Fit::Contain, 50, 50)
             ->keepOriginalImageFormat()
             ->nonQueued();
     }

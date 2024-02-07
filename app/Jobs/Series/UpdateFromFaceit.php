@@ -62,7 +62,7 @@ class UpdateFromFaceit implements ShouldQueue
                 $series->{'team'.$uppercase}()->associate($team);
             }
 
-            info("Team {$uppercase} is ".$team?->name ?? 'Unknown');
+            info("Team {$uppercase} is ".$team?->name);
         }
 
         $series->type = 'bo'.Arr::get($match, 'best_of', 1);

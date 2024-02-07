@@ -37,7 +37,7 @@ class GetUKCSGONews
 
                 $srcset = $img->match('/srcset=".*?"/');
 
-                if ($srcset) {
+                if ($srcset->length() > 0) {
                     $srcset = $srcset->replace('srcset="', '');
                     $srcset = $srcset->replace('"', '');
                     $srcset = $srcset->explode(', ');

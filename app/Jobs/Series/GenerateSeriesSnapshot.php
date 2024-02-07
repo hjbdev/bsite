@@ -19,7 +19,7 @@ class GenerateSeriesSnapshot implements ShouldBeUnique, ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * Create a new job instance.w
+     * Create a new job instance.
      */
     public function __construct(
         public int $seriesId,

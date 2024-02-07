@@ -97,8 +97,8 @@ class SyncEseaMatchesForTeam extends Command
             }
 
             if (isset($match['results']['score']['faction1']) && isset($match['results']['score']['faction2'])) {
-                $series->team_a_score = ($shouldBeTeamA ? $match['results']['score']['faction1'] : $match['results']['score']['faction2']) ?? 0;
-                $series->team_b_score = ($shouldBeTeamA ? $match['results']['score']['faction2'] : $match['results']['score']['faction1']) ?? 0;
+                $series->team_a_score = ($shouldBeTeamA ? $match['results']['score']['faction1'] : $match['results']['score']['faction2']);
+                $series->team_b_score = ($shouldBeTeamA ? $match['results']['score']['faction2'] : $match['results']['score']['faction1']);
             }
 
             $series->start_date = now()->parse($match['scheduled_at']);

@@ -41,7 +41,7 @@ class OrganiserPolicy
         }
 
         if ($user->can('update:(own)organiser')) {
-            return $organiser->users()?->where('id', $user->id)?->exists() ?? false;
+            return $organiser->users()->where('id', $user->id)->exists() ?? false;
         }
 
         return false;

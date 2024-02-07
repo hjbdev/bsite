@@ -23,6 +23,7 @@ class UpdateSeriesRequest extends FormRequest
         }
 
         if ($user->can('update:(own)series')) {
+            /** @var Series */
             $series = Series::findOrFail($this->route('series'))->with('event.organiser');
 
             return $series->event->organiser->users()->where('id', $user->id)->exists();

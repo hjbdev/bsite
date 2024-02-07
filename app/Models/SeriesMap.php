@@ -39,6 +39,7 @@ class SeriesMap extends Model
         return $this->belongsTo(Map::class);
     }
 
+    /** @return BelongsToMany<Player> */
     public function players(): BelongsToMany
     {
         return $this->belongsToMany(Player::class)->withPivot(['kills', 'assists', 'deaths', 'damage', 'traded', 'kast', 'rating', 'opening_kills', 'opening_deaths', 'health']);

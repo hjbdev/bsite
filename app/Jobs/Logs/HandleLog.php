@@ -17,8 +17,8 @@ class HandleLog implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        Model $log,
-        string $serverInstanceToken,
+        // Model $log,
+        // string $serverInstanceToken,
 
     ) {
         //

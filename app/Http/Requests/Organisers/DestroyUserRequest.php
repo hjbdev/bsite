@@ -25,7 +25,7 @@ class DestroyUserRequest extends FormRequest
         if ($user->can('update:(own)organiser')) {
             $organiser = Organiser::findOrFail($this->route('organiser'));
 
-            if ($organiser && $organiser->users()->where('id', $user->id)->exists()) {
+            if ($organiser->users()->where('id', $user->id)->exists()) {
                 return true;
             }
         }

@@ -41,7 +41,7 @@ class EventPolicy
         }
 
         if ($user->can('update:(own)event')) {
-            return $event?->organiser?->users()?->where('id', $user->id)?->exists() ?? false;
+            return $event->organiser?->users()->where('id', $user->id)->exists() ?? false;
         }
 
         return false;
@@ -57,7 +57,7 @@ class EventPolicy
         }
 
         if ($user->can('delete:(own)event')) {
-            return $event?->organiser?->users()?->where('id', $user->id)?->exists() ?? false;
+            return $event->organiser?->users()->where('id', $user->id)->exists() ?? false;
         }
 
         return false;

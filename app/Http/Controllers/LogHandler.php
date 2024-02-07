@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class LogHandler extends Controller
 {
@@ -44,7 +45,7 @@ class LogHandler extends Controller
         try {
             if (! $serverInstanceToken = $request->header('x-server-instance-token')) {
                 logger('No Instance token '.$request->ip());
-                abort(403);
+                throw new UnauthorizedHttpException('No instance token');
             }
 
             $series = null;
@@ -272,7 +273,7 @@ class LogHandler extends Controller
                     $seriesMap = $series->seriesMaps()->where('map_id', $currentMap->id)->first();
 
                     if ($seriesMap) {
-                        if ($seriesMap?->status === SeriesMapStatus::FINISHED) {
+                        if ($seriesMap->status === SeriesMapStatus::FINISHED) {
                             // It's already finished, we don't need to do anything.
                             return;
                         } else {

@@ -23,7 +23,8 @@ class StoreSeriesRequest extends FormRequest
         }
 
         if ($user->can('store:(own)series')) {
-            $event = Event::findOrFail($this->input('event.id'))->with('organiser');
+            /** @var Event */
+            $event = Event::with('organiser')->findOrFail($this->input('event.id'));
 
             return $event->organiser->users()->where('id', $user->id)->exists();
         }

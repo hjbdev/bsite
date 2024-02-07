@@ -23,7 +23,7 @@ class StoreSeriesVetoRequest extends FormRequest
         }
 
         if ($user->can('store:(own)veto')) {
-            $series = Series::findOrFail($this->route('series'))->with('event.organiser');
+            $series = Series::with('event.organiser')->findOrFail($this->route('series'));
 
             return $series->event->organiser->users()->where('id', $user->id)->exists();
         }

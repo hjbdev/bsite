@@ -16,6 +16,6 @@ class GenerateCurrentGameState
 
     public function execute(Collection $logs)
     {
-        return new CS2GameState($logs);
+        // return new CS2GameState($logs);
     }
 }

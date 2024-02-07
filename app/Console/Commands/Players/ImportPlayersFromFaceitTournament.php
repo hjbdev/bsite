@@ -9,23 +9,9 @@ use Illuminate\Support\Facades\Http;
 
 class ImportPlayersFromFaceitTournament extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:import-players-from-faceit-tournament {tournamentId} {--offset=0}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Syncs players from faceit tournament';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $response = Http::withHeader('Authorization', 'Bearer '.env('FACEIT_API_TOKEN'))->get('https://open.faceit.com/data/v4/championships/'.$this->argument('tournamentId').'/subscriptions?offset='.$this->option('offset').'&limit=10');
@@ -33,8 +19,6 @@ class ImportPlayersFromFaceitTournament extends Command
         if (! $response->ok()) {
             $this->error('Error while fetching players from faceit');
             dd($response->body());
-
-            return;
         }
 
         $teams = $response->json('items');
@@ -116,7 +100,7 @@ class ImportPlayersFromFaceitTournament extends Command
         if (count($teams) === 10) {
             $this->call('app:import-players-from-faceit-tournament', [
                 'tournamentId' => $this->argument('tournamentId'),
-                '--offset' => $this->option('offset') + 10,
+                '--offset' => intval($this->option('offset')) + 10,
             ]);
         }
     }

@@ -30,10 +30,6 @@ class ModifyPlayerSeriesMapStatistic implements ShouldQueue
     {
         $seriesMap = app(GetCachedSeriesMap::class)->execute($this->seriesMapId);
 
-        if (! $seriesMap) {
-            return;
-        }
-
         if (! $seriesMap->start_date) {
             // If the series map doesn't have a start date, we don't want to update the stats
             return;

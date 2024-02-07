@@ -2,24 +2,19 @@
 
 namespace App\Models;
 
-use Engine\Fields\File;
-use Engine\Fields\Text;
-use Engine\HasFields;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\File as RulesFile;
-use Spatie\Image\Manipulations;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Organiser extends Model implements HasMedia
 {
-    use HasFactory, HasFields, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -27,17 +22,6 @@ class Organiser extends Model implements HasMedia
     ];
 
     protected $appends = ['logo'];
-
-    public function fields()
-    {
-        return [
-            Text::create('Name')
-                ->creationRules(['required', 'string', 'unique:organisers,name'])
-                ->updateRules(['required', 'string', Rule::unique('organisers')->ignore(request()?->route('organiser') ?? 0)]),
-            File::create('Logo')
-                ->rules(['nullable', RulesFile::types(['png'])->max(5192)]),
-        ];
-    }
 
     public static function boot(): void
     {
@@ -67,14 +51,14 @@ class Organiser extends Model implements HasMedia
         $this
             ->addMediaConversion('preview')
             ->performOnCollections('logo')
-            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->fit(Fit::Contain, 300, 300)
             ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this
             ->addMediaConversion('mini_preview')
             ->performOnCollections('logo')
-            ->fit(Manipulations::FIT_CROP, 50, 50)
+            ->fit(Fit::Contain, 50, 50)
             ->keepOriginalImageFormat()
             ->nonQueued();
     }
