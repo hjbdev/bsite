@@ -48,7 +48,7 @@ Route::get('/', function () {
         'recentRosterMoves' => $rosterMoves,
         'upcomingEvents' => Event::where('end_date', '>=', now()->startOfDay())->orderBy('start_date')->limit(5)->get(),
         'pastEvents' => Event::where('end_date', '<', now()->startOfDay())->orderByDesc('start_date')->limit(5)->get(),
-        'news' => app(GetUKCSGONews::class)->execute()->take(6),
+        'news' => inertia()->lazy(fn () => app(GetUKCSGONews::class)->execute()->take(6)),
     ]);
 });
 

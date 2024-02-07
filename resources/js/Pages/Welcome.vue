@@ -3,8 +3,9 @@ import HH2 from "@/Components/HH2.vue";
 import PublicLayout from "@/Layouts/PublicLayout.vue";
 import Container from "@/Components/Container.vue";
 import EventList from "@/Components/Events/EventList.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import RosterMovesList from "@/Components/RosterMovesList.vue";
+import { nextTick } from "vue";
 
 defineOptions({ layout: PublicLayout });
 
@@ -14,6 +15,10 @@ const props = defineProps({
     pastEvents: Array,
     news: Array,
 });
+
+router.reload({
+    only: ['news'],
+})
 </script>
 <template>
     <Head title="B-Site: Counter-Strike Coverage for the UK & Ireland"></Head>
@@ -40,7 +45,7 @@ const props = defineProps({
                         class="object-cover object-center rounded-lg h-32 w-full shadow-lg opacity-80 transition group-hover:opacity-100"
                     />
                 </div>
-                <div>
+                <div v-if="news">
                     <div class="flex gap-3 mb-6 items-center">
                         <HH2>News</HH2>
                         via
