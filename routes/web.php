@@ -48,7 +48,7 @@ Route::get('/', function () {
             $query->where('start_date', '<', now()->addDays(7)->startOfDay());
         })
         ->orderBy('start_date')
-        ->limit(10);
+        ->limit(30);
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
