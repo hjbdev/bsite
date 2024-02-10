@@ -32,7 +32,7 @@ class SeriesController extends Controller
         $series = Series::with('teamA.players', 'teamB.players', 'event', 'seriesMaps.map', 'currentSeriesMap.map', 'seriesMaps.players', 'streams')->findOrFail($id);
 
         $demos = $series->seriesMaps->map(function ($seriesMap) {
-            $demo = $seriesMap->demos?->first();
+            $demo = $seriesMap->demo;
             $demoUrl = null;
 
             if ($demo) {
