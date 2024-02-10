@@ -32,6 +32,10 @@ class ProcessDemo implements ShouldQueue
         $localFilePath = $this->demo->path;
         $originalFileSize = Storage::disk('local')->size($localFilePath);
 
+        Storage::disk('local')->move($localFilePath, str($localFilePath)->replaceLast('.bin', '.dem')->toString());
+        $localFilePath = str($localFilePath)->replaceLast('.bin', '.dem')->toString();
+        $this->demo->path = $localFilePath;
+
         $data = $this->analyse();
 
         if ($this->demo->seriesMap) {
@@ -128,8 +132,7 @@ class ProcessDemo implements ShouldQueue
         Storage::disk(config('media-library.disk_name'))
             ->writeStream(
                 $this->demo->path,
-                Storage::disk('local')->readStream($localFilePath . '.gz'),
-                ['visibility' => 'public']
+                Storage::disk('local')->readStream($localFilePath . '.gz')
             );
 
         Storage::disk(config('media-library.disk_name'))

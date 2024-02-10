@@ -406,19 +406,19 @@ const seriesMaps = computed(() => {
                                     <td class="p-2 text-right">
                                         {{
                                             player.pivot
-                                                .average_damage_per_round
+                                                .average_damage_per_round.toFixed(2)
                                         }}
                                     </td>
                                     <td class="p-2 text-right">
                                         {{ player.pivot.first_kill_count }}:{{
-                                            player.pivot.first_death_count
+                                            player.pivot.first_death_count.toFixed(0)
                                         }}
                                     </td>
                                     <td class="p-2 text-right">
-                                        {{ player.pivot.kast }}%
+                                        {{ player.pivot.kast.toFixed(0) }}%
                                     </td>
                                     <td class="p-2 text-right">
-                                        {{ player.pivot.hltv_rating2 }}
+                                        {{ player.pivot.hltv_rating2.toFixed(2) }}
                                     </td>
                                 </template>
                             </tr>
