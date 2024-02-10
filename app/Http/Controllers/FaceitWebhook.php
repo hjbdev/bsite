@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Series\UpdateFromFaceit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class FaceitWebhook extends Controller
 {
@@ -23,6 +24,8 @@ class FaceitWebhook extends Controller
 
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        logger('faceit webhook: '.$request->event.' '.Arr::get($request->all(), 'payload.id'));
 
         if (
             $request->event === 'match_status_ready'

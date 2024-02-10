@@ -73,11 +73,6 @@ class SyncFaceitMatchesForEvent extends Command
                     $series->status = SeriesStatus::UPCOMING;
                 }
 
-                if (Arr::has($match, 'results')) {
-                    $series->team_a_score = Arr::get($match, 'results.score.faction1');
-                    $series->team_b_score = Arr::get($match, 'results.score.faction2');
-                }
-
                 try {
                     $series->save();
                 } catch (\Exception $e) {
@@ -88,11 +83,13 @@ class SyncFaceitMatchesForEvent extends Command
                 }
 
                 if (count($maps = Arr::get($match, 'voting.map.pick', [])) > 0) {
-                    foreach ($maps as $map) {
+                    foreach ($maps as $mapIndex => $map) {
                         $series->seriesMaps()->updateOrCreate([
                             'map_id' => Map::firstWhere('name', $map)->id,
                         ], [
-                            'status' => SeriesMapStatus::UPCOMING,
+                            'status' => Arr::has($match, 'detailed_results.'.$mapIndex) ? SeriesMapStatus::FINISHED : SeriesMapStatus::UPCOMING,
+                            'team_a_score' => Arr::get($match, 'detailed_results.'.$mapIndex.'.factions.faction1.score', 0),
+                            'team_b_score' => Arr::get($match, 'detailed_results.'.$mapIndex.'.factions.faction2.score', 0),
                         ]);
                     }
                 }

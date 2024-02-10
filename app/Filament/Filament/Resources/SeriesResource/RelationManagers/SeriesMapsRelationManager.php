@@ -52,7 +52,12 @@ class SeriesMapsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('edit')
+                    ->url(fn ($record) => route('filament.filament.resources.series-maps.edit', $record))
+                    ->icon("heroicon-m-pencil-square")
+                    ->openUrlInNewTab(),
+                // Tables\Actions\ViewAction::make(),
+                // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

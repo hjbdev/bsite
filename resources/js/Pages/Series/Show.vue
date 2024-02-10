@@ -240,9 +240,7 @@ const seriesMaps = computed(() => {
                             class="absolute inset-0 flex items-center justify-center p-6 opacity-50"
                         >
                             Scorebot is unavailable for
-                            {{
-                                series.source === "esea" ? "ESEA" : "FACEIT"
-                            }}
+                            {{ series.source === "esea" ? "ESEA" : "FACEIT" }}
                             matches
                         </div>
                     </div>
@@ -250,7 +248,9 @@ const seriesMaps = computed(() => {
             </div>
             <div>
                 <FrostedGlassCard
-                    v-if="series.source === 'esea' || series.source === 'faceit'"
+                    v-if="
+                        series.source === 'esea' || series.source === 'faceit'
+                    "
                     flush
                     class="mb-6 overflow-hidden"
                 >
@@ -291,7 +291,7 @@ const seriesMaps = computed(() => {
             </div>
         </div>
 
-        <FrostedGlassCard flush class="overflow-hidden">
+        <FrostedGlassCard flush>
             <CardSectionHeader :icon="TableCellsIcon"
                 >Scoreboard
 
@@ -309,75 +309,128 @@ const seriesMaps = computed(() => {
                     </button>
                 </template></CardSectionHeader
             >
-            <table
-                v-if="
-                    (series.source === 'scorebot' || series.source === 'faceit') && series.series_maps?.length
-                "
-                class="w-full dark:text-white"
-            >
-                <thead>
-                    <tr>
-                        <th class="p-2 text-left">Player</th>
-                        <th class="p-2 text-right">Kills</th>
-                        <th class="p-2 text-right">Assists</th>
-                        <th class="p-2 text-right">Deaths</th>
-                        <th v-if="series.source !== 'faceit'" class="p-2 text-right">ADR</th>
-                    </tr>
-                </thead>
-                <template v-for="seriesMap in series.series_maps">
-                    <tbody v-if="seriesMap.map.name === selectedSnapshotMap">
-                        <tr
-                            v-for="player in seriesMap.players
-                                .sort((a, b) => b.pivot.damage - a.pivot.damage)
-                                .sort((a, b) => b.team_id - a.team_id)"
-                            :class="{
-                                'bg-orange-600/20':
-                                    (series.team_a.players.some(
-                                        (p) => p.id === player.id,
-                                    ) &&
-                                        series.terrorist_team_id ===
-                                            series.team_a_id) ||
-                                    (series.team_b.players.some(
-                                        (p) => p.id === player.id,
-                                    ) &&
-                                        series.terrorist_team_id ===
-                                            series.team_b_id),
-                                'bg-blue-600/20':
-                                    (series.team_a.players.some(
-                                        (p) => p.id === player.id,
-                                    ) &&
-                                        series.ct_team_id ===
-                                            series.team_a_id) ||
-                                    (series.team_b.players.some(
-                                        (p) => p.id === player.id,
-                                    ) &&
-                                        series.ct_team_id === series.team_b_id),
-                            }"
-                        >
-                            <td class="p-2">{{ player.name }}</td>
-                            <td class="p-2 text-right">
-                                {{ player.pivot.kills }}
-                            </td>
-                            <td class="p-2 text-right">
-                                {{ player.pivot.assists }}
-                            </td>
-                            <td class="p-2 text-right">
-                                {{ player.pivot.deaths }}
-                            </td>
-                            <td v-if="series.source !== 'faceit'" class="p-2 text-right">
-                                {{
-                                    (
-                                        player.pivot.damage /
-                                        (seriesMap.rounds_played ?? 0)
-                                    ).toFixed(0)
-                                }}
-                            </td>
+            <div class="overflow-x-auto">
+                <table
+                    v-if="
+                        (series.source === 'scorebot' ||
+                            series.source === 'faceit') &&
+                        series.series_maps?.length
+                    "
+                    class="w-full dark:text-white"
+                >
+                    <thead>
+                        <tr>
+                            <th class="p-2 text-left">Player</th>
+                            <th class="p-2 text-right">Kills</th>
+                            <th class="p-2 text-right">Assists</th>
+                            <th class="p-2 text-right">Deaths</th>
+                            <th
+                                v-if="series.source !== 'faceit'"
+                                class="p-2 text-right"
+                            >
+                                ADR
+                            </th>
+                            <template
+                                v-if="
+                                    series.series_maps.find(
+                                        (m) =>
+                                            m.map.name === selectedSnapshotMap,
+                                    )?.players[0]?.kast !== null
+                                "
+                            >
+                                <th class="p-2 text-right">ADR</th>
+                                <th class="p-2 text-right">Opening Duels</th>
+                                <th class="p-2 text-right">KAST</th>
+                                <th class="p-2 text-right">Rating</th>
+                            </template>
                         </tr>
-                    </tbody>
-                </template>
-            </table>
-            <div v-else-if="series.source === 'esea'" class="p-4 opacity-50">
-                No Scoreboard Available for ESEA Matches yet.
+                    </thead>
+                    <template v-for="seriesMap in series.series_maps">
+                        <tbody
+                            v-if="seriesMap.map.name === selectedSnapshotMap"
+                        >
+                            <tr
+                                v-for="player in seriesMap.players
+                                    .sort(
+                                        (a, b) =>
+                                            b.pivot.damage - a.pivot.damage,
+                                    )
+                                    .sort((a, b) => b.team_id - a.team_id)"
+                                :class="{
+                                    'bg-orange-600/20':
+                                        (series.team_a.players.some(
+                                            (p) => p.id === player.id,
+                                        ) &&
+                                            series.terrorist_team_id ===
+                                                series.team_a_id) ||
+                                        (series.team_b.players.some(
+                                            (p) => p.id === player.id,
+                                        ) &&
+                                            series.terrorist_team_id ===
+                                                series.team_b_id),
+                                    'bg-blue-600/20':
+                                        (series.team_a.players.some(
+                                            (p) => p.id === player.id,
+                                        ) &&
+                                            series.ct_team_id ===
+                                                series.team_a_id) ||
+                                        (series.team_b.players.some(
+                                            (p) => p.id === player.id,
+                                        ) &&
+                                            series.ct_team_id ===
+                                                series.team_b_id),
+                                }"
+                            >
+                                <td class="p-2">{{ player.name }}</td>
+                                <td class="p-2 text-right">
+                                    {{ player.pivot.kills }}
+                                </td>
+                                <td class="p-2 text-right">
+                                    {{ player.pivot.assists }}
+                                </td>
+                                <td class="p-2 text-right">
+                                    {{ player.pivot.deaths }}
+                                </td>
+                                <td
+                                    v-if="series.source !== 'faceit'"
+                                    class="p-2 text-right"
+                                >
+                                    {{
+                                        (
+                                            player.pivot.damage /
+                                            (seriesMap.rounds_played ?? 0)
+                                        ).toFixed(0)
+                                    }}
+                                </td>
+                                <template v-if="player.kast !== null">
+                                    <td class="p-2 text-right">
+                                        {{
+                                            player.pivot
+                                                .average_damage_per_round
+                                        }}
+                                    </td>
+                                    <td class="p-2 text-right">
+                                        {{ player.pivot.first_kill_count }}:{{
+                                            player.pivot.first_death_count
+                                        }}
+                                    </td>
+                                    <td class="p-2 text-right">
+                                        {{ player.pivot.kast }}%
+                                    </td>
+                                    <td class="p-2 text-right">
+                                        {{ player.pivot.hltv_rating2 }}
+                                    </td>
+                                </template>
+                            </tr>
+                        </tbody>
+                    </template>
+                </table>
+                <div
+                    v-else-if="series.source === 'esea'"
+                    class="p-4 opacity-50"
+                >
+                    No Scoreboard Available for ESEA Matches yet.
+                </div>
             </div>
         </FrostedGlassCard>
     </Container>

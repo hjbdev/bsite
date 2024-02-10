@@ -19,7 +19,7 @@ class GetUKCSGONews
 
             $xml = simplexml_load_string($response->body());
 
-            $storage = Storage::disk('spaces-public');
+            $storage = app()->isProduction() ? Storage::disk('spaces-public') : Storage::disk('public');
 
             if ($storage->exists('ukcsgo-images')) {
                 $storage->deleteDirectory('ukcsgo-images');

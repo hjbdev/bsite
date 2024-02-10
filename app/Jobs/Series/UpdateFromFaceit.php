@@ -84,11 +84,13 @@ class UpdateFromFaceit implements ShouldQueue
         $statsResponse = null;
 
         if (count($maps = Arr::get($match, 'voting.map.pick', [])) > 0) {
-            foreach ($maps as $map) {
+            foreach ($maps as $mapIndex => $map) {
                 $series->seriesMaps()->updateOrCreate([
                     'map_id' => Map::firstWhere('name', $map)->id,
                 ], [
                     'status' => SeriesMapStatus::UPCOMING,
+                    'team_a_score' => Arr::get($match, 'detailed_results.'.$mapIndex.'.factions.faction1.score'),
+                    'team_b_score' => Arr::get($match, 'detailed_results.'.$mapIndex.'.factions.faction2.score'),
                 ]);
             }
         }
