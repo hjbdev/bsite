@@ -29,9 +29,13 @@ class SyncEseaMatches extends Command
         $teamsWithFaceitId = Team::whereNotNull('faceit_id')->get();
 
         foreach ($teamsWithFaceitId as $team) {
-            $this->call('app:sync-esea-matches-for-team', [
-                'teamId' => $team->id,
-            ]);
+            try {
+                $this->call('app:sync-esea-matches-for-team', [
+                    'teamId' => $team->id,
+                ]);
+            } catch (\Exception $e) {
+                logger($e->getMessage());
+            }
         }
     }
 }
