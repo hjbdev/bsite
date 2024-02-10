@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Models\Series;
-use App\Support\GameState\CS2GameState;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class SeriesController extends Controller
 {
@@ -32,6 +31,24 @@ class SeriesController extends Controller
 
         $series = Series::with('teamA.players', 'teamB.players', 'event', 'seriesMaps.map', 'currentSeriesMap.map', 'seriesMaps.players', 'streams')->findOrFail($id);
 
+        $demos = $series->seriesMaps->map(function ($seriesMap) {
+            $demo = $seriesMap->demos?->first();
+            $demoUrl = null;
+
+            if ($demo) {
+                if ($demo->disk !== 'local') {
+                    $demoUrl = Storage::disk($demo->disk)->temporaryUrl($demo->path, now()->addMinutes(10));
+                } else {
+                    $demoUrl = Storage::disk($demo->disk)->url($demo->path);
+                }
+            }
+
+            return [
+                'map' => $seriesMap->map->title,
+                'url' => $demoUrl,
+            ];
+        });
+
         // if (Cache::has('series-'.$series->id.'-game-state')) {
         //     $gameState = Cache::get('series-'.$series->id.'-game-state');
         // } else {
@@ -42,6 +59,7 @@ class SeriesController extends Controller
         return inertia('Series/Show', [
             'series' => $series,
             'snapshot' => $gameState,
+            'demos' => $demos,
             'logs' => $series->logs()->latest()->where('created_at', '<', now()->subSeconds($series->event->delay))->whereIn('type', Log::BROADCASTABLE_EVENTS)->limit(20)->get(),
         ]);
     }

@@ -21,6 +21,7 @@ defineOptions({ layout: PublicLayout });
 const props = defineProps({
     series: Object,
     logs: Array,
+    demos: Array
 });
 
 const echo = useEcho();
@@ -264,7 +265,7 @@ const seriesMaps = computed(() => {
                         >View on FACEIT</a
                     >
                 </FrostedGlassCard>
-                <FrostedGlassCard flush class="overflow-hidden">
+                <FrostedGlassCard flush class="overflow-hidden mb-6 last:mb-0">
                     <CardSectionHeader :icon="TvIcon"
                         >Streams</CardSectionHeader
                     >
@@ -285,6 +286,30 @@ const seriesMaps = computed(() => {
                             class="relative p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
                         >
                             No Streams Available
+                        </li>
+                    </ul>
+                </FrostedGlassCard>
+                <FrostedGlassCard v-if="demos.find(d => d.url !== null)" flush class="overflow-hidden mb-6 last:mb-0">
+                    <CardSectionHeader :icon="TvIcon"
+                        >Demos</CardSectionHeader
+                    >
+                    <ul>
+                        <li
+                            v-for="demo in demos"
+                            class="relative p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
+                        >
+                            <a
+                                class="absolute inset-0"
+                                :href="demo.url"
+                                target="_blank"
+                            ></a>
+                            {{ demo.map }} <template v-if="!demo.url">(unavailable)</template>
+                        </li>
+                        <li
+                            v-if="!demos.length"
+                            class="relative p-3 transition hover:bg-zinc-200 hover:dark:bg-black/25"
+                        >
+                            No Demos Available
                         </li>
                     </ul>
                 </FrostedGlassCard>
