@@ -20,10 +20,10 @@
     </div>
 
     <div class="mt-24 flex items-center justify-center relative z-10">
-        <div class="text-center flex justify-center items-center">
+        <div class="text-center flex justify-center items-center flex-col gap-16">
             <div class="aspect-square h-[300px] w-[300px]">
                 @if ($series->teamA->logo)
-                    <div class="relative mb-6">
+                    <div class="relative">
                         <img
                             src="{{ $series->teamA->logo }}"
                             class="z-10 aspect-square w-full object-contain"
@@ -55,10 +55,10 @@
         <div class="px-32 text-6xl font-medium tracking-tighter opacity-50">
             vs
         </div>
-        <div class="text-center flex justify-center items-center">
+        <div class="text-center flex justify-center items-center flex-col gap-16">
             <div class="aspect-square h-[300px] w-[300px]">
                 @if ($series->teamB?->logo)
-                    <div class="relative mb-6">
+                    <div class="relative">
                         <img
                             src="{{ $series->teamB->logo }}"
                             class="z-10 aspect-square w-full object-contain"
